@@ -7,6 +7,7 @@ import { NativeBaseProvider } from 'native-base'
 
 export default function App() {
   const [fontsLoaded, fontError] = useFonts({
+    Satoshi_Regular: require('./assets/fonts/Satoshi_Regular.otf'),
     MarkPro_Regular: require('./assets/fonts/MarkPro_Regular.otf'),
     MarkPro_Medium: require('./assets/fonts/MarkPro_Medium.otf'),
     MarkPro_Bold: require('./assets/fonts/MarkPro_Bold.otf'),
