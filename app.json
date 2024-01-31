@@ -32,7 +32,9 @@
           "fonts": [
             "./assets/fonts/MarkPro_Regular.otf",
             "./assets/fonts/MarkPro_Medium.otf",
-            "./assets/fonts/MarkPro_Bold.otf"
+            "./assets/fonts/MarkPro_Bold.otf",
+            "./assets/fonts/Satoshi_Regular.otf",
+            "./assets/fonts/Satoshi_Medium.otf"
           ]
         }
       ]

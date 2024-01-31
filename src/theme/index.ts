@@ -8,6 +8,7 @@ export const THEME = extendTheme({
     },
     light: {
       700: '#333333',
+      600: '#6E6A64',
       500: '#797979',
       400: '#ABA6A1',
     },
@@ -30,6 +31,7 @@ export const THEME = extendTheme({
     title: 'MarkPro_Bold',
     heading: 'MarkPro_Medium',
     body: 'MarkPro_Regular',
+    label: 'Satoshi_Medium',
     paragraph: 'Satoshi_Regular',
   },
   fontSizes: {
@@ -42,9 +44,12 @@ export const THEME = extendTheme({
     '3xl': 32,
   },
   sizes: {
+    13: 50,
     14: 56,
     22: 88,
+    28: 112,
     33: 148,
+    41: 164,
     1934: 1934,
   },
 })
