@@ -1,6 +1,8 @@
+import { THEME } from '@theme/index'
 import { useFonts } from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
+import { NativeBaseProvider } from 'native-base'
 import { useCallback } from 'react'
 import { Text, View } from 'react-native'
 
@@ -24,15 +26,17 @@ export default function App() {
   }
 
   return (
-    <View
-      onLayout={onLayoutRootView}
-      style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-    >
+    <NativeBaseProvider theme={THEME}>
       <StatusBar style="dark" />
-      <Text style={{ fontFamily: 'MarkPro_Bold', fontSize: 30 }}>
-        Inter Black
-      </Text>
-      <Text style={{ fontSize: 30 }}>Platform Default</Text>
-    </View>
+      <View
+        onLayout={onLayoutRootView}
+        style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+      >
+        <Text style={{ fontFamily: 'MarkPro_Bold', fontSize: 30 }}>
+          Inter Black
+        </Text>
+        <Text style={{ fontSize: 30 }}>Platform Default</Text>
+      </View>
+    </NativeBaseProvider>
   )
 }
