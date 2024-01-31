@@ -6,8 +6,9 @@ export const THEME = extendTheme({
       700: '#00875F',
       500: '#00B37E',
     },
-    fendi: {
-      600: '#797979',
+    light: {
+      500: '#797979',
+      400: '#ABA6A1',
     },
     gray: {
       700: '#121214',
@@ -19,13 +20,15 @@ export const THEME = extendTheme({
       100: '#E1E1E6',
     },
     white: '#FFFFFF',
+
     red: {
       500: '#F75A68',
     },
   },
   fonts: {
-    heading: 'Roboto_700Bold',
-    body: 'Roboto_400Regular',
+    title: 'MarkPro_Bold',
+    heading: 'MarkPro_Medium',
+    body: 'MarkPro_Regular',
   },
   fontSizes: {
     xs: 12,
@@ -33,9 +36,12 @@ export const THEME = extendTheme({
     md: 16,
     lg: 18,
     xl: 20,
+    '2xl': 24,
+    '3xl': 32,
   },
   sizes: {
     14: 56,
+    21: 84,
     33: 148,
   },
 })
