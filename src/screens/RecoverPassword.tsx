@@ -46,20 +46,19 @@ export function RecoverPassword() {
       </Text>
 
       <Center>
-        <Text
-          fontFamily={'label'}
-          alignSelf={'flex-start'}
-          fontSize={'md'}
-          mb={3}
-          color={'light.700'}
-        >
-          E-mail
-        </Text>
         <Input
-          placeholder="E-mail"
+          placeholder="Insira seu email"
           keyboardType="email-address"
           autoCapitalize="none"
           mb={6}
+          InputLeftElement={
+            <Icon
+              as={<Feather name="mail" />}
+              size={5}
+              ml="2"
+              color="muted.400"
+            />
+          }
         />
       </Center>
 

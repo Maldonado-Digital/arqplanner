@@ -18,12 +18,12 @@ export function Button({
   return (
     <NativeBaseButton
       w={'full'}
-      h={14}
+      h={16}
       bg={variant === 'outline' ? 'white' : 'light.500'}
       borderWidth={variant === 'outline' ? 1 : 0}
       borderColor={'light.700'}
       _pressed={{
-        bg: variant === 'outline' ? 'light.200' : 'light.400',
+        bg: variant === 'outline' ? 'light.200' : 'light.300',
       }}
       {...rest}
     >

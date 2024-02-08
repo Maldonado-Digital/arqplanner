@@ -1,8 +1,10 @@
 import { Button } from '@components/Button'
 import { Input } from '@components/Input'
+import { LogoBox } from '@components/LogoBox'
 import { Feather } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import { AuthNavigatorRoutesProps } from '@routes/auth.routes'
+import { StatusBarHeight } from '@utils/constants'
 import {
   Center,
   HStack,
@@ -45,69 +47,73 @@ export function SignIn() {
           <Icon as={Feather} name="arrow-left" color={'light.700'} size={6} />
         </Pressable>
 
+        <Center mt={16 + StatusBarHeight}>
+          <LogoBox />
+        </Center>
+
         <Heading
-          mt={20}
-          mb={12}
+          mt={16}
+          mb={6}
           alignSelf={'flex-start'}
           color={'light.700'}
           fontSize={'3xl'}
           fontFamily={'heading'}
         >
-          Faça seu login
+          Login
         </Heading>
+        <Text fontSize={'md'} fontFamily={'body'} color={'light.500'} mb={8}>
+          Seja bem-vindo ao ArqPlanner
+        </Text>
 
         <Center>
-          <Text
-            fontFamily={'label'}
-            alignSelf={'flex-start'}
-            fontSize={'md'}
-            mb={3}
-            color={'light.700'}
-          >
-            E-mail
-          </Text>
           <Input
-            placeholder="E-mail"
+            placeholder="Insira seu email"
             keyboardType="email-address"
             autoCapitalize="none"
-            mb={6}
+            mb={4}
+            InputLeftElement={
+              <Icon
+                as={<Feather name="mail" />}
+                size={4}
+                ml={4}
+                color="light.400"
+              />
+            }
           />
 
-          <Text
-            fontFamily={'label'}
-            alignSelf={'flex-start'}
-            fontSize={'md'}
-            mb={3}
-            color={'light.700'}
-          >
-            Senha
-          </Text>
-          <Input placeholder="Senha" secureTextEntry mb={6} />
+          <Input
+            placeholder="Insira sua senha"
+            secureTextEntry
+            mb={4}
+            InputLeftElement={
+              <Icon
+                as={<Feather name="lock" />}
+                size={4}
+                ml={4}
+                color="light.400"
+              />
+            }
+          />
 
           <HStack>
-            <Text fontFamily={'label'} fontSize={'md'} color={'light.900'}>
+            <Text fontFamily={'body'} fontSize={'md'} color={'light.400'}>
               Esqueceu sua senha?{' '}
             </Text>
             <Pressable onPress={navigateToRecoverPassword}>
-              <Text
-                fontFamily={'label'}
-                fontSize={'md'}
-                color={'light.600'}
-                underline
-              >
-                Recupere aqui.
+              <Text fontFamily={'body'} fontSize={'md'} color={'light.700'}>
+                Recuperar agora.
               </Text>
             </Pressable>
           </HStack>
-        </Center>
 
-        <Button
-          title="Entrar"
-          rounded={'full'}
-          fontSize={'lg'}
-          mt={'auto'}
-          onPress={handleSignIn}
-        />
+          <Button
+            title="Entrar"
+            rounded={'full'}
+            fontSize={'lg'}
+            mt={8}
+            onPress={handleSignIn}
+          />
+        </Center>
       </VStack>
     </ScrollView>
   )

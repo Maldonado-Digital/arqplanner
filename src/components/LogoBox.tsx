@@ -7,7 +7,7 @@ export function LogoBox({ ...rest }: IBoxProps) {
       h={22}
       w={22}
       rounded={'3xl'}
-      bg={'light.400'}
+      bg={'light.300'}
       justifyContent={'center'}
       alignItems={'center'}
       mt={-44}
