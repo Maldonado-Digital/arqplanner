@@ -49,7 +49,7 @@ export function Onboarding1() {
           mt={10}
           color={'light.700'}
         >
-          O projeto da sua casa na palma da mão.
+          Seu projeto na palma da mão.
         </Heading>
 
         <Text
@@ -147,7 +147,7 @@ export function Onboarding2() {
           mt={10}
           color={'light.700'}
         >
-          Gerencie e aprove orçamentos.
+          Gerencie e aprove projetos.
         </Heading>
 
         <Text
