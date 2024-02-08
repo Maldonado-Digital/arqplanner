@@ -1,11 +1,11 @@
-import ArqWhiteTextLogoSvg from '@assets/arq_white_text_logo.svg'
 import BackgroundImg from '@assets/onboarding_bg.png'
 import WhiteCircleSvg from '@assets/white_circle.svg'
+import { LogoBox } from '@components/LogoBox'
 import { SliderDots } from '@components/SliderDots'
 import { Feather } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import { AuthNavigatorRoutesProps } from '@routes/auth.routes'
-import { Box, Heading, IconButton, Image, Text, VStack } from 'native-base'
+import { Heading, IconButton, Image, Text, VStack } from 'native-base'
 
 export function Onboarding1() {
   const navigation = useNavigation<AuthNavigatorRoutesProps>()
@@ -30,17 +30,7 @@ export function Onboarding1() {
       <WhiteCircleSvg style={{ position: 'absolute', top: 466 }} />
 
       <VStack w={'full'} h={'1/2'} mt={'auto'} alignItems={'center'} px={10}>
-        <Box
-          h={22}
-          w={22}
-          rounded={'3xl'}
-          bg={'light.400'}
-          justifyContent={'center'}
-          alignItems={'center'}
-          mt={-44}
-        >
-          <ArqWhiteTextLogoSvg width={60} style={{ marginRight: 3 }} />
-        </Box>
+        <LogoBox />
 
         <Heading
           fontFamily={'heading'}
@@ -49,11 +39,11 @@ export function Onboarding1() {
           mt={10}
           color={'light.700'}
         >
-          Seu projeto na palma da mão.
+          Seu projeto na palma da sua mão.
         </Heading>
 
         <Text
-          fontFamily={'paragraph'}
+          fontFamily={'body'}
           fontSize={'md'}
           color={'light.500'}
           textAlign={'center'}
@@ -65,8 +55,8 @@ export function Onboarding1() {
 
         <SliderDots activeIndex={0} mt={9} />
         <IconButton
-          w={22}
-          h={13}
+          w={24}
+          h={16}
           mt={50}
           variant={'solid'}
           rounded={'full'}
@@ -128,17 +118,7 @@ export function Onboarding2() {
       <WhiteCircleSvg style={{ position: 'absolute', top: 466 }} />
 
       <VStack w={'full'} h={'1/2'} mt={'auto'} alignItems={'center'} px={10}>
-        <Box
-          h={22}
-          w={22}
-          rounded={'3xl'}
-          bg={'light.400'}
-          justifyContent={'center'}
-          alignItems={'center'}
-          mt={-44}
-        >
-          <ArqWhiteTextLogoSvg width={60} style={{ marginRight: 3 }} />
-        </Box>
+        <LogoBox />
 
         <Heading
           fontFamily={'heading'}
@@ -151,7 +131,7 @@ export function Onboarding2() {
         </Heading>
 
         <Text
-          fontFamily={'paragraph'}
+          fontFamily={'body'}
           fontSize={'md'}
           color={'light.500'}
           textAlign={'center'}
@@ -163,8 +143,8 @@ export function Onboarding2() {
 
         <SliderDots activeIndex={1} mt={9} />
         <IconButton
-          w={22}
-          h={13}
+          w={24}
+          h={16}
           mt={50}
           variant={'solid'}
           rounded={'full'}
@@ -226,17 +206,7 @@ export function Onboarding3() {
       <WhiteCircleSvg style={{ position: 'absolute', top: 466 }} />
 
       <VStack w={'full'} h={'1/2'} mt={'auto'} alignItems={'center'} px={10}>
-        <Box
-          h={22}
-          w={22}
-          rounded={'3xl'}
-          bg={'light.400'}
-          justifyContent={'center'}
-          alignItems={'center'}
-          mt={-44}
-        >
-          <ArqWhiteTextLogoSvg width={60} style={{ marginRight: 3 }} />
-        </Box>
+        <LogoBox />
 
         <Heading
           fontFamily={'heading'}
@@ -249,7 +219,7 @@ export function Onboarding3() {
         </Heading>
 
         <Text
-          fontFamily={'paragraph'}
+          fontFamily={'body'}
           fontSize={'md'}
           color={'light.500'}
           textAlign={'center'}
@@ -261,8 +231,8 @@ export function Onboarding3() {
 
         <SliderDots activeIndex={2} mt={9} />
         <IconButton
-          w={22}
-          h={13}
+          w={24}
+          h={16}
           mt={50}
           variant={'solid'}
           rounded={'full'}

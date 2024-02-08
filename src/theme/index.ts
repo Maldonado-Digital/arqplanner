@@ -28,11 +28,8 @@ export const THEME = extendTheme({
     },
   },
   fonts: {
-    title: 'MarkPro_Bold',
-    heading: 'MarkPro_Medium',
-    body: 'MarkPro_Regular',
-    label: 'Satoshi_Medium',
-    paragraph: 'Satoshi_Regular',
+    heading: 'Proxima_Nova_Semibold',
+    body: 'Proxima_Nova_Regular',
   },
   fontSizes: {
     xs: 12,

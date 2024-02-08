@@ -68,7 +68,7 @@ export function Home() {
             <Heading fontFamily={'heading'} fontSize={'xl'} color={'light.700'}>
               Veja o status geral do projeto
             </Heading>
-            <Text fontFamily={'paragraph'} fontSize={'md'} color={'light.500'}>
+            <Text fontFamily={'body'} fontSize={'md'} color={'light.500'}>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit.
             </Text>
           </VStack>

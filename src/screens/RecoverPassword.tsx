@@ -40,12 +40,7 @@ export function RecoverPassword() {
         Recupere sua senha
       </Heading>
 
-      <Text
-        fontFamily={'paragraph'}
-        fontSize={'md'}
-        color={'light.500'}
-        mb={12}
-      >
+      <Text fontFamily={'body'} fontSize={'md'} color={'light.500'} mb={12}>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque id
         tortor.
       </Text>
@@ -118,7 +113,7 @@ export function PasswordRecovered() {
         </Heading>
 
         <Text
-          fontFamily={'paragraph'}
+          fontFamily={'body'}
           fontSize={'md'}
           color={'light.500'}
           mb={12}
