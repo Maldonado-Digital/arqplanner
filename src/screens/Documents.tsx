@@ -1,14 +1,27 @@
 import { Category } from '@components/Category'
+import { ItemStatus, ListItem } from '@components/ListItem'
 import { ListScreenHeader } from '@components/ListScreenHeader'
+import { Feather } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import { AppNavigatorRoutesProps } from '@routes/app.routes'
-import { FlatList, VStack } from 'native-base'
+import { FlatList, Icon, VStack } from 'native-base'
 import { useState } from 'react'
 
 export function Documents() {
-  const [groups, setGroups] = useState(['costas', 'biceps', 'triceps', 'ombro'])
+  const [documents, setDocuments] = useState([
+    'Orçamento Quarto-1 v1',
+    'Orçamento Quarto-1 v2',
+    'Orçamento Sala v1',
+    'Orçamento Sala v2',
+    'Contrato',
+    'Proposta Cozinha v1',
+    'Proposta Cozinha v2',
+    'Briefing v1',
+    'Briefing v2',
+    'Briefing v3',
+  ])
   const [selectedCategory, setSelectedCategory] = useState('Todos')
-  const [exercises, setExercises] = useState([
+  const [categories, setCategories] = useState([
     'Todos',
     'Propostas',
     'Briefings',
@@ -22,11 +35,11 @@ export function Documents() {
   }
 
   return (
-    <VStack flex={1} bg={'gray.50'} pb={20}>
+    <VStack flex={1} bg={'gray.50'}>
       <ListScreenHeader title="Documentos" />
 
       <FlatList
-        data={exercises}
+        data={categories}
         keyExtractor={item => item}
         horizontal
         renderItem={({ item }) => (
@@ -48,17 +61,26 @@ export function Documents() {
         borderBottomColor={'#00000012'}
       />
 
-      <VStack flex={1} px={8}>
-        {/* <FlatList
-          data={exercises}
-          keyExtractor={item => item}
-          renderItem={({ item }) => (
-            <ExerciseCard onPress={handleOpenExerciseDetails} />
-          )}
-          showsVerticalScrollIndicator={false}
-          _contentContainerStyle={{ paddingBottom: 20 }}
-        /> */}
-      </VStack>
+      <FlatList
+        mt={6}
+        flex={1}
+        data={documents}
+        keyExtractor={item => item}
+        renderItem={({ item }) => (
+          <ListItem
+            title={item}
+            status={
+              ['pendente', 'aprovado'].at(
+                Math.round(Math.random()),
+              ) as ItemStatus
+            }
+            icon={<Icon as={Feather} name="folder" size={6} color="#A9772C" />}
+            onPress={handleOpenExerciseDetails}
+          />
+        )}
+        showsVerticalScrollIndicator={false}
+        _contentContainerStyle={{ paddingBottom: 20 }}
+      />
     </VStack>
   )
 }
