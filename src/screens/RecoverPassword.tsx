@@ -3,6 +3,7 @@ import { Input } from '@components/Input'
 import { Feather } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import { AuthNavigatorRoutesProps } from '@routes/auth.routes'
+import { statusBarHeight } from '@utils/constants'
 import { Center, Heading, Icon, Pressable, Text, VStack } from 'native-base'
 
 export function RecoverPassword() {
@@ -21,8 +22,7 @@ export function RecoverPassword() {
       <Pressable
         alignSelf={'flex-start'}
         onPress={handleGoBack}
-        bg={'red.100'}
-        mt={12}
+        mt={statusBarHeight}
         pt={4}
         pr={4}
       >
@@ -63,7 +63,7 @@ export function RecoverPassword() {
       </Center>
 
       <Button
-        title="Enviar instruções"
+        title="Recuperar senha"
         rounded={'full'}
         fontSize={'lg'}
         mt={'auto'}
@@ -89,12 +89,11 @@ export function PasswordRecovered() {
           rounded={'full'}
           borderWidth={1}
           borderColor={'gray.100'}
-          bg={'gray.50'}
         >
           <Icon
             as={Feather}
             name="check-circle"
-            size={8}
+            size={6}
             color={'black'}
             strokeWidth={1}
             strokeDashoffset={0.5}

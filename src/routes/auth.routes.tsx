@@ -3,7 +3,9 @@ import {
   createNativeStackNavigator,
 } from '@react-navigation/native-stack'
 import { Documents } from '@screens/Documents'
+import { Event } from '@screens/Event'
 import { Home } from '@screens/Home'
+import { Schedule } from '@screens/Schedule'
 
 import { Onboarding1, Onboarding2, Onboarding3 } from '@screens/Onboarding'
 import { PasswordRecovered, RecoverPassword } from '@screens/RecoverPassword'
@@ -18,6 +20,8 @@ export type AuthRoutesType = {
   password_recovered: undefined
   home: undefined
   documents: undefined
+  schedule: undefined
+  event: undefined
 }
 
 export type AuthNavigatorRoutesProps = NativeStackNavigationProp<AuthRoutesType>
@@ -27,6 +31,7 @@ const { Navigator, Screen } = createNativeStackNavigator<AuthRoutesType>()
 export function AuthRoutes() {
   return (
     <Navigator screenOptions={{ headerShown: false }}>
+      <Screen name="schedule" component={Schedule} />
       <Screen name="onboarding_1" component={Onboarding1} />
       <Screen name="onboarding_2" component={Onboarding2} />
       <Screen name="onboarding_3" component={Onboarding3} />
@@ -35,6 +40,7 @@ export function AuthRoutes() {
       <Screen name="password_recovered" component={PasswordRecovered} />
       <Screen name="home" component={Home} />
       <Screen name="documents" component={Documents} />
+      <Screen name="event" component={Event} />
     </Navigator>
   )
 }

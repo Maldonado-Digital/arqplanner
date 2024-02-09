@@ -36,7 +36,7 @@ export function Documents() {
 
   return (
     <VStack flex={1} bg={'gray.50'}>
-      <ListScreenHeader title="Documentos" />
+      <ListScreenHeader title="Documentos" bg={'white'} opacity={90} />
 
       <FlatList
         data={categories}

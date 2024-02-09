@@ -4,7 +4,6 @@ import { LogoBox } from '@components/LogoBox'
 import { Feather } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import { AuthNavigatorRoutesProps } from '@routes/auth.routes'
-import { StatusBarHeight } from '@utils/constants'
 import {
   Center,
   HStack,
@@ -47,7 +46,7 @@ export function SignIn() {
           <Icon as={Feather} name="arrow-left" color={'light.700'} size={6} />
         </Pressable>
 
-        <Center mt={16 + StatusBarHeight}>
+        <Center mt={32}>
           <LogoBox />
         </Center>
 

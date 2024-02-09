@@ -117,7 +117,7 @@ export function Home() {
         <VStack px={10} space={6}>
           <HStack maxW={'1'} w={'full'} space={6}>
             <MenuCard
-              onPress={() => navigation.navigate('documents')}
+              onPress={() => navigation.navigate('schedule')}
               title="Agenda"
               icon={
                 <Icon as={Feather} name="calendar" size={6} color="#F9B34A" />
