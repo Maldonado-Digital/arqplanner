@@ -32,6 +32,8 @@ export function Schedule() {
         pb={6}
         mb={8}
         bg={'white'}
+        borderWidth={1}
+        borderColor={'#00000012'}
         borderBottomRightRadius={'3xl'}
         borderBottomLeftRadius={'3xl'}
         style={{
@@ -70,13 +72,19 @@ export function Schedule() {
         />
       </VStack>
 
-      <VStack px={10}>
-        <Heading fontFamily={'heading'} color={'light.700'} fontSize={'md'}>
+      <VStack>
+        <Heading
+          fontFamily={'heading'}
+          color={'light.700'}
+          fontSize={'md'}
+          px={10}
+        >
           {formattedDate}
         </Heading>
 
         <FlatList
           mt={6}
+          px={10}
           data={['0F25EE', 'F8C40E', 'FF38A4']}
           keyExtractor={item => item}
           renderItem={({ item }) => (

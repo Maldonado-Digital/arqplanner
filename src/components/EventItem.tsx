@@ -22,9 +22,10 @@ export function EventItem({
     <TouchableOpacity {...rest}>
       <HStack
         bg={'white'}
-        alignItems={'center'}
         p={4}
         mb={3}
+        alignItems={'center'}
+        rounded={'lg'}
         borderWidth={1}
         borderColor={'#00000012'}
         style={{
