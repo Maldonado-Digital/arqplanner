@@ -1,25 +1,16 @@
 import { ListScreenHeader } from '@components/ListScreenHeader'
 import { Feather } from '@expo/vector-icons'
-import {
-  Box,
-  Center,
-  HStack,
-  Heading,
-  IStackProps,
-  Icon,
-  Text,
-  VStack,
-} from 'native-base'
+import { useRoute } from '@react-navigation/native'
+import { Box, Center, HStack, Heading, Icon, Text, VStack } from 'native-base'
 
-type EventProps = IStackProps & {
+type EventRouteParams = {
   title: string
   markerColor: string
 }
 
-export function Event({
-  title = 'Visita Eletricista Márcio',
-  markerColor = '#0F25EE',
-}: EventProps) {
+export function Event() {
+  const route = useRoute()
+  const { title, markerColor } = route.params as EventRouteParams
   return (
     <VStack flex={1} bg={'gray.50'}>
       <ListScreenHeader title={'Visita técnica'} bg={'gray.50'} />

@@ -21,7 +21,10 @@ export type AuthRoutesType = {
   home: undefined
   documents: undefined
   schedule: undefined
-  event: undefined
+  event: {
+    title: string
+    markerColor: string
+  }
 }
 
 export type AuthNavigatorRoutesProps = NativeStackNavigationProp<AuthRoutesType>
@@ -31,7 +34,6 @@ const { Navigator, Screen } = createNativeStackNavigator<AuthRoutesType>()
 export function AuthRoutes() {
   return (
     <Navigator screenOptions={{ headerShown: false }}>
-      <Screen name="schedule" component={Schedule} />
       <Screen name="onboarding_1" component={Onboarding1} />
       <Screen name="onboarding_2" component={Onboarding2} />
       <Screen name="onboarding_3" component={Onboarding3} />
@@ -40,6 +42,7 @@ export function AuthRoutes() {
       <Screen name="password_recovered" component={PasswordRecovered} />
       <Screen name="home" component={Home} />
       <Screen name="documents" component={Documents} />
+      <Screen name="schedule" component={Schedule} />
       <Screen name="event" component={Event} />
     </Navigator>
   )

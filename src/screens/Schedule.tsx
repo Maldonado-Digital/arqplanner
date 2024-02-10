@@ -1,5 +1,6 @@
 import { Calendar } from '@components/Calendar'
 import { EventItem } from '@components/EventItem'
+import { ListEmpty } from '@components/ListEmpty'
 import { Feather } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import { AuthNavigatorRoutesProps } from '@routes/auth.routes'
@@ -10,6 +11,7 @@ export function Schedule() {
   const navigation = useNavigation<AuthNavigatorRoutesProps>()
   // const date = Intl.DateTimeFormat('pt-BR').format(new Date())
   const today = new Date()
+  const [events, setEvents] = useState([])
   const [selectedDate, setSelectedDate] = useState(today)
   const formattedDate = `${selectedDate.getDate()} de ${Intl.DateTimeFormat(
     'pt-BR',
@@ -20,8 +22,11 @@ export function Schedule() {
     navigation.goBack()
   }
 
-  function navigateToEventDetails() {
-    navigation.navigate('event')
+  function navigateToEvent(markerColor: string) {
+    navigation.navigate('event', {
+      title: 'Visita Eletricista Márcio',
+      markerColor,
+    })
   }
 
   return (
@@ -72,7 +77,7 @@ export function Schedule() {
         />
       </VStack>
 
-      <VStack>
+      <VStack flex={1}>
         <Heading
           fontFamily={'heading'}
           color={'light.700'}
@@ -83,18 +88,26 @@ export function Schedule() {
         </Heading>
 
         <FlatList
-          mt={6}
           px={10}
-          data={['0F25EE', 'F8C40E', 'FF38A4']}
+          // data={['0F25EE', 'F8C40E', 'FF38A4']}
+          data={events}
           keyExtractor={item => item}
           renderItem={({ item }) => (
             <EventItem
               markerColor={`#${item}`}
-              onPress={navigateToEventDetails}
+              onPress={() => navigateToEvent(item)}
             />
           )}
           showsVerticalScrollIndicator={false}
-          _contentContainerStyle={{ paddingBottom: 20 }}
+          _contentContainerStyle={{ paddingBottom: 20, mt: 6 }}
+          ListEmptyComponent={() => (
+            <ListEmpty
+              mt={8}
+              icon="calendar"
+              title="Nenhum evento na data selecionada"
+              message="Você não possui nenhum evento na data selecionada."
+            />
+          )}
         />
       </VStack>
     </VStack>
