@@ -26,6 +26,7 @@ export const THEME = extendTheme({
 
     red: {
       500: '#F75A68',
+      700: '#DD0000',
     },
   },
   fonts: {
@@ -39,9 +40,11 @@ export const THEME = extendTheme({
     lg: 18,
     xl: 20,
     '2xl': 24,
-    '3xl': 32,
+    '3xl': 28,
+    '4xl': 32,
   },
   sizes: {
+    11: 44,
     13: 50,
     14: 56,
     22: 88,

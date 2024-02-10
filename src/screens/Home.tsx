@@ -8,6 +8,7 @@ import {
   HStack,
   Heading,
   Icon,
+  Pressable,
   ScrollView,
   Text,
   VStack,
@@ -15,6 +16,10 @@ import {
 
 export function Home() {
   const navigation = useNavigation<AuthNavigatorRoutesProps>()
+
+  function handleShowProfile() {
+    navigation.navigate('profile')
+  }
 
   return (
     <ScrollView
@@ -28,29 +33,35 @@ export function Home() {
           mb={12}
           px={10}
         >
-          <Heading fontFamily={'heading'} fontSize={'3xl'} color={'black'}>
+          <Heading fontFamily={'heading'} fontSize={'4xl'} color={'black'}>
             Bem-vindo!
           </Heading>
-          <HStack alignItems={'center'}>
-            <Center
-              bg={'white'}
-              w={12}
-              h={12}
-              rounded={'full'}
-              borderWidth={1}
-              borderColor={'gray.100'}
-            >
-              <Text fontFamily={'heading'} fontSize={'md'} color={'light.700'}>
-                BA
-              </Text>
-            </Center>
-            <Icon
-              as={<Feather name="chevron-down" strokeWidth={2} />}
-              color={'light.700'}
-              size={6}
-              ml={2}
-            />
-          </HStack>
+          <Pressable onPress={handleShowProfile}>
+            <HStack alignItems={'center'}>
+              <Center
+                bg={'white'}
+                w={12}
+                h={12}
+                rounded={'full'}
+                borderWidth={1}
+                borderColor={'gray.100'}
+              >
+                <Text
+                  fontFamily={'heading'}
+                  fontSize={'md'}
+                  color={'light.700'}
+                >
+                  BA
+                </Text>
+              </Center>
+              <Icon
+                as={<Feather name="chevron-down" strokeWidth={2} />}
+                color={'light.700'}
+                size={6}
+                ml={2}
+              />
+            </HStack>
+          </Pressable>
         </HStack>
 
         <HStack

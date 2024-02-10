@@ -8,19 +8,21 @@ import { Home } from '@screens/Home'
 import { Schedule } from '@screens/Schedule'
 
 import { Onboarding1, Onboarding2, Onboarding3 } from '@screens/Onboarding'
+import { Profile } from '@screens/Profile'
 import { PasswordRecovered, RecoverPassword } from '@screens/RecoverPassword'
 import { SignIn } from '@screens/SignIn'
 
 export type AuthRoutesType = {
+  documents: undefined
+  home: undefined
   onboarding_1: undefined
   onboarding_2: undefined
   onboarding_3: undefined
-  sign_in: undefined
-  recover_password: undefined
   password_recovered: undefined
-  home: undefined
-  documents: undefined
+  profile: undefined
+  recover_password: undefined
   schedule: undefined
+  sign_in: undefined
   event: {
     title: string
     markerColor: string
@@ -29,7 +31,8 @@ export type AuthRoutesType = {
 
 export type AuthNavigatorRoutesProps = NativeStackNavigationProp<AuthRoutesType>
 
-const { Navigator, Screen } = createNativeStackNavigator<AuthRoutesType>()
+const { Navigator, Screen, Group } =
+  createNativeStackNavigator<AuthRoutesType>()
 
 export function AuthRoutes() {
   return (
@@ -44,6 +47,9 @@ export function AuthRoutes() {
       <Screen name="documents" component={Documents} />
       <Screen name="schedule" component={Schedule} />
       <Screen name="event" component={Event} />
+      <Group screenOptions={{ presentation: 'fullScreenModal' }}>
+        <Screen name="profile" component={Profile} />
+      </Group>
     </Navigator>
   )
 }

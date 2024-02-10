@@ -57,7 +57,7 @@ export function Schedule() {
           alignItems={'center'}
           justifyContent={'space-between'}
         >
-          <Heading fontFamily={'heading'} fontSize={'3xl'}>
+          <Heading fontFamily={'heading'} fontSize={'4xl'}>
             Agenda
           </Heading>
 

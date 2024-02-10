@@ -55,7 +55,7 @@ export function SignIn() {
           mb={6}
           alignSelf={'flex-start'}
           color={'light.700'}
-          fontSize={'3xl'}
+          fontSize={'4xl'}
           fontFamily={'heading'}
         >
           Login

@@ -32,7 +32,7 @@ export function Event() {
           <Heading
             pl={5}
             fontFamily={'heading'}
-            fontSize={'3xl'}
+            fontSize={'4xl'}
             color={'light.700'}
             noOfLines={2}
           >

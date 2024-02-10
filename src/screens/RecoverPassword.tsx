@@ -34,7 +34,7 @@ export function RecoverPassword() {
         mb={6}
         alignSelf={'flex-start'}
         color={'light.700'}
-        fontSize={'3xl'}
+        fontSize={'4xl'}
         fontFamily={'heading'}
       >
         Recupere sua senha
@@ -104,7 +104,7 @@ export function PasswordRecovered() {
           mt={4}
           mb={6}
           color={'light.700'}
-          fontSize={'3xl'}
+          fontSize={'4xl'}
           fontFamily={'heading'}
         >
           Obrigado!

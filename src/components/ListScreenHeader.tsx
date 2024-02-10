@@ -24,13 +24,7 @@ export function ListScreenHeader({ title, ...rest }: ScreenHeaderType) {
       justifyContent={'space-between'}
       {...rest}
     >
-      <Pressable
-        alignSelf={'flex-start'}
-        onPress={handleGoBack}
-        // mt={12}
-        pt={4}
-        pr={4}
-      >
+      <Pressable alignSelf={'flex-start'} onPress={handleGoBack} pt={4} pr={4}>
         <Icon as={Feather} name="arrow-left" color={'light.700'} size={6} />
       </Pressable>
       <Heading color={'light.700'} fontSize={'xl'} fontFamily={'heading'}>

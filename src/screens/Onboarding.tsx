@@ -34,7 +34,7 @@ export function Onboarding1() {
 
         <Heading
           fontFamily={'heading'}
-          fontSize={'3xl'}
+          fontSize={'4xl'}
           textAlign={'center'}
           mt={10}
           color={'light.700'}
@@ -122,7 +122,7 @@ export function Onboarding2() {
 
         <Heading
           fontFamily={'heading'}
-          fontSize={'3xl'}
+          fontSize={'4xl'}
           textAlign={'center'}
           mt={10}
           color={'light.700'}
@@ -210,7 +210,7 @@ export function Onboarding3() {
 
         <Heading
           fontFamily={'heading'}
-          fontSize={'3xl'}
+          fontSize={'4xl'}
           textAlign={'center'}
           mt={10}
           color={'light.700'}
