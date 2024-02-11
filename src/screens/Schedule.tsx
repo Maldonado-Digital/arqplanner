@@ -10,7 +10,7 @@ import { useState } from 'react'
 export function Schedule() {
   const navigation = useNavigation<AuthNavigatorRoutesProps>()
   const today = new Date()
-  const [events, setEvents] = useState(['0F25EE', 'F8C40E', 'FF38A4'])
+  const [events, setEvents] = useState(['#0F25EE', '#F8C40E', '#FF38A4'])
   const [selectedDate, setSelectedDate] = useState(today)
   const formattedDate = `${selectedDate.getDate()} de ${Intl.DateTimeFormat(
     'pt-BR',
@@ -92,7 +92,7 @@ export function Schedule() {
           keyExtractor={item => item}
           renderItem={({ item }) => (
             <EventItem
-              markerColor={`#${item}`}
+              markerColor={`${item}`}
               onPress={() => navigateToEvent(item)}
             />
           )}

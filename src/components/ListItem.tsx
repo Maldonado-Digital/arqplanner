@@ -15,13 +15,8 @@ type ListItemProps = TouchableOpacityProps & {
 export function ListItem({ title, icon, status, ...rest }: ListItemProps) {
   const navigation = useNavigation<AuthNavigatorRoutesProps>()
 
-  function handleViewDocument() {
-    console.log('Navigate to document view')
-    navigation.navigate('document_view')
-  }
-
   return (
-    <TouchableOpacity onPress={handleViewDocument} {...rest}>
+    <TouchableOpacity {...rest}>
       <HStack
         bg={'white'}
         alignItems={'center'}

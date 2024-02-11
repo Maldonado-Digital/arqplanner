@@ -4,7 +4,7 @@ import { ItemStatus, ListItem } from '@components/ListItem'
 import { ListScreenHeader } from '@components/ListScreenHeader'
 import { Feather } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
-import { AppNavigatorRoutesProps } from '@routes/app.routes'
+import { AuthNavigatorRoutesProps } from '@routes/auth.routes'
 import { FlatList, Icon, VStack } from 'native-base'
 import { useState } from 'react'
 
@@ -29,15 +29,16 @@ export function Documents() {
     'Contratos',
   ])
 
-  const navigation = useNavigation<AppNavigatorRoutesProps>()
+  const navigation = useNavigation<AuthNavigatorRoutesProps>()
 
-  function handleOpenExerciseDetails() {
-    // navigation.navigate('exercise')
+  function handleViewDocument() {
+    console.log('Navigate to document view')
+    navigation.navigate('document_view')
   }
 
   return (
     <VStack flex={1} bg={'gray.50'}>
-      <ListScreenHeader title="Documentos" bg={'white'} opacity={90} />
+      <ListScreenHeader title="Documentos" bg={'white'} />
 
       <FlatList
         data={categories}
@@ -63,8 +64,6 @@ export function Documents() {
       />
 
       <FlatList
-        mt={6}
-        flex={1}
         data={documents}
         keyExtractor={item => item}
         renderItem={({ item }) => (
@@ -76,18 +75,16 @@ export function Documents() {
               ) as ItemStatus
             }
             icon={<Icon as={Feather} name="folder" size={6} color="#A9772C" />}
-            onPress={handleOpenExerciseDetails}
+            onPress={handleViewDocument}
           />
         )}
         showsVerticalScrollIndicator={false}
         _contentContainerStyle={{
           paddingBottom: 20,
-          flex: 1,
-          justifyContent: 'center',
+          ...(!documents.length && { flex: 1, justifyContent: 'center' }),
         }}
         ListEmptyComponent={() => (
           <ListEmpty
-            flex={1}
             px={10}
             icon="folder"
             title="Nenhum documento foi encontrado"

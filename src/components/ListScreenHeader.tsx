@@ -1,13 +1,26 @@
 import { Feather } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import { AuthNavigatorRoutesProps } from '@routes/auth.routes'
-import { HStack, Heading, IStackProps, Icon, Pressable } from 'native-base'
+import {
+  HStack,
+  Heading,
+  IStackProps,
+  Icon,
+  Pressable,
+  Text,
+  VStack,
+} from 'native-base'
 
 type ScreenHeaderType = IStackProps & {
   title: string
+  subTitle?: string
 }
 
-export function ListScreenHeader({ title, ...rest }: ScreenHeaderType) {
+export function ListScreenHeader({
+  title,
+  subTitle,
+  ...rest
+}: ScreenHeaderType) {
   const navigation = useNavigation<AuthNavigatorRoutesProps>()
 
   function handleGoBack() {
@@ -24,16 +37,23 @@ export function ListScreenHeader({ title, ...rest }: ScreenHeaderType) {
       pb={6}
       pt={16}
       px={10}
-      alignItems={'flex-end'}
+      alignItems={'center'}
       justifyContent={'space-between'}
       {...rest}
     >
-      <Pressable alignSelf={'flex-start'} onPress={handleGoBack} pt={4} pr={4}>
+      <Pressable onPress={handleGoBack} pr={4}>
         <Icon as={Feather} name="arrow-left" color={'light.700'} size={6} />
       </Pressable>
-      <Heading color={'light.700'} fontSize={'xl'} fontFamily={'heading'}>
-        {title}
-      </Heading>
+      <VStack alignItems={'center'}>
+        <Heading color={'light.700'} fontSize={'xl'} fontFamily={'heading'}>
+          {title}
+        </Heading>
+        {!!subTitle && (
+          <Text fontFamily={'body'} color={'light.500'} fontSize={'sm'}>
+            {subTitle}
+          </Text>
+        )}
+      </VStack>
 
       <Pressable onPress={handleShowProfile}>
         <Icon as={Feather} name="more-vertical" color={'light.700'} size={6} />
