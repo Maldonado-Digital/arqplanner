@@ -14,6 +14,10 @@ export function ListScreenHeader({ title, ...rest }: ScreenHeaderType) {
     navigation.goBack()
   }
 
+  function handleShowProfile() {
+    navigation.navigate('profile')
+  }
+
   return (
     <HStack
       bg={'white'}
@@ -31,7 +35,7 @@ export function ListScreenHeader({ title, ...rest }: ScreenHeaderType) {
         {title}
       </Heading>
 
-      <Pressable onPress={handleGoBack}>
+      <Pressable onPress={handleShowProfile}>
         <Icon as={Feather} name="more-vertical" color={'light.700'} size={6} />
       </Pressable>
     </HStack>

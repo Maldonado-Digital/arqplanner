@@ -1,4 +1,5 @@
 import { Category } from '@components/Category'
+import { ListEmpty } from '@components/ListEmpty'
 import { ItemStatus, ListItem } from '@components/ListItem'
 import { ListScreenHeader } from '@components/ListScreenHeader'
 import { Feather } from '@expo/vector-icons'
@@ -79,7 +80,20 @@ export function Documents() {
           />
         )}
         showsVerticalScrollIndicator={false}
-        _contentContainerStyle={{ paddingBottom: 20 }}
+        _contentContainerStyle={{
+          paddingBottom: 20,
+          flex: 1,
+          justifyContent: 'center',
+        }}
+        ListEmptyComponent={() => (
+          <ListEmpty
+            flex={1}
+            px={10}
+            icon="folder"
+            title="Nenhum documento foi encontrado"
+            message="Você ainda não possui nenhum documento adicionado."
+          />
+        )}
       />
     </VStack>
   )

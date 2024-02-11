@@ -9,9 +9,8 @@ import { useState } from 'react'
 
 export function Schedule() {
   const navigation = useNavigation<AuthNavigatorRoutesProps>()
-  // const date = Intl.DateTimeFormat('pt-BR').format(new Date())
   const today = new Date()
-  const [events, setEvents] = useState([])
+  const [events, setEvents] = useState(['0F25EE', 'F8C40E', 'FF38A4'])
   const [selectedDate, setSelectedDate] = useState(today)
   const formattedDate = `${selectedDate.getDate()} de ${Intl.DateTimeFormat(
     'pt-BR',
@@ -89,7 +88,6 @@ export function Schedule() {
 
         <FlatList
           px={10}
-          // data={['0F25EE', 'F8C40E', 'FF38A4']}
           data={events}
           keyExtractor={item => item}
           renderItem={({ item }) => (

@@ -1,3 +1,5 @@
+import { useNavigation } from '@react-navigation/native'
+import { AuthNavigatorRoutesProps } from '@routes/auth.routes'
 import { Box, HStack, Heading, Text, VStack } from 'native-base'
 import { ReactNode } from 'react'
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native'
@@ -11,8 +13,15 @@ type ListItemProps = TouchableOpacityProps & {
 }
 
 export function ListItem({ title, icon, status, ...rest }: ListItemProps) {
+  const navigation = useNavigation<AuthNavigatorRoutesProps>()
+
+  function handleViewDocument() {
+    console.log('Navigate to document view')
+    navigation.navigate('document_view')
+  }
+
   return (
-    <TouchableOpacity {...rest}>
+    <TouchableOpacity onPress={handleViewDocument} {...rest}>
       <HStack
         bg={'white'}
         alignItems={'center'}

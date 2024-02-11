@@ -7,6 +7,7 @@ import { Event } from '@screens/Event'
 import { Home } from '@screens/Home'
 import { Schedule } from '@screens/Schedule'
 
+import { DocumentView } from '@screens/DocumentView'
 import { Onboarding1, Onboarding2, Onboarding3 } from '@screens/Onboarding'
 import { Profile } from '@screens/Profile'
 import { PasswordRecovered, RecoverPassword } from '@screens/RecoverPassword'
@@ -14,6 +15,7 @@ import { SignIn } from '@screens/SignIn'
 
 export type AuthRoutesType = {
   documents: undefined
+  document_view: undefined
   home: undefined
   onboarding_1: undefined
   onboarding_2: undefined
@@ -45,6 +47,7 @@ export function AuthRoutes() {
       <Screen name="password_recovered" component={PasswordRecovered} />
       <Screen name="home" component={Home} />
       <Screen name="documents" component={Documents} />
+      <Screen name="document_view" component={DocumentView} />
       <Screen name="schedule" component={Schedule} />
       <Screen name="event" component={Event} />
       <Group screenOptions={{ presentation: 'fullScreenModal' }}>

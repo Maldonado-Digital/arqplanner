@@ -15,7 +15,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.bernardoamim.arqplanner"
     },
     "android": {
       "adaptiveIcon": {
@@ -28,13 +29,21 @@
     },
     "plugins": [
       [
-        "expo-font", {
+        "expo-font",
+        {
           "fonts": [
             "./assets/fonts/Proxima_Nova_Regular.otf",
             "./assets/fonts/Proxima_Nova_Semibold.otf"
           ]
         }
-      ]
-    ]
+      ],
+      "@config-plugins/react-native-blob-util",
+      "@config-plugins/react-native-pdf"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "aac43cdf-1124-4412-8b25-8e2b303425a7"
+      }
+    }
   }
 }
