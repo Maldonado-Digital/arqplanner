@@ -6,7 +6,6 @@ type VariantType = 'solid' | 'outline' | 'dismiss'
 type ButtonProps = IButtonProps & {
   title?: string
   variant?: VariantType
-  titleColor?: string
   icon?: ReactNode
 }
 
@@ -44,7 +43,6 @@ export function Button({
   title,
   variant = 'solid',
   icon,
-  titleColor,
   fontSize = 'sm',
   fontFamily = 'heading',
   ...rest

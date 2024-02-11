@@ -1,12 +1,20 @@
+import { useNavigation } from '@react-navigation/native'
+import { AuthNavigatorRoutesProps } from '@routes/auth.routes'
 import { BlurView } from 'expo-blur'
-import { Box, HStack, IStackProps, Text } from 'native-base'
+import { Box, HStack, IBoxProps, Text } from 'native-base'
 import { Button } from './Button'
 
-export function ApprovalFooter({ ...rest }: IStackProps) {
+type DisclosureFooter = IBoxProps & {
+  onDisclose: (disclose: 'approve' | 'reject') => void
+}
+
+export function ApprovalFooter({ onDisclose, ...rest }: DisclosureFooter) {
+  const navigation = useNavigation<AuthNavigatorRoutesProps>()
+
   return (
     <Box w={'full'} borderTopColor={'muted.200'} borderTopWidth={1} {...rest}>
       <BlurView
-        intensity={75}
+        intensity={90}
         tint="systemThickMaterialLight"
         style={{
           width: '100%',
@@ -27,12 +35,13 @@ export function ApprovalFooter({ ...rest }: IStackProps) {
           </Text>
           <Button
             title="Reprovar"
-            titleColor={'red.700'}
+            color={'red.700'}
             bg={'#dd00001A'}
             w={22}
             h={10}
             rounded={'full'}
             variant={'dismiss'}
+            onPress={() => onDisclose('reject')}
           />
 
           <Button
@@ -42,6 +51,7 @@ export function ApprovalFooter({ ...rest }: IStackProps) {
             rounded={'full'}
             ml={2}
             variant={'solid'}
+            onPress={() => onDisclose('approve')}
           />
         </HStack>
       </BlurView>
