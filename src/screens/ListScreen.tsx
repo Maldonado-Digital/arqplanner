@@ -3,24 +3,39 @@ import { ListEmpty } from '@components/ListEmpty'
 import { ItemStatus, ListItem } from '@components/ListItem'
 import { ListScreenHeader } from '@components/ListScreenHeader'
 import { Feather } from '@expo/vector-icons'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { AuthNavigatorRoutesProps } from '@routes/auth.routes'
 import { FlatList, Icon, VStack } from 'native-base'
 import { useState } from 'react'
 
-export function Documents() {
-  const [documents, setDocuments] = useState([
-    'Orçamento Quarto-1 v1',
-    'Orçamento Quarto-1 v2',
-    'Orçamento Sala v1',
-    'Orçamento Sala v2',
-    'Contrato',
-    'Proposta Cozinha v1',
-    'Proposta Cozinha v2',
-    'Briefing v1',
-    'Briefing v2',
-    'Briefing v3',
-  ])
+type ListScreenRouteParams = {
+  title: string
+}
+
+const documents = [
+  'Orçamento Quarto-1 v1',
+  'Orçamento Quarto-1 v2',
+  'Orçamento Sala v1',
+  'Orçamento Sala v2',
+  'Contrato',
+  'Proposta Cozinha v1',
+  'Proposta Cozinha v2',
+  'Briefing v1',
+  'Briefing v2',
+  'Briefing v3',
+]
+
+const perspectives = [
+  'Proposta 3D Versão 1',
+  'Proposta 3D Versão 2',
+  'Proposta 3D Versão 3',
+  'Proposta 3D Versão 4',
+  'Proposta 3D Versão 6',
+]
+
+export function ListScreen() {
+  const route = useRoute()
+  const { title } = route.params as ListScreenRouteParams
   const [selectedCategory, setSelectedCategory] = useState('Todos')
   const [categories, setCategories] = useState([
     'Todos',
@@ -36,9 +51,13 @@ export function Documents() {
     navigation.navigate('document_view')
   }
 
+  function handleViewMedias(title: string) {
+    navigation.navigate('medias', { title })
+  }
+
   return (
     <VStack flex={1} bg={'gray.50'}>
-      <ListScreenHeader title="Documentos" bg={'white'} />
+      <ListScreenHeader title={title} bg={'white'} />
 
       <FlatList
         data={categories}
@@ -64,7 +83,7 @@ export function Documents() {
       />
 
       <FlatList
-        data={documents}
+        data={perspectives}
         keyExtractor={item => item}
         renderItem={({ item }) => (
           <ListItem
@@ -74,8 +93,11 @@ export function Documents() {
                 Math.round(Math.random()),
               ) as ItemStatus
             }
-            icon={<Icon as={Feather} name="folder" size={6} color="#A9772C" />}
-            onPress={handleViewDocument}
+            icon={
+              <Icon as={Feather} name="folder" size={6} color="light.700" />
+            }
+            // onPress={handleViewDocument}
+            onPress={() => handleViewMedias(item)}
           />
         )}
         showsVerticalScrollIndicator={false}

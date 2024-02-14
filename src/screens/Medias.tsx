@@ -1,28 +1,37 @@
+import ExampleImage from '@assets/onboarding_bg.png'
 import { ApprovalFooter } from '@components/ApprovalFooter'
 import { Button } from '@components/Button'
 import { ListScreenHeader } from '@components/ListScreenHeader'
 import { Feather } from '@expo/vector-icons'
+import { useRoute } from '@react-navigation/native'
 import {
   Actionsheet,
   HStack,
   Heading,
   IconButton,
+  Image,
   KeyboardAvoidingView,
   Text,
   TextArea,
   VStack,
   useDisclose,
 } from 'native-base'
-import { Platform } from 'react-native'
-import PDF from 'react-native-pdf'
+import { Platform, useWindowDimensions } from 'react-native'
 
 const source = {
   uri: 'https://prod-cdn.damacproperties.com/uploads/brochure/safa-one-super-luxury-collection-db-en.pdf?utm_source=&utm_medium=&utm_campaign=&campaign_id=a120Y000000uLMj',
   cache: true,
 }
 
-export function DocumentView() {
+type MediasRouteParams = {
+  title: string
+}
+
+export function Medias() {
+  const route = useRoute()
+  const { title } = route.params as MediasRouteParams
   const { isOpen, onOpen, onClose } = useDisclose()
+  const { height, width } = useWindowDimensions()
 
   function handleOpenDisclose(disclose: 'approve' | 'reject') {
     onOpen()
@@ -31,25 +40,22 @@ export function DocumentView() {
   return (
     <VStack flex={1} bg={'gray.50'} position={'relative'}>
       <ListScreenHeader
-        title="Prestação de Serviços v1"
+        title={title}
         subTitle="13-05-23 | 05:00"
-        // mb={6}
         borderBottomColor={'muted.200'}
         borderBottomWidth={1}
       />
-      <PDF
-        source={source}
-        style={{
-          flex: 1,
-          borderTopColor: '#00000012',
-          borderTopWidth: 1,
-          paddingBottom: 16,
-          // paddingTop: 6,
-        }}
-        onLoadComplete={(nOfPages, filePath) => {
-          console.log('Number of pages', nOfPages)
-        }}
-      />
+      <HStack maxWidth={'full'} space={'2px'} w={'full'} flexWrap={'wrap'}>
+        {Array.from({ length: 18 }).map(_ => (
+          <Image
+            source={ExampleImage}
+            w={width / 3 - 2 * 2}
+            mb={'2px'}
+            alt=""
+            style={{ aspectRatio: 1 }}
+          />
+        ))}
+      </HStack>
       <ApprovalFooter
         position={'absolute'}
         bottom={0}

@@ -2,9 +2,10 @@ import {
   NativeStackNavigationProp,
   createNativeStackNavigator,
 } from '@react-navigation/native-stack'
-import { Documents } from '@screens/Documents'
 import { Event } from '@screens/Event'
 import { Home } from '@screens/Home'
+import { ListScreen } from '@screens/ListScreen'
+import { Medias } from '@screens/Medias'
 import { Schedule } from '@screens/Schedule'
 
 import { DocumentView } from '@screens/DocumentView'
@@ -14,9 +15,14 @@ import { PasswordRecovered, RecoverPassword } from '@screens/RecoverPassword'
 import { SignIn } from '@screens/SignIn'
 
 export type AuthRoutesType = {
-  documents: undefined
   document_view: undefined
   home: undefined
+  list_screen: {
+    title: string
+  }
+  medias: {
+    title: string
+  }
   onboarding_1: undefined
   onboarding_2: undefined
   onboarding_3: undefined
@@ -46,10 +52,12 @@ export function AuthRoutes() {
       <Screen name="recover_password" component={RecoverPassword} />
       <Screen name="password_recovered" component={PasswordRecovered} />
       <Screen name="home" component={Home} />
-      <Screen name="documents" component={Documents} />
+      <Screen name="list_screen" component={ListScreen} />
+      <Screen name="medias" component={Medias} />
       <Screen name="document_view" component={DocumentView} />
       <Screen name="schedule" component={Schedule} />
       <Screen name="event" component={Event} />
+
       <Group screenOptions={{ presentation: 'fullScreenModal' }}>
         <Screen name="profile" component={Profile} />
       </Group>

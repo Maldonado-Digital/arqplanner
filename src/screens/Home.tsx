@@ -135,7 +135,9 @@ export function Home() {
               }
             />
             <MenuCard
-              onPress={() => navigation.navigate('documents')}
+              onPress={() =>
+                navigation.navigate('list_screen', { title: 'Projetos' })
+              }
               title="Projetos"
               icon={
                 <Icon as={Feather} name="layout" size={6} color="#0F25EE" />
@@ -144,12 +146,16 @@ export function Home() {
           </HStack>
           <HStack maxW={'1'} w={'full'} space={6}>
             <MenuCard
-              onPress={() => navigation.navigate('documents')}
+              onPress={() =>
+                navigation.navigate('list_screen', { title: '3Ds' })
+              }
               title="3Ds"
               icon={<Icon as={Feather} name="box" size={6} color="#AD00FF" />}
             />
             <MenuCard
-              onPress={() => navigation.navigate('documents')}
+              onPress={() =>
+                navigation.navigate('list_screen', { title: 'Documentos' })
+              }
               title="Documentos"
               icon={
                 <Icon as={Feather} name="folder" size={6} color="#A9772C" />
@@ -158,12 +164,16 @@ export function Home() {
           </HStack>
           <HStack maxW={'1'} w={'full'} space={6}>
             <MenuCard
-              onPress={() => navigation.navigate('documents')}
+              onPress={() =>
+                navigation.navigate('list_screen', { title: 'Fotos' })
+              }
               title="Fotos"
               icon={<Icon as={Feather} name="image" size={6} color="#FF38A4" />}
             />
             <MenuCard
-              onPress={() => navigation.navigate('documents')}
+              onPress={() =>
+                navigation.navigate('list_screen', { title: 'Orçamentos' })
+              }
               title="Orçamentos"
               icon={
                 <Icon
