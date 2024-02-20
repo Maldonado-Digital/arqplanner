@@ -1,4 +1,4 @@
-import ExampleImage from '@assets/onboarding_bg.png'
+import ExampleImage from '@assets/mock-1.png'
 import { ApprovalFooter } from '@components/ApprovalFooter'
 import { Button } from '@components/Button'
 import { ListScreenHeader } from '@components/ListScreenHeader'

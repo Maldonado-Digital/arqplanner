@@ -60,7 +60,13 @@ export function SignIn() {
         >
           Login
         </Heading>
-        <Text fontSize={'md'} fontFamily={'body'} color={'light.500'} mb={8}>
+        <Text
+          fontSize={'md'}
+          fontFamily={'body'}
+          color={'light.500'}
+          mb={8}
+          fontWeight={'bold'}
+        >
           Seja bem-vindo ao ArqPlanner
         </Text>
 

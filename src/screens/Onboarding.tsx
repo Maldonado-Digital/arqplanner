@@ -1,4 +1,6 @@
-import BackgroundImg from '@assets/onboarding_bg.png'
+import Mock1 from '@assets/mock-1.png'
+import Mock2 from '@assets/mock-2.png'
+import Mock3 from '@assets/mock-3.png'
 import WhiteCircleSvg from '@assets/white_circle.svg'
 import { LogoBox } from '@components/LogoBox'
 import { SliderDots } from '@components/SliderDots'
@@ -15,16 +17,14 @@ export function Onboarding1() {
   }
 
   return (
-    <VStack flex={1} alignItems={'center'}>
+    <VStack flex={1} alignItems={'center'} bg={'gray.200'}>
       <Image
-        source={BackgroundImg}
-        defaultSource={BackgroundImg}
-        alt="People training at gym"
+        source={Mock1}
+        defaultSource={Mock1}
+        alt="ArqPlanner App mock"
         resizeMode="cover"
         position="absolute"
-        top={-80}
-        w={'full'}
-        h={586}
+        right={-280}
       />
 
       <WhiteCircleSvg style={{ position: 'absolute', top: 466 }} />
@@ -49,8 +49,7 @@ export function Onboarding1() {
           textAlign={'center'}
           mt={6}
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque
-          id tortor.
+          Tenha controle total do seu projeto onde quer que esteja.
         </Text>
 
         <SliderDots activeIndex={0} mt={9} />
@@ -86,16 +85,15 @@ export function Onboarding2() {
   }
 
   return (
-    <VStack flex={1} alignItems={'center'}>
+    <VStack flex={1} alignItems={'center'} bg={'gray.200'}>
       <Image
-        source={BackgroundImg}
-        defaultSource={BackgroundImg}
-        alt="People training at gym"
+        source={Mock2}
+        defaultSource={Mock2}
+        alt="ArqPlanner App mock"
         resizeMode="cover"
         position="absolute"
-        top={-80}
+        top={12}
         w={'full'}
-        h={586}
       />
 
       <IconButton
@@ -107,7 +105,7 @@ export function Onboarding2() {
         _icon={{
           as: Feather,
           name: 'arrow-left',
-          color: 'white',
+          color: 'light.700',
           size: 6,
         }}
         _pressed={{
@@ -127,7 +125,7 @@ export function Onboarding2() {
           mt={10}
           color={'light.700'}
         >
-          Gerencie e aprove projetos.
+          Gerencie e aprove projetos e imagens.
         </Heading>
 
         <Text
@@ -137,8 +135,7 @@ export function Onboarding2() {
           textAlign={'center'}
           mt={6}
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque
-          id tortor.
+          Organize documentos, aprove projetos e imagens de forma descomplicada.
         </Text>
 
         <SliderDots activeIndex={1} mt={9} />
@@ -174,16 +171,15 @@ export function Onboarding3() {
   }
 
   return (
-    <VStack flex={1} alignItems={'center'}>
+    <VStack flex={1} alignItems={'center'} bg={'gray.200'}>
       <Image
-        source={BackgroundImg}
-        defaultSource={BackgroundImg}
-        alt="People training at gym"
+        source={Mock3}
+        defaultSource={Mock3}
+        alt="ArqPlanner App mock"
         resizeMode="cover"
         position="absolute"
-        top={-80}
+        top={16}
         w={'full'}
-        h={586}
       />
 
       <IconButton
@@ -195,7 +191,7 @@ export function Onboarding3() {
         _icon={{
           as: Feather,
           name: 'arrow-left',
-          color: 'white',
+          color: 'light.700',
           size: 6,
         }}
         _pressed={{
@@ -215,7 +211,7 @@ export function Onboarding3() {
           mt={10}
           color={'light.700'}
         >
-          Organize documentos e fotos do projeto.
+          Acompanhe o dia-a-dia do seu projeto.
         </Heading>
 
         <Text
@@ -225,8 +221,7 @@ export function Onboarding3() {
           textAlign={'center'}
           mt={6}
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque
-          id tortor.
+          Mantenha-se atualizado com o dia-a-dia do seu projeto, em tempo real.
         </Text>
 
         <SliderDots activeIndex={2} mt={9} />
