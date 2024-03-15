@@ -1,8 +1,10 @@
 import { MenuCard } from '@components/MenuCard'
 import { SliderDots } from '@components/SliderDots'
 import { Feather } from '@expo/vector-icons'
+import { useAuth } from '@hooks/useAuth'
 import { useNavigation } from '@react-navigation/native'
-import { AuthNavigatorRoutesProps } from '@routes/auth.routes'
+import type { AppNavigatorRoutesProps } from '@routes/app.routes'
+import { getInitials } from '@utils/helpers'
 import {
   Center,
   HStack,
@@ -15,7 +17,10 @@ import {
 } from 'native-base'
 
 export function Home() {
-  const navigation = useNavigation<AuthNavigatorRoutesProps>()
+  const { user } = useAuth()
+  const navigation = useNavigation<AppNavigatorRoutesProps>()
+
+  const initials = getInitials(user.name)
 
   function handleShowProfile() {
     navigation.navigate('profile')
@@ -50,8 +55,9 @@ export function Home() {
                   fontFamily={'heading'}
                   fontSize={'md'}
                   color={'light.700'}
+                  textTransform={'uppercase'}
                 >
-                  BA
+                  {initials}
                 </Text>
               </Center>
               <Icon
@@ -71,7 +77,7 @@ export function Home() {
           justifyContent={'space-between'}
           px={10}
           py={8}
-          mb={6}
+          mb={12}
           borderTopWidth={1}
           borderBottomWidth={1}
           borderTopColor={'#00000012'}
@@ -88,7 +94,7 @@ export function Home() {
               Veja o status do projeto
             </Heading>
             <Text fontFamily={'body'} fontSize={'md'} color={'light.500'}>
-              Lorem ipsum dolor sit amet, consectetur
+              Confira o status geral de conclusão ao lado.
             </Text>
           </VStack>
           <Center
@@ -120,10 +126,6 @@ export function Home() {
             </Center>
           </Center>
         </HStack>
-
-        <Center mb={12}>
-          <SliderDots />
-        </Center>
 
         <VStack px={10} space={6}>
           <HStack maxW={'1'} w={'full'} space={6}>

@@ -1,3 +1,4 @@
+import { AuthProvider } from '@contexts/AuthContext'
 import { Routes } from '@routes/index'
 import { THEME } from '@theme/index'
 import { useFonts } from 'expo-font'
@@ -24,7 +25,7 @@ export default function App() {
   return (
     <NativeBaseProvider theme={THEME}>
       <StatusBar style="dark" backgroundColor="transparent" translucent />
-      {fontsLoaded && <Routes />}
+      <AuthProvider>{fontsLoaded && <Routes />}</AuthProvider>
     </NativeBaseProvider>
   )
 }

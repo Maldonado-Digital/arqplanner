@@ -6,7 +6,7 @@ import { LogoBox } from '@components/LogoBox'
 import { SliderDots } from '@components/SliderDots'
 import { Feather } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
-import { AuthNavigatorRoutesProps } from '@routes/auth.routes'
+import type { AuthNavigatorRoutesProps } from '@routes/auth.routes'
 import { Heading, IconButton, Image, Text, VStack } from 'native-base'
 
 export function Onboarding1() {

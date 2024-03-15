@@ -1,7 +1,10 @@
 import { ProfileHeader } from '@components/ProfileHeader'
+import { Toast } from '@components/Toast'
 import { Feather } from '@expo/vector-icons'
+import { useAuth } from '@hooks/useAuth'
 import { useNavigation } from '@react-navigation/native'
-import { AuthNavigatorRoutesProps } from '@routes/auth.routes'
+import type { AppNavigatorRoutesProps } from '@routes/app.routes'
+import { getFullName, getInitials, phoneMask } from '@utils/helpers'
 import {
   Center,
   HStack,
@@ -11,13 +14,37 @@ import {
   Pressable,
   Text,
   VStack,
+  useToast,
 } from 'native-base'
 
 export function Profile() {
-  const navigation = useNavigation<AuthNavigatorRoutesProps>()
+  const { user, signOut } = useAuth()
+  const toast = useToast()
+  const navigation = useNavigation<AppNavigatorRoutesProps>()
 
-  function navigateToRecoverPassword() {
-    navigation.navigate('recover_password')
+  const initials = getInitials(user.name)
+  const fullName = getFullName(user.name)
+
+  // function navigateToRecoverPassword() {
+  //   navigation.navigate('recover_password')
+  // }
+
+  async function handleSignOut() {
+    try {
+      await signOut()
+    } catch (error) {
+      toast.show({
+        duration: 3000,
+        render: ({ id }) => (
+          <Toast
+            id={id}
+            message={'Ocorreu um erro ao sair do app'}
+            status="error"
+            onClose={() => toast.close(id)}
+          />
+        ),
+      })
+    }
   }
 
   function handleGoBack() {
@@ -70,7 +97,7 @@ export function Profile() {
             borderColor={'light.300'}
           >
             <Text fontFamily={'heading'} fontSize={'3xl'} color={'light.700'}>
-              BA
+              {initials}
             </Text>
           </Center>
           <Heading
@@ -80,7 +107,7 @@ export function Profile() {
             color={'light.700'}
             noOfLines={2}
           >
-            Bernardo {'\n'}Amim
+            {fullName}
           </Heading>
         </HStack>
 
@@ -100,17 +127,19 @@ export function Profile() {
             Contatos
           </Heading>
 
-          <HStack alignItems={'center'} mb={5}>
-            <Icon as={Feather} name="phone" size={5} color={'light.700'} />
-            <Text
-              fontFamily={'body'}
-              fontSize={'sm'}
-              color={'light.500'}
-              pl={3}
-            >
-              (31) 92324-2412
-            </Text>
-          </HStack>
+          {!!user.phone_number && (
+            <HStack alignItems={'center'} mb={5}>
+              <Icon as={Feather} name="phone" size={5} color={'light.700'} />
+              <Text
+                fontFamily={'body'}
+                fontSize={'sm'}
+                color={'light.500'}
+                pl={3}
+              >
+                {phoneMask(user.phone_number)}
+              </Text>
+            </HStack>
+          )}
 
           <HStack alignItems={'center'} mb={5}>
             <Icon as={Feather} name="mail" size={5} color={'light.700'} />
@@ -120,21 +149,23 @@ export function Profile() {
               color={'light.500'}
               pl={3}
             >
-              bernardo@maldonadodigital.com
+              {user.email}
             </Text>
           </HStack>
 
-          <HStack alignItems={'center'}>
-            <Icon as={Feather} name="at-sign" size={5} color={'light.700'} />
-            <Text
-              fontFamily={'body'}
-              fontSize={'sm'}
-              color={'light.500'}
-              pl={3}
-            >
-              bernardoamim
-            </Text>
-          </HStack>
+          {!!user.social_media && (
+            <HStack alignItems={'center'}>
+              <Icon as={Feather} name="at-sign" size={5} color={'light.700'} />
+              <Text
+                fontFamily={'body'}
+                fontSize={'sm'}
+                color={'light.500'}
+                pl={3}
+              >
+                {user.social_media}
+              </Text>
+            </HStack>
+          )}
         </VStack>
 
         <VStack
@@ -144,7 +175,7 @@ export function Profile() {
           alignItems={'center'}
           justifyContent={'space-between'}
         >
-          <HStack justifyContent={'center'}>
+          {/* <HStack justifyContent={'center'}>
             <Text fontFamily={'body'} fontSize={'sm'} color={'light.400'}>
               Esqueceu sua senha?{' '}
             </Text>
@@ -153,8 +184,8 @@ export function Profile() {
                 Recuperar agora.
               </Text>
             </Pressable>
-          </HStack>
-          <Pressable>
+          </HStack> */}
+          <Pressable onPress={handleSignOut}>
             <Text fontFamily={'heading'} fontSize={'sm'} color={'red.700'}>
               Sair do app agora
             </Text>

@@ -1,6 +1,6 @@
 import { Feather } from '@expo/vector-icons'
 import { Box, HStack, Heading, Icon, Text, VStack } from 'native-base'
-import { TouchableOpacity, TouchableOpacityProps } from 'react-native'
+import { TouchableOpacity, type TouchableOpacityProps } from 'react-native'
 
 type EventItemProps = TouchableOpacityProps & {
   title?: string

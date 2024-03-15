@@ -1,6 +1,6 @@
-import { IInputProps, Input as NativeBaseInput } from 'native-base'
+import { type IInputProps, Input as NativeBaseInput } from 'native-base'
 
-export function Input({ ...rest }: IInputProps) {
+export function Input({ isInvalid, ...rest }: IInputProps) {
   return (
     <NativeBaseInput
       bg={'gray.50'}
@@ -8,7 +8,7 @@ export function Input({ ...rest }: IInputProps) {
       pr={4}
       borderWidth={1}
       rounded={'xl'}
-      borderColor={'#00000012'}
+      borderColor={isInvalid ? 'red.700' : '#00000012'}
       fontSize="sm"
       color={'light.700'}
       fontFamily={'body'}
@@ -16,7 +16,7 @@ export function Input({ ...rest }: IInputProps) {
       placeholderTextColor="light.400"
       _focus={{
         bg: 'gray.50',
-        borderColor: 'light.500',
+        borderColor: isInvalid ? 'red.700' : 'light.500',
       }}
       _disabled={{
         bg: '#e7e7e7',

@@ -1,7 +1,11 @@
-import { Button as NativeBaseButton, IButtonProps, Text } from 'native-base'
-import { ReactNode } from 'react'
+import {
+  type IButtonProps,
+  Button as NativeBaseButton,
+  Text,
+} from 'native-base'
+import type { ReactNode } from 'react'
 
-type VariantType = 'solid' | 'outline' | 'dismiss'
+type VariantType = 'solid' | 'outline' | 'subtle'
 
 type ButtonProps = IButtonProps & {
   title?: string
@@ -15,26 +19,35 @@ const buttonVariants = {
     borderWidth: 0,
     borderColor: 'light.700',
     color: 'white',
-    pressed: {
-      bg: 'light.200',
+    _pressed: {
+      bg: 'light.400',
+    },
+    _loading: {
+      bg: 'light.700',
     },
   },
   outline: {
     bg: 'white',
     borderWidth: 1,
-    borderColor: undefined,
+    borderColor: '#00000012',
     color: 'light.700',
-    pressed: {
-      bg: 'light.300',
+    _pressed: {
+      bg: '#00000012',
+    },
+    _loading: {
+      bg: 'light.700',
     },
   },
-  dismiss: {
+  subtle: {
     bg: '#DD00001A',
     borderWidth: 0,
     borderColor: undefined,
     color: 'red.700',
-    pressed: {
+    _pressed: {
       bg: 'red.200',
+    },
+    _loading: {
+      bg: 'red.700',
     },
   },
 }
@@ -47,7 +60,7 @@ export function Button({
   fontFamily = 'heading',
   ...rest
 }: ButtonProps) {
-  const { bg, borderWidth, borderColor, color, pressed } =
+  const { bg, borderWidth, borderColor, color, _pressed, _loading } =
     buttonVariants[variant as VariantType]
 
   return (
@@ -57,7 +70,12 @@ export function Button({
       bg={bg}
       borderWidth={borderWidth}
       borderColor={borderColor}
-      _pressed={pressed}
+      _pressed={_pressed}
+      _loading={_loading}
+      _text={{
+        fontFamily,
+        fontSize,
+      }}
       {...rest}
     >
       {icon}
