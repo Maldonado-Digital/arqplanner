@@ -1,16 +1,43 @@
 import { ListScreenHeader } from '@components/ListScreenHeader'
 import { Feather } from '@expo/vector-icons'
 import { useRoute } from '@react-navigation/native'
+import { useQuery } from '@tanstack/react-query'
+import { phoneMask } from '@utils/helpers'
+import { format } from 'date-fns'
 import { Box, Center, HStack, Heading, Icon, Text, VStack } from 'native-base'
+import { getWorks } from 'src/api/queries/getWorks'
 
 type EventRouteParams = {
-  title: string
+  id: string
   markerColor: string
 }
 
 export function Event() {
   const route = useRoute()
-  const { title, markerColor } = route.params as EventRouteParams
+  const { id, markerColor } = route.params as EventRouteParams
+
+  const {
+    data: works,
+    error,
+    isLoading,
+  } = useQuery({
+    queryKey: ['works'],
+    queryFn: getWorks,
+  })
+
+  const eventData = works?.docs[0].events.find(e => e.id === id)
+
+  const title = eventData?.event.title
+  const description = eventData?.event.description
+  const time = format(eventData?.event.date as string, 'HH:mm')
+  const place = eventData?.event.address
+  const timeAndPlace = `${time} ${place}`
+  const professionalName = eventData?.event.professional_name
+  const profession = eventData?.event.profession
+  const phoneNumber = phoneMask(eventData?.event.contact_number || '')
+  const email = eventData?.event.contact_email
+  const instagram = eventData?.event.instagram
+
   return (
     <VStack flex={1} bg={'gray.50'}>
       <ListScreenHeader title={'Visita técnica'} bg={'gray.50'} />
@@ -58,7 +85,7 @@ export function Event() {
               color={'light.500'}
               pl={2}
             >
-              16:30 - 17:30 R. Santa Rita Durão, 759
+              {timeAndPlace}
             </Text>
           </HStack>
         </VStack>
@@ -88,16 +115,16 @@ export function Event() {
               borderColor={'light.300'}
             >
               <Text fontFamily={'heading'} fontSize={'xl'} color={'light.700'}>
-                M
+                {professionalName?.[0].toUpperCase()}
               </Text>
             </Center>
 
             <VStack pl={2}>
               <Text fontFamily={'heading'} fontSize={'sm'} color={'light.700'}>
-                Eletricista Márcio Guedes
+                {professionalName}
               </Text>
               <Text fontFamily={'body'} fontSize={'sm'} color={'light.500'}>
-                Eletricista Parceiro
+                {profession}
               </Text>
             </VStack>
           </HStack>
@@ -118,41 +145,47 @@ export function Event() {
             Contatos
           </Heading>
 
-          <HStack alignItems={'center'} mb={5}>
-            <Icon as={Feather} name="phone" size={5} color={'light.700'} />
-            <Text
-              fontFamily={'body'}
-              fontSize={'sm'}
-              color={'light.500'}
-              pl={3}
-            >
-              (31) 92324-2412
-            </Text>
-          </HStack>
+          {!!phoneNumber && (
+            <HStack alignItems={'center'} mb={5}>
+              <Icon as={Feather} name="phone" size={5} color={'light.700'} />
+              <Text
+                fontFamily={'body'}
+                fontSize={'sm'}
+                color={'light.500'}
+                pl={3}
+              >
+                {phoneNumber}
+              </Text>
+            </HStack>
+          )}
 
-          <HStack alignItems={'center'} mb={5}>
-            <Icon as={Feather} name="mail" size={5} color={'light.700'} />
-            <Text
-              fontFamily={'body'}
-              fontSize={'sm'}
-              color={'light.500'}
-              pl={3}
-            >
-              marcioguedes@gmail.com
-            </Text>
-          </HStack>
+          {!!email && (
+            <HStack alignItems={'center'} mb={5}>
+              <Icon as={Feather} name="mail" size={5} color={'light.700'} />
+              <Text
+                fontFamily={'body'}
+                fontSize={'sm'}
+                color={'light.500'}
+                pl={3}
+              >
+                {email}
+              </Text>
+            </HStack>
+          )}
 
-          <HStack alignItems={'center'}>
-            <Icon as={Feather} name="at-sign" size={5} color={'light.700'} />
-            <Text
-              fontFamily={'body'}
-              fontSize={'sm'}
-              color={'light.500'}
-              pl={3}
-            >
-              marcioguedes
-            </Text>
-          </HStack>
+          {!!instagram && (
+            <HStack alignItems={'center'}>
+              <Icon as={Feather} name="at-sign" size={5} color={'light.700'} />
+              <Text
+                fontFamily={'body'}
+                fontSize={'sm'}
+                color={'light.500'}
+                pl={3}
+              >
+                {instagram}
+              </Text>
+            </HStack>
+          )}
         </VStack>
 
         <VStack pb={6} pt={4}>
@@ -166,11 +199,7 @@ export function Event() {
           </Heading>
 
           <Text fontFamily={'body'} fontSize={'md'} color={'light.500'}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut
-            libero dapibus, tristique sapien non, pharetra augue. Suspendisse
-            accumsan ex eu ultricies convallis. Morbi aliquet nunc felis, quis
-            lacinia nulla finibus vel. Nam nulla ex, sagittis eget fermentum
-            non, elementum vitae sapien. Suspendisse consequat euismod.
+            {description}
           </Text>
         </VStack>
       </VStack>

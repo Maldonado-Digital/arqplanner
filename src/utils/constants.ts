@@ -1,3 +1,39 @@
 import { Platform } from 'react-native'
 
 export const statusBarHeight = Platform.OS === 'android' ? 4 : 12
+
+export const calendarEventColors = [
+  '#0F25EE',
+  '#F8C40E',
+  '#FF38A4',
+  '#797979',
+  '#AD00FF',
+  '#0AAF87',
+]
+
+export const documentsCategories = [
+  {
+    label: 'Todos',
+    value: 'all',
+  },
+  {
+    label: 'Propostas',
+    value: 'offers',
+  },
+  {
+    label: 'Briefings',
+    value: 'briefings',
+  },
+  {
+    label: 'Contratos',
+    value: 'contracts',
+  },
+  {
+    label: 'Atas de Reunião',
+    value: 'meeting_minutes',
+  },
+  {
+    label: 'Outros',
+    value: 'other',
+  },
+]

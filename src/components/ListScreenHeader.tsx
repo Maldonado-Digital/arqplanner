@@ -1,10 +1,10 @@
 import { Feather } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
-import { AuthNavigatorRoutesProps } from '@routes/auth.routes'
+import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import {
   HStack,
   Heading,
-  IStackProps,
+  type IStackProps,
   Icon,
   Pressable,
   Text,
@@ -21,7 +21,7 @@ export function ListScreenHeader({
   subTitle,
   ...rest
 }: ScreenHeaderType) {
-  const navigation = useNavigation<AuthNavigatorRoutesProps>()
+  const navigation = useNavigation<AppNavigatorRoutesProps>()
 
   function handleGoBack() {
     navigation.goBack()

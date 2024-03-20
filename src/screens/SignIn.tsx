@@ -8,7 +8,6 @@ import { useAuth } from '@hooks/useAuth'
 import { useNavigation } from '@react-navigation/native'
 import type { AuthNavigatorRoutesProps } from '@routes/auth.routes'
 import { AppError } from '@utils/AppError'
-import axios, { AxiosError } from 'axios'
 import {
   Center,
   HStack,

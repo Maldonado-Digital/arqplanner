@@ -1,9 +1,12 @@
+import { Loading } from '@components/Loading'
 import { MenuCard } from '@components/MenuCard'
-import { SliderDots } from '@components/SliderDots'
 import { Feather } from '@expo/vector-icons'
 import { useAuth } from '@hooks/useAuth'
+import { useRefresh } from '@hooks/useRefresh'
 import { useNavigation } from '@react-navigation/native'
 import type { AppNavigatorRoutesProps } from '@routes/app.routes'
+import { useQuery } from '@tanstack/react-query'
+import { statusBarHeight } from '@utils/constants'
 import { getInitials } from '@utils/helpers'
 import {
   Center,
@@ -14,24 +17,75 @@ import {
   ScrollView,
   Text,
   VStack,
+  useToast,
 } from 'native-base'
+import { RefreshControl } from 'react-native'
+import { ProgressCircle } from 'react-native-svg-charts'
+import { getWorks } from 'src/api/queries/getWorks'
 
 export function Home() {
-  const { user } = useAuth()
+  const { user, signOut } = useAuth()
   const navigation = useNavigation<AppNavigatorRoutesProps>()
 
   const initials = getInitials(user.name)
 
+  const {
+    data: works,
+    error,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ['works'],
+    queryFn: getWorks,
+  })
+  const { refreshing, handleRefresh } = useRefresh(refetch)
+
+  const totalSteps = works?.docs[0]?.steps.length ?? 0
+  const stepsCompleted =
+    works?.docs[0]?.steps.filter(step => step.step.is_completed).length ?? 0
+  const progress = totalSteps ? stepsCompleted / totalSteps : totalSteps
+  const percentage = `${progress * 100}%`
+
   function handleShowProfile() {
     navigation.navigate('profile')
+  }
+
+  if (isLoading) return <Loading />
+
+  if (error) {
+    return (
+      <Center flex={1}>
+        <Text fontFamily={'heading'} fontSize={'xl'} mb={4} color={'light.700'}>
+          Erro ao buscar as informações.
+        </Text>
+        <Pressable onPress={signOut}>
+          <Text fontFamily={'heading'} fontSize={'md'} color={'red.700'}>
+            Voltar para login
+          </Text>
+        </Pressable>
+      </Center>
+    )
   }
 
   return (
     <ScrollView
       contentContainerStyle={{ flexGrow: 1 }}
       showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
+          progressViewOffset={statusBarHeight + 40}
+          style={{
+            height: refreshing ? 50 : 0,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        />
+      }
     >
-      <VStack flex={1} bg={'gray.50'} pt={24} pb={20}>
+      <VStack flex={1} bg={'gray.50'} pt={20} pb={20}>
         <HStack
           alignItems={'center'}
           justifyContent={'space-between'}
@@ -97,40 +151,33 @@ export function Home() {
               Confira o status geral de conclusão ao lado.
             </Text>
           </VStack>
-          <Center
-            w={34}
-            h={34}
-            rounded={'full'}
-            borderWidth={7}
-            borderColor={'muted.100'}
-          >
-            <Center
-              style={{ transform: [{ rotateZ: '45deg' }] }}
-              w={34}
-              h={34}
-              rounded={'full'}
-              borderWidth={7}
-              borderRightColor={'light.500'}
-              borderTopColor={'light.500'}
-              borderBottomColor={'transparent'}
-              borderLeftColor={'transparent'}
+
+          <ProgressCircle
+            style={{ height: 136, width: 136, position: 'relative' }}
+            progress={progress}
+            progressColor={'#797979'}
+            strokeWidth={7}
+          />
+
+          <Center position={'absolute'} right={'98px'}>
+            <Heading
+              fontFamily={'body'}
+              fontSize={'md'}
+              color={'light.400'}
+              mb={1}
             >
-              <Heading
-                fontFamily={'heading'}
-                fontSize={'md'}
-                color={'light.700'}
-                style={{ transform: [{ rotateZ: '-45deg' }] }}
-              >
-                50%
-              </Heading>
-            </Center>
+              Geral:
+            </Heading>
+            <Heading fontFamily={'heading'} fontSize={'md'} color={'light.700'}>
+              {percentage}
+            </Heading>
           </Center>
         </HStack>
 
         <VStack px={10} space={6}>
           <HStack maxW={'1'} w={'full'} space={6}>
             <MenuCard
-              onPress={() => navigation.navigate('schedule')}
+              onPress={() => navigation.navigate('agenda')}
               title="Agenda"
               icon={
                 <Icon as={Feather} name="calendar" size={6} color="#F9B34A" />
@@ -155,9 +202,7 @@ export function Home() {
               icon={<Icon as={Feather} name="box" size={6} color="#AD00FF" />}
             />
             <MenuCard
-              onPress={() =>
-                navigation.navigate('list_screen', { title: 'Documentos' })
-              }
+              onPress={() => navigation.navigate('documents')}
               title="Documentos"
               icon={
                 <Icon as={Feather} name="folder" size={6} color="#A9772C" />

@@ -1,9 +1,11 @@
 import { AuthProvider } from '@contexts/AuthContext'
 import { Routes } from '@routes/index'
+import { QueryClientProvider } from '@tanstack/react-query'
 import { THEME } from '@theme/index'
 import { useFonts } from 'expo-font'
 import { StatusBar } from 'expo-status-bar'
 import { NativeBaseProvider } from 'native-base'
+import { queryClient } from 'src/lib/react-query'
 // SplashScreen.preventAutoHideAsync()
 
 export default function App() {
@@ -25,7 +27,11 @@ export default function App() {
   return (
     <NativeBaseProvider theme={THEME}>
       <StatusBar style="dark" backgroundColor="transparent" translucent />
-      <AuthProvider>{fontsLoaded && <Routes />}</AuthProvider>
+      <AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          {fontsLoaded && <Routes />}
+        </QueryClientProvider>
+      </AuthProvider>
     </NativeBaseProvider>
   )
 }

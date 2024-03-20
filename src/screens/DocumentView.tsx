@@ -2,6 +2,7 @@ import { ApprovalFooter } from '@components/ApprovalFooter'
 import { Button } from '@components/Button'
 import { ListScreenHeader } from '@components/ListScreenHeader'
 import { Feather } from '@expo/vector-icons'
+import { useRoute } from '@react-navigation/native'
 import {
   Actionsheet,
   HStack,
@@ -13,49 +14,70 @@ import {
   VStack,
   useDisclose,
 } from 'native-base'
+import { useState } from 'react'
 import { Platform } from 'react-native'
 import PDF from 'react-native-pdf'
 
-const source = {
-  uri: 'https://prod-cdn.damacproperties.com/uploads/brochure/safa-one-super-luxury-collection-db-en.pdf?utm_source=&utm_medium=&utm_campaign=&campaign_id=a120Y000000uLMj',
-  cache: true,
+type DocumentViewRouteParams = {
+  title: string
+  source: {
+    uri: string
+    cache: boolean
+  }
 }
+
+// const source = {
+//   // uri: 'https://prod-cdn.damacproperties.com/uploads/brochure/safa-one-super-luxury-collection-db-en.pdf?utm_source=&utm_medium=&utm_campaign=&campaign_id=a120Y000000uLMj',
+//   uri: `http://localhost:3000`,
+//   cache: true,
+// }
 
 export function DocumentView() {
   const { isOpen, onOpen, onClose } = useDisclose()
+  const route = useRoute()
+  const { title, source } = route.params as DocumentViewRouteParams
+  const [comments, setComments] = useState('')
+  const [selectedOption, setSelectedOption] = useState<'approve' | 'reject'>(
+    'approve',
+  )
 
-  function handleOpenDisclose(disclose: 'approve' | 'reject') {
+  console.log(source)
+
+  function handleOpenDisclose(option: 'approve' | 'reject') {
+    setSelectedOption(option)
     onOpen()
   }
+
+  function handleSubmit() {}
 
   return (
     <VStack flex={1} bg={'gray.50'} position={'relative'}>
       <ListScreenHeader
-        title="Prestação de Serviços v1"
+        title={title}
         subTitle="13-05-23 | 05:00"
-        // mb={6}
+        mb={6}
         borderBottomColor={'muted.200'}
         borderBottomWidth={1}
       />
       <PDF
+        onError={error => console.log(error)}
         source={source}
         style={{
           flex: 1,
           borderTopColor: '#00000012',
           borderTopWidth: 1,
           paddingBottom: 16,
-          // paddingTop: 6,
         }}
         onLoadComplete={(nOfPages, filePath) => {
           console.log('Number of pages', nOfPages)
         }}
       />
-      <ApprovalFooter
+      {/* <ApprovalFooter
         position={'absolute'}
         bottom={0}
         left={0}
-        onDisclose={handleOpenDisclose}
-      />
+        onOpenDisclose={handleOpenDisclose}
+      /> */}
 
       <Actionsheet
         isOpen={isOpen}
@@ -80,7 +102,9 @@ export function DocumentView() {
                   color="light.700"
                   fontFamily={'heading'}
                 >
-                  Confirmar aprovação
+                  {selectedOption === 'reject'
+                    ? 'Confirmar reprovação'
+                    : 'Confirmar aprovação'}
                 </Heading>
 
                 <IconButton
@@ -107,7 +131,9 @@ export function DocumentView() {
                 color={'light.500'}
                 mb={6}
               >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                {selectedOption === 'reject'
+                  ? 'Clique no botão abaixo para reprovar. Caso deseje, insira um comentário adicional.'
+                  : 'Clique no botão abaixo para confirmar. Caso deseje, insira um comentário adicional.'}
               </Text>
 
               <TextArea
@@ -124,9 +150,21 @@ export function DocumentView() {
                 autoCompleteType={false}
                 focusOutlineColor="light.700"
                 _focus={{ bg: 'gray.50' }}
+                onChangeText={setComments}
               />
 
-              <Button title="Confirmar aprovação" rounded={'full'} />
+              <Button
+                title={
+                  selectedOption === 'reject'
+                    ? 'Confirmar reprovação'
+                    : 'Confirmar aprovação'
+                }
+                rounded={'full'}
+                fontFamily={'heading'}
+                fontSize={'md'}
+                variant={selectedOption === 'reject' ? 'subtle' : 'solid'}
+                onPress={handleSubmit}
+              />
             </VStack>
           </Actionsheet.Content>
         </KeyboardAvoidingView>

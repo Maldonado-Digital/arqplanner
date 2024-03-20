@@ -1,5 +1,12 @@
 import { Feather } from '@expo/vector-icons'
-import { Center, Heading, ICenterProps, Icon, Text, VStack } from 'native-base'
+import {
+  Center,
+  Heading,
+  type ICenterProps,
+  Icon,
+  Text,
+  VStack,
+} from 'native-base'
 
 type ListEmptyProps = ICenterProps & {
   icon: string
@@ -9,12 +16,7 @@ type ListEmptyProps = ICenterProps & {
 
 export function ListEmpty({ icon, title, message, ...rest }: ListEmptyProps) {
   return (
-    <VStack
-      alignItems={'center'}
-      justifyContent={'center'}
-      h={'full'}
-      {...rest}
-    >
+    <Center flex={1} minH={'full'} pb={6} {...rest}>
       <Center
         w={20}
         h={20}
@@ -45,6 +47,6 @@ export function ListEmpty({ icon, title, message, ...rest }: ListEmptyProps) {
       >
         {message}
       </Text>
-    </VStack>
+    </Center>
   )
 }

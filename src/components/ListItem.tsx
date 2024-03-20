@@ -1,19 +1,19 @@
 import { useNavigation } from '@react-navigation/native'
-import { AuthNavigatorRoutesProps } from '@routes/auth.routes'
+import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { Box, HStack, Heading, Text, VStack } from 'native-base'
-import { ReactNode } from 'react'
-import { TouchableOpacity, TouchableOpacityProps } from 'react-native'
+import type { ReactNode } from 'react'
+import { TouchableOpacity, type TouchableOpacityProps } from 'react-native'
 
 export type ItemStatus = 'pendente' | 'aprovado'
 
 type ListItemProps = TouchableOpacityProps & {
   title: string
   icon: ReactNode
-  status: ItemStatus
+  status?: ItemStatus
 }
 
 export function ListItem({ title, icon, status, ...rest }: ListItemProps) {
-  const navigation = useNavigation<AuthNavigatorRoutesProps>()
+  const navigation = useNavigation<AppNavigatorRoutesProps>()
 
   return (
     <TouchableOpacity {...rest}>
@@ -43,16 +43,18 @@ export function ListItem({ title, icon, status, ...rest }: ListItemProps) {
           </Text>
         </VStack>
 
-        <Box
-          py={1}
-          px={2}
-          rounded={'xl'}
-          bg={status === 'pendente' ? '#F8C40E26' : '#0AAF8726'}
-        >
-          <Text fontSize={'xs'} fontFamily={'heading'} color={'light.700'}>
-            {status.toLocaleUpperCase()}
-          </Text>
-        </Box>
+        {!!status && (
+          <Box
+            py={1}
+            px={2}
+            rounded={'xl'}
+            bg={status === 'pendente' ? '#F8C40E26' : '#0AAF8726'}
+          >
+            <Text fontSize={'xs'} fontFamily={'heading'} color={'light.700'}>
+              {status.toLocaleUpperCase()}
+            </Text>
+          </Box>
+        )}
       </HStack>
     </TouchableOpacity>
   )

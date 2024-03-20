@@ -12,9 +12,13 @@
     "@config-plugins/react-native-blob-util": "^7.0.0",
     "@config-plugins/react-native-pdf": "^7.0.0",
     "@hookform/resolvers": "^3.3.4",
+    "@react-native-async-storage/async-storage": "1.21.0",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.17",
+    "@tanstack/react-query": "^5.28.2",
+    "@types/react-native-svg-charts": "^5.0.16",
     "axios": "^1.6.7",
+    "date-fns": "^3.6.0",
     "expo": "~50.0.4",
     "expo-blur": "~12.9.1",
     "expo-dev-client": "~3.3.8",
@@ -31,8 +35,8 @@
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.29.0",
     "react-native-svg": "12.1.1",
-    "zod": "^3.22.4",
-    "@react-native-async-storage/async-storage": "1.21.0"
+    "react-native-svg-charts": "^5.4.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -60,7 +60,7 @@ export function Medias() {
         position={'absolute'}
         bottom={0}
         left={0}
-        onDisclose={handleOpenDisclose}
+        onOpenDisclose={handleOpenDisclose}
       />
 
       <Actionsheet

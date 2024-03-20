@@ -1,14 +1,14 @@
 import { useNavigation } from '@react-navigation/native'
-import { AuthNavigatorRoutesProps } from '@routes/auth.routes'
+import type { AuthNavigatorRoutesProps } from '@routes/auth.routes'
 import { BlurView } from 'expo-blur'
-import { Box, HStack, IBoxProps, Text } from 'native-base'
+import { Box, HStack, type IBoxProps, Text } from 'native-base'
 import { Button } from './Button'
 
 type DisclosureFooter = IBoxProps & {
-  onDisclose: (disclose: 'approve' | 'reject') => void
+  onOpenDisclose: (disclose: 'approve' | 'reject') => void
 }
 
-export function ApprovalFooter({ onDisclose, ...rest }: DisclosureFooter) {
+export function ApprovalFooter({ onOpenDisclose, ...rest }: DisclosureFooter) {
   const navigation = useNavigation<AuthNavigatorRoutesProps>()
 
   return (
@@ -40,8 +40,8 @@ export function ApprovalFooter({ onDisclose, ...rest }: DisclosureFooter) {
             w={22}
             h={10}
             rounded={'full'}
-            variant={'dismiss'}
-            onPress={() => onDisclose('reject')}
+            variant={'subtle'}
+            onPress={() => onOpenDisclose('reject')}
           />
 
           <Button
@@ -51,7 +51,7 @@ export function ApprovalFooter({ onDisclose, ...rest }: DisclosureFooter) {
             rounded={'full'}
             ml={2}
             variant={'solid'}
-            onPress={() => onDisclose('approve')}
+            onPress={() => onOpenDisclose('approve')}
           />
         </HStack>
       </BlurView>

@@ -6,13 +6,10 @@ import { Feather } from '@expo/vector-icons'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { useQuery } from '@tanstack/react-query'
+import { documentsCategories } from '@utils/constants'
 import { FlatList, Icon, VStack } from 'native-base'
 import { useState } from 'react'
-import { getWorks } from 'src/api/queries/getWorks'
-
-type ListScreenRouteParams = {
-  title: 'documents' | 'projects' | '3Ds' | 'Orçamentos'
-}
+import { type Document, getWorks } from 'src/api/queries/getWorks'
 
 const screenNameMap = {
   documents: 'documents',
@@ -21,37 +18,8 @@ const screenNameMap = {
   // Orçamentos: 'quotes',
 }
 
-const documents = [
-  'Orçamento Quarto-1 v1',
-  'Orçamento Quarto-1 v2',
-  'Orçamento Sala v1',
-  'Orçamento Sala v2',
-  'Contrato',
-  'Proposta Cozinha v1',
-  'Proposta Cozinha v2',
-  'Briefing v1',
-  'Briefing v2',
-  'Briefing v3',
-]
-
-const perspectives = [
-  'Proposta 3D Versão 1',
-  'Proposta 3D Versão 2',
-  'Proposta 3D Versão 3',
-  'Proposta 3D Versão 4',
-  'Proposta 3D Versão 6',
-]
-
-export function ListScreen() {
-  const route = useRoute()
-  const { title } = route.params as ListScreenRouteParams
-  const [selectedCategory, setSelectedCategory] = useState('Todos')
-  const [categories, setCategories] = useState([
-    'Todos',
-    'Propostas',
-    'Briefings',
-    'Contratos',
-  ])
+export function Documents() {
+  const [selectedCategory, setSelectedCategory] = useState('all')
 
   const {
     data: works,
@@ -62,35 +30,41 @@ export function ListScreen() {
     queryFn: getWorks,
   })
 
-  const listItems = works?.docs[0].documents
+  const documents = works?.docs[0].documents
+  const filteredDocuments = documents?.filter(
+    document =>
+      document.document.type === selectedCategory || selectedCategory === 'all',
+  )
 
+  console.log(documents)
   const navigation = useNavigation<AppNavigatorRoutesProps>()
 
-  function handleViewDocument() {
-    console.log('Navigate to document view')
-    // navigation.navigate('document_view')
-  }
-
-  function handleViewMedias(title: string) {
-    navigation.navigate('medias', { title })
+  function handleViewDocument(document: Document) {
+    navigation.navigate('document_view', {
+      title: document.document.title,
+      source: {
+        uri: `https://arqplanner-cms-staging.payloadcms.app${document.document.file.url}`,
+        cache: true,
+      },
+    })
   }
 
   return (
     <VStack flex={1} bg={'gray.50'}>
-      <ListScreenHeader title={title} bg={'white'} />
+      <ListScreenHeader title={'Documentos'} bg={'white'} />
 
       <FlatList
-        data={categories}
-        keyExtractor={item => item}
+        data={documentsCategories}
+        keyExtractor={item => item.value}
         horizontal
         renderItem={({ item }) => (
           <Category
-            name={item}
+            name={item.label}
             isActive={
-              selectedCategory.toLocaleUpperCase() === item.toLocaleUpperCase()
+              selectedCategory.toLocaleLowerCase() ===
+              item.value.toLocaleLowerCase()
             }
-            onPress={() => setSelectedCategory(item)}
-            onTouchStart={() => setSelectedCategory('')}
+            onPress={() => setSelectedCategory(item.value)}
           />
         )}
         showsHorizontalScrollIndicator={false}
@@ -100,30 +74,25 @@ export function ListScreen() {
         bg={'white'}
         borderBottomWidth={1}
         borderBottomColor={'#00000012'}
+        mb={6}
       />
 
       <FlatList
-        data={listItems}
+        data={filteredDocuments}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
           <ListItem
             title={item.document.title}
-            // status={
-            //   ['pendente', 'aprovado'].at(
-            //     Math.round(Math.random()),
-            //   ) as ItemStatus
-            // }
             icon={
               <Icon as={Feather} name="folder" size={6} color="light.700" />
             }
-            onPress={handleViewDocument}
-            // onPress={() => handleViewMedias(item)}
+            onPress={() => handleViewDocument(item)}
           />
         )}
         showsVerticalScrollIndicator={false}
         _contentContainerStyle={{
           paddingBottom: 20,
-          ...(!documents.length && { flex: 1, justifyContent: 'center' }),
+          ...(!documents?.length && { flex: 1, justifyContent: 'center' }),
         }}
         ListEmptyComponent={() => (
           <ListEmpty

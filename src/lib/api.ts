@@ -4,6 +4,7 @@ import axios from 'axios'
 const api = axios.create({
   withCredentials: true,
   baseURL: 'https://arqplanner-cms-staging.payloadcms.app',
+  // baseURL: 'http://192.168.1.100:3000',
 })
 
 api.interceptors.response.use(

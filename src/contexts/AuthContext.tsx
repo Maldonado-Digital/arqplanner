@@ -1,3 +1,4 @@
+import { Toast } from '@components/Toast'
 import type { UserDTO } from '@dtos/UserDTO'
 import {
   getTokenFromStorage,
@@ -9,6 +10,8 @@ import {
   removeUserFromStorage,
   saveUserInStorage,
 } from '@storage/storageUser'
+import { AppError } from '@utils/AppError'
+import { useToast } from 'native-base'
 import { type ReactNode, createContext, useEffect, useState } from 'react'
 import { api } from 'src/lib/api'
 
@@ -24,11 +27,12 @@ export const AuthContext = createContext<AuthContextProps>(
 )
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const toast = useToast()
   const [user, setUser] = useState<UserDTO>({} as UserDTO)
   const [isLoadingUserFromStorage, setIsLoadingUserFromStorage] = useState(true)
 
   async function updateUserAndToken(userData: UserDTO, token: string) {
-    api.defaults.headers.common.Authorization = `Bearer ${token}`
+    api.defaults.headers.common.Authorization = `JWT ${token}`
     setUser(userData)
   }
 
@@ -55,13 +59,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         },
       )
 
+      console.log(data)
+
+      if (!data.user?.organization?.id || !data.user.works[0]) {
+        throw new AppError('Erro ao carregar as informações')
+      }
+
       if (data.user && data.token) {
         await updateUserAndTokenInStorage(data.user, data.token)
         updateUserAndToken(data.user, data.token)
       }
     } catch (error) {
-      // biome-ignore lint/complexity/noUselessCatch: <explanation>
-      throw error
+      const isAppError = error instanceof AppError
+
+      if (isAppError) {
+        toast.show({
+          duration: 3000,
+          render: ({ id }) => (
+            <Toast
+              id={id}
+              message="Erro ao carregar as informações"
+              status="error"
+            />
+          ),
+        })
+      }
     } finally {
       setIsLoadingUserFromStorage(false)
     }
