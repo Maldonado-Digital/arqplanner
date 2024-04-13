@@ -14,21 +14,19 @@ import {
 type ScreenHeaderType = IStackProps & {
   title: string
   subTitle?: string
+  onClickSettings: () => void
 }
 
 export function ListScreenHeader({
   title,
   subTitle,
+  onClickSettings,
   ...rest
 }: ScreenHeaderType) {
   const navigation = useNavigation<AppNavigatorRoutesProps>()
 
   function handleGoBack() {
     navigation.goBack()
-  }
-
-  function handleShowProfile() {
-    navigation.navigate('profile')
   }
 
   return (
@@ -55,7 +53,7 @@ export function ListScreenHeader({
         )}
       </VStack>
 
-      <Pressable onPress={handleShowProfile}>
+      <Pressable onPress={onClickSettings}>
         <Icon as={Feather} name="more-vertical" color={'light.700'} size={6} />
       </Pressable>
     </HStack>

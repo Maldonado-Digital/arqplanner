@@ -176,6 +176,7 @@ export function Agenda() {
           keyExtractor={item => item.id}
           renderItem={({ item, index }) => (
             <EventItem
+              title={item.event.title}
               markerColor={
                 calendarEventColors[index] ||
                 calendarEventColors[index - calendarEventColors.length]

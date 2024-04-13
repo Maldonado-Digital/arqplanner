@@ -9,8 +9,6 @@ type DisclosureFooter = IBoxProps & {
 }
 
 export function ApprovalFooter({ onOpenDisclose, ...rest }: DisclosureFooter) {
-  const navigation = useNavigation<AuthNavigatorRoutesProps>()
-
   return (
     <Box w={'full'} borderTopColor={'muted.200'} borderTopWidth={1} {...rest}>
       <BlurView

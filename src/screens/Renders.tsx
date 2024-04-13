@@ -6,13 +6,13 @@ import { Feather } from '@expo/vector-icons'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { useQuery } from '@tanstack/react-query'
-import { documentsCategories } from '@utils/constants'
+import { projectStatus } from '@utils/constants'
 import { FlatList, Icon, VStack } from 'native-base'
 import { useState } from 'react'
-import { type Document, getWorks } from 'src/api/queries/getWorks'
+import { type Render, getWorks } from 'src/api/queries/getWorks'
 
-export function Documents() {
-  const [selectedCategory, setSelectedCategory] = useState('all')
+export function Renders() {
+  const [selectedStatus, setSelectedStatus] = useState('all')
 
   const {
     data: works,
@@ -23,42 +23,35 @@ export function Documents() {
     queryFn: getWorks,
   })
 
-  const documents = works?.docs[0].documents
-  const filteredDocuments = documents?.filter(
-    document =>
-      document.document.type === selectedCategory || selectedCategory === 'all',
+  const renders = works?.docs[0].renders
+  const filteredRenders = renders?.filter(
+    render =>
+      render.render.status === selectedStatus || selectedStatus === 'all',
   )
 
-  console.log(documents)
+  console.log(renders)
   const navigation = useNavigation<AppNavigatorRoutesProps>()
 
-  function handleViewDocument(document: Document) {
-    navigation.navigate('document_view', {
-      title: document.document.title,
-      hasApprovalFlow: false,
-      source: {
-        uri: `https://arqplanner-cms-staging.payloadcms.app${document.document.file.url}`,
-        cache: true,
-      },
-    })
+  function handleViewMedia(renderId: string) {
+    navigation.navigate('medias', { id: renderId, hasApprovalFlow: true })
   }
 
   return (
     <VStack flex={1} bg={'gray.50'}>
-      <ListScreenHeader title={'Documentos'} bg={'white'} />
+      <ListScreenHeader title={'Projetos'} bg={'white'} />
 
       <FlatList
-        data={documentsCategories}
+        data={projectStatus}
         keyExtractor={item => item.value}
         horizontal
         renderItem={({ item }) => (
           <Category
             name={item.label}
             isActive={
-              selectedCategory.toLocaleLowerCase() ===
+              selectedStatus.toLocaleLowerCase() ===
               item.value.toLocaleLowerCase()
             }
-            onPress={() => setSelectedCategory(item.value)}
+            onPress={() => setSelectedStatus(item.value)}
           />
         )}
         showsHorizontalScrollIndicator={false}
@@ -72,28 +65,27 @@ export function Documents() {
       />
 
       <FlatList
-        data={filteredDocuments}
+        data={filteredRenders}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
           <ListItem
-            title={item.document.title}
-            icon={
-              <Icon as={Feather} name="folder" size={6} color="light.700" />
-            }
-            onPress={() => handleViewDocument(item)}
+            title={item.render.title}
+            icon={<Icon as={Feather} name="box" size={6} color="light.700" />}
+            onPress={() => handleViewMedia(item.id)}
+            status={item.render.status}
           />
         )}
         showsVerticalScrollIndicator={false}
         _contentContainerStyle={{
           paddingBottom: 20,
-          ...(!documents?.length && { flex: 1, justifyContent: 'center' }),
+          ...(!renders?.length && { flex: 1, justifyContent: 'center' }),
         }}
         ListEmptyComponent={() => (
           <ListEmpty
             px={10}
-            icon="folder"
-            title="Nenhum documento foi encontrado"
-            message="Você ainda não possui nenhum documento adicionado."
+            icon="box"
+            title="Nenhum 3D foi encontrado"
+            message="Você ainda não possui nenhuma imagem 3D adicionada."
           />
         )}
       />

@@ -42,16 +42,84 @@ export type Document = {
   id: string
 }
 
+export type Project = {
+  project: {
+    title: string
+    status: 'pending' | 'approved' | 'archived'
+    type: 'executive' | 'wood_detailing' | 'wet_spaces_detailing'
+    file: {
+      id: string
+      organization: string
+      filename: string
+      mimeType: string
+      filesize: number
+      createdAt: string
+      updatedAt: string
+      url: string
+    }
+  }
+  id: string
+}
+
+export type Render = {
+  render: {
+    title: string
+    status: 'pending' | 'approved' | 'archived'
+    files: [
+      {
+        uploads: {
+          id: string
+          organization: string
+          filename: string
+          mimeType: string
+          filesize: number
+          width: number
+          height: number
+          createdAt: string
+          updatedAt: string
+          url: string
+        }
+        id: string
+      },
+    ]
+  }
+  id: string
+}
+
+export type Photo = {
+  photo: {
+    title: string
+    files: [
+      {
+        uploads: {
+          id: string
+          organization: string
+          filename: string
+          mimeType: string
+          filesize: number
+          width: number
+          height: number
+          createdAt: string
+          updatedAt: string
+          url: string
+        }
+        id: string
+      },
+    ]
+  }
+  id: string
+}
+
 type GetWorksResponse = {
   docs: Array<{
     id: string
     title: string
     steps: Array<Step>
     events: Array<Event>
-    // projects: []
-    // renders: []
+    projects: Array<Project>
+    renders: Array<Render>
     documents: Array<Document>
-    // photos: []
+    photos: Array<Photo>
     // quotes: []
     organization: {
       id: string

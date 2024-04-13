@@ -1,10 +1,11 @@
 import { useNavigation } from '@react-navigation/native'
 import type { AppNavigatorRoutesProps } from '@routes/app.routes'
+import { projectStatus } from '@utils/constants'
 import { Box, HStack, Heading, Text, VStack } from 'native-base'
 import type { ReactNode } from 'react'
 import { TouchableOpacity, type TouchableOpacityProps } from 'react-native'
 
-export type ItemStatus = 'pendente' | 'aprovado'
+export type ItemStatus = 'pending' | 'approved' | 'archived'
 
 type ListItemProps = TouchableOpacityProps & {
   title: string
@@ -14,6 +15,9 @@ type ListItemProps = TouchableOpacityProps & {
 
 export function ListItem({ title, icon, status, ...rest }: ListItemProps) {
   const navigation = useNavigation<AppNavigatorRoutesProps>()
+  const statusText = status
+    ? (projectStatus.find(s => s.value === status)?.label as string)
+    : ''
 
   return (
     <TouchableOpacity {...rest}>
@@ -48,10 +52,10 @@ export function ListItem({ title, icon, status, ...rest }: ListItemProps) {
             py={1}
             px={2}
             rounded={'xl'}
-            bg={status === 'pendente' ? '#F8C40E26' : '#0AAF8726'}
+            bg={status === 'pending' ? '#F8C40E26' : '#0AAF8726'}
           >
             <Text fontSize={'xs'} fontFamily={'heading'} color={'light.700'}>
-              {status.toLocaleUpperCase()}
+              {statusText.toLocaleUpperCase()}
             </Text>
           </Box>
         )}

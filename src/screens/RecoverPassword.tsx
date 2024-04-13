@@ -2,7 +2,7 @@ import { Button } from '@components/Button'
 import { Input } from '@components/Input'
 import { Feather } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
-import { AuthNavigatorRoutesProps } from '@routes/auth.routes'
+import type { AuthNavigatorRoutesProps } from '@routes/auth.routes'
 import { statusBarHeight } from '@utils/constants'
 import { Center, Heading, Icon, Pressable, Text, VStack } from 'native-base'
 

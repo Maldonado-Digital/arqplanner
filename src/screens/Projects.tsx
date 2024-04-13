@@ -6,13 +6,13 @@ import { Feather } from '@expo/vector-icons'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { useQuery } from '@tanstack/react-query'
-import { documentsCategories } from '@utils/constants'
+import { projectStatus } from '@utils/constants'
 import { FlatList, Icon, VStack } from 'native-base'
 import { useState } from 'react'
-import { type Document, getWorks } from 'src/api/queries/getWorks'
+import { type Project, getWorks } from 'src/api/queries/getWorks'
 
-export function Documents() {
-  const [selectedCategory, setSelectedCategory] = useState('all')
+export function Projects() {
+  const [selectedStatus, setSelectedStatus] = useState('all')
 
   const {
     data: works,
@@ -23,21 +23,22 @@ export function Documents() {
     queryFn: getWorks,
   })
 
-  const documents = works?.docs[0].documents
-  const filteredDocuments = documents?.filter(
-    document =>
-      document.document.type === selectedCategory || selectedCategory === 'all',
+  const projects = works?.docs[0].projects
+  const filteredProjects = projects?.filter(
+    project =>
+      project.project.status === selectedStatus || selectedStatus === 'all',
   )
 
-  console.log(documents)
+  console.log(projects)
   const navigation = useNavigation<AppNavigatorRoutesProps>()
 
-  function handleViewDocument(document: Document) {
+  function handleViewDocument(project: Project) {
     navigation.navigate('document_view', {
-      title: document.document.title,
-      hasApprovalFlow: false,
+      title: project.project.title,
+      hasApprovalFlow: true,
       source: {
-        uri: `https://arqplanner-cms-staging.payloadcms.app${document.document.file.url}`,
+        // uri: `https://arqplanner-cms-staging.payloadcms.app${project.project.file.url}`,
+        uri: `http://192.168.1.100:3000${project.project.file.url}`,
         cache: true,
       },
     })
@@ -45,20 +46,24 @@ export function Documents() {
 
   return (
     <VStack flex={1} bg={'gray.50'}>
-      <ListScreenHeader title={'Documentos'} bg={'white'} />
+      <ListScreenHeader
+        title={'Projetos'}
+        bg={'white'}
+        onClickSettings={() => {}}
+      />
 
       <FlatList
-        data={documentsCategories}
+        data={projectStatus}
         keyExtractor={item => item.value}
         horizontal
         renderItem={({ item }) => (
           <Category
             name={item.label}
             isActive={
-              selectedCategory.toLocaleLowerCase() ===
+              selectedStatus.toLocaleLowerCase() ===
               item.value.toLocaleLowerCase()
             }
-            onPress={() => setSelectedCategory(item.value)}
+            onPress={() => setSelectedStatus(item.value)}
           />
         )}
         showsHorizontalScrollIndicator={false}
@@ -72,28 +77,29 @@ export function Documents() {
       />
 
       <FlatList
-        data={filteredDocuments}
+        data={filteredProjects}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
           <ListItem
-            title={item.document.title}
+            title={item.project.title}
             icon={
-              <Icon as={Feather} name="folder" size={6} color="light.700" />
+              <Icon as={Feather} name="layout" size={6} color="light.700" />
             }
             onPress={() => handleViewDocument(item)}
+            status={item.project.status}
           />
         )}
         showsVerticalScrollIndicator={false}
         _contentContainerStyle={{
           paddingBottom: 20,
-          ...(!documents?.length && { flex: 1, justifyContent: 'center' }),
+          ...(!projects?.length && { flex: 1, justifyContent: 'center' }),
         }}
         ListEmptyComponent={() => (
           <ListEmpty
             px={10}
             icon="folder"
-            title="Nenhum documento foi encontrado"
-            message="Você ainda não possui nenhum documento adicionado."
+            title="Nenhum projeto foi encontrado"
+            message="Você ainda não possui nenhum projeto adicionado."
           />
         )}
       />

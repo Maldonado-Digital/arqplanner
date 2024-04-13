@@ -60,7 +60,7 @@ export function Home() {
         </Text>
         <Pressable onPress={signOut}>
           <Text fontFamily={'heading'} fontSize={'md'} color={'red.700'}>
-            Voltar para login
+            Fazer login novamente
           </Text>
         </Pressable>
       </Center>
@@ -81,6 +81,7 @@ export function Home() {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'center',
+            backgroundColor: '#fafafa',
           }}
         />
       }
@@ -184,9 +185,7 @@ export function Home() {
               }
             />
             <MenuCard
-              onPress={() =>
-                navigation.navigate('list_screen', { title: 'Projetos' })
-              }
+              onPress={() => navigation.navigate('projects')}
               title="Projetos"
               icon={
                 <Icon as={Feather} name="layout" size={6} color="#0F25EE" />
@@ -195,9 +194,7 @@ export function Home() {
           </HStack>
           <HStack maxW={'1'} w={'full'} space={6}>
             <MenuCard
-              onPress={() =>
-                navigation.navigate('list_screen', { title: '3Ds' })
-              }
+              onPress={() => navigation.navigate('renders')}
               title="3Ds"
               icon={<Icon as={Feather} name="box" size={6} color="#AD00FF" />}
             />
@@ -211,16 +208,12 @@ export function Home() {
           </HStack>
           <HStack maxW={'1'} w={'full'} space={6}>
             <MenuCard
-              onPress={() =>
-                navigation.navigate('list_screen', { title: 'Fotos' })
-              }
+              onPress={() => navigation.navigate('photos')}
               title="Fotos"
               icon={<Icon as={Feather} name="image" size={6} color="#FF38A4" />}
             />
             <MenuCard
-              onPress={() =>
-                navigation.navigate('list_screen', { title: 'Orçamentos' })
-              }
+              onPress={() => navigation.navigate('quotes')}
               title="Orçamentos"
               icon={
                 <Icon

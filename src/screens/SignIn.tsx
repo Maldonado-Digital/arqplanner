@@ -62,6 +62,7 @@ export function SignIn() {
     try {
       await signIn(email, password)
     } catch (err) {
+      console.log('Erro', err)
       const isAppError = err instanceof AppError
       const message = isAppError
         ? 'Email e senha incorretos'
