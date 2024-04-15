@@ -49,7 +49,8 @@ export function Medias() {
   const { photo } = works?.docs[0].photos.find(r => r.id === id) as Photo
   const images = photo.files.map(({ uploads }) => ({
     key: uploads.id,
-    uri: `http://192.168.1.100:3000${uploads.url}`,
+    uri: `https://arqplanner-cms-staging.payloadcms.app${uploads.url}`,
+    // uri: `http://192.168.1.100:3000${uploads.url}`,
   }))
 
   console.log(images)

@@ -37,8 +37,8 @@ export function Projects() {
       title: project.project.title,
       hasApprovalFlow: true,
       source: {
-        // uri: `https://arqplanner-cms-staging.payloadcms.app${project.project.file.url}`,
-        uri: `http://192.168.1.100:3000${project.project.file.url}`,
+        uri: `https://arqplanner-cms-staging.payloadcms.app${project.project.file.url}`,
+        // uri: `http://192.168.1.100:3000${project.project.file.url}`,
         cache: true,
       },
     })
