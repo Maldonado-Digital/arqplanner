@@ -22,9 +22,7 @@ export type AuthContextProps = {
   signOut: () => Promise<void>
 }
 
-export const AuthContext = createContext<AuthContextProps>(
-  {} as AuthContextProps,
-)
+export const AuthContext = createContext<AuthContextProps>({} as AuthContextProps)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const toast = useToast()
@@ -76,11 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         toast.show({
           duration: 3000,
           render: ({ id }) => (
-            <Toast
-              id={id}
-              message="Erro ao carregar as informações"
-              status="error"
-            />
+            <Toast id={id} message="Erro ao carregar as informações" status="error" />
           ),
         })
       }
@@ -114,6 +108,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     loadUserData()
   }, [])

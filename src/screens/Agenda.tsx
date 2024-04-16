@@ -102,8 +102,8 @@ export function Agenda() {
           Erro ao buscar as informações.
         </Text>
         <Pressable onPress={signOut}>
-          <Text fontFamily={'heading'} fontSize={'md'} color={'red.700'}>
-            Voltar para login
+          <Text fontFamily={'heading'} fontSize={'md'} color={'light.500'}>
+            Fazer login novamente
           </Text>
         </Pressable>
       </Center>
@@ -132,23 +132,13 @@ export function Agenda() {
         <Pressable alignSelf={'flex-start'} onPress={handleGoBack} mb={6}>
           <Icon as={Feather} name="arrow-left" color={'light.700'} size={6} />
         </Pressable>
-        <HStack
-          w={'full'}
-          mb={6}
-          alignItems={'center'}
-          justifyContent={'space-between'}
-        >
+        <HStack w={'full'} mb={6} alignItems={'center'} justifyContent={'space-between'}>
           <Heading fontFamily={'heading'} fontSize={'4xl'}>
             Agenda
           </Heading>
 
           <Pressable>
-            <Icon
-              as={Feather}
-              name="more-vertical"
-              color={'light.700'}
-              size={6}
-            />
+            <Icon as={Feather} name="more-vertical" color={'light.700'} size={6} />
           </Pressable>
         </HStack>
 
@@ -161,12 +151,7 @@ export function Agenda() {
       </VStack>
 
       <VStack flex={1}>
-        <Heading
-          fontFamily={'heading'}
-          color={'light.700'}
-          fontSize={'md'}
-          px={10}
-        >
+        <Heading fontFamily={'heading'} color={'light.700'} fontSize={'md'} px={10}>
           {selectedDateText}
         </Heading>
 
@@ -194,7 +179,6 @@ export function Agenda() {
           _contentContainerStyle={{ paddingBottom: 20, mt: 6 }}
           ListEmptyComponent={() => (
             <ListEmpty
-              mt={6}
               icon="calendar"
               title="Nenhum evento na data selecionada"
               message="Você não possui nenhum evento na data selecionada."

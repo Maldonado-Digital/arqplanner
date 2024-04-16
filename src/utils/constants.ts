@@ -44,12 +44,12 @@ export const projectStatus = [
     value: 'all',
   },
   {
-    label: 'Pendente',
-    value: 'pending',
-  },
-  {
     label: 'Aprovado',
     value: 'approved',
+  },
+  {
+    label: 'Pendente',
+    value: 'pending',
   },
   {
     label: 'Arquivado',

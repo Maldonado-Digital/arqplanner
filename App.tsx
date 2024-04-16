@@ -5,6 +5,8 @@ import { THEME } from '@theme/index'
 import { useFonts } from 'expo-font'
 import { StatusBar } from 'expo-status-bar'
 import { NativeBaseProvider } from 'native-base'
+import 'react-native-gesture-handler'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { queryClient } from 'src/lib/react-query'
 // SplashScreen.preventAutoHideAsync()
 
@@ -26,12 +28,14 @@ export default function App() {
 
   return (
     <NativeBaseProvider theme={THEME}>
-      <StatusBar style="dark" backgroundColor="transparent" translucent />
-      <AuthProvider>
-        <QueryClientProvider client={queryClient}>
-          {fontsLoaded && <Routes />}
-        </QueryClientProvider>
-      </AuthProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <StatusBar style="dark" backgroundColor="transparent" translucent />
+        <AuthProvider>
+          <QueryClientProvider client={queryClient}>
+            {fontsLoaded && <Routes />}
+          </QueryClientProvider>
+        </AuthProvider>
+      </GestureHandlerRootView>
     </NativeBaseProvider>
   )
 }

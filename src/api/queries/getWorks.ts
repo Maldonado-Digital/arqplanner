@@ -110,6 +110,27 @@ export type Photo = {
   id: string
 }
 
+export type Quote = {
+  quote: {
+    title: string
+    file: 
+      {
+          id: string
+          organization: string
+          filename: string
+          mimeType: string
+          filesize: number
+          width: number
+          height: number
+          createdAt: string
+          updatedAt: string
+          url: string
+        }
+        id: string
+  }
+  id: string
+}
+
 type GetWorksResponse = {
   docs: Array<{
     id: string
@@ -120,7 +141,7 @@ type GetWorksResponse = {
     renders: Array<Render>
     documents: Array<Document>
     photos: Array<Photo>
-    // quotes: []
+    quotes: Array<Quote>
     organization: {
       id: string
       name: string

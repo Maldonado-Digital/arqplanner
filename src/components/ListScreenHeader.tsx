@@ -14,7 +14,7 @@ import {
 type ScreenHeaderType = IStackProps & {
   title: string
   subTitle?: string
-  onClickSettings: () => void
+  onClickSettings?: () => void
 }
 
 export function ListScreenHeader({
@@ -33,16 +33,15 @@ export function ListScreenHeader({
     <HStack
       bg={'white'}
       pb={6}
-      pt={16}
       px={10}
       alignItems={'center'}
       justifyContent={'space-between'}
       {...rest}
     >
-      <Pressable onPress={handleGoBack} pr={4}>
+      <Pressable onPress={handleGoBack}>
         <Icon as={Feather} name="arrow-left" color={'light.700'} size={6} />
       </Pressable>
-      <VStack alignItems={'center'}>
+      <VStack alignItems={'center'} alignSelf={'center'}>
         <Heading color={'light.700'} fontSize={'xl'} fontFamily={'heading'}>
           {title}
         </Heading>

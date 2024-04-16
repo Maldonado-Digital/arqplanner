@@ -5,7 +5,6 @@ import {
   type ICenterProps,
   Icon,
   Text,
-  VStack,
 } from 'native-base'
 
 type ListEmptyProps = ICenterProps & {
@@ -16,7 +15,7 @@ type ListEmptyProps = ICenterProps & {
 
 export function ListEmpty({ icon, title, message, ...rest }: ListEmptyProps) {
   return (
-    <Center flex={1} minH={'full'} pb={6} {...rest}>
+    <Center flex={1} pb={6} {...rest}>
       <Center
         w={20}
         h={20}

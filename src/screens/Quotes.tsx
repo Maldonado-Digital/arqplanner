@@ -9,10 +9,10 @@ import { useQuery } from '@tanstack/react-query'
 import { projectStatus } from '@utils/constants'
 import { FlatList, Icon, VStack } from 'native-base'
 import { useState } from 'react'
-import { type Project, type Render, getWorks } from 'src/api/queries/getWorks'
+import { type Project, type Quote, type Render, getWorks } from 'src/api/queries/getWorks'
 
 export function Quotes() {
-  const [selectedStatus, setSelectedStatus] = useState('all')
+  const navigation = useNavigation<AppNavigatorRoutesProps>()
 
   const {
     data: works,
@@ -23,19 +23,15 @@ export function Quotes() {
     queryFn: getWorks,
   })
 
-  const projects = works?.docs[0].projects
-  const filteredProjects = projects?.filter(
-    project =>
-      project.project.status === selectedStatus || selectedStatus === 'all',
-  )
-  const navigation = useNavigation<AppNavigatorRoutesProps>()
+  const quotes = works?.docs[0].quotes
 
-  function handleViewDocument(project: Project) {
+  function handleViewDocument(quote: Quote) {
     navigation.navigate('document_view', {
-      title: project.project.title,
-      hasApprovalFlow: true,
+      title: quote.quote.title,
+      hasApprovalFlow: false,
       source: {
-        uri: `https://arqplanner-cms-staging.payloadcms.app${project.project.file.url}`,
+        // uri: `https://arqplanner-cms-staging.payloadcms.app${project.project.file.url}`,
+        uri: `http://192.168.1.100:3000${quote.quote.file.url}`,
         cache: true,
       },
     })
@@ -46,19 +42,15 @@ export function Quotes() {
       <ListScreenHeader title={'Orçamentos'} bg={'white'} />
 
       <FlatList
-        data={projectStatus}
+        data={[
+          {
+            label: 'Todos',
+            value: 'all',
+          },
+        ]}
         keyExtractor={item => item.value}
         horizontal
-        renderItem={({ item }) => (
-          <Category
-            name={item.label}
-            isActive={
-              selectedStatus.toLocaleLowerCase() ===
-              item.value.toLocaleLowerCase()
-            }
-            onPress={() => setSelectedStatus(item.value)}
-          />
-        )}
+        renderItem={({ item }) => <Category name={item.label} isActive />}
         showsHorizontalScrollIndicator={false}
         _contentContainerStyle={{ px: 6 }}
         maxH={10}
@@ -70,34 +62,32 @@ export function Quotes() {
       />
 
       <FlatList
-        data={filteredProjects}
+        data={quotes}
         keyExtractor={item => item.id}
+        style={{
+          shadowColor: '#000000',
+          shadowOpacity: 0.05,
+          shadowRadius: 30,
+          shadowOffset: { width: 0, height: 4 },
+        }}
         renderItem={({ item }) => (
           <ListItem
-            title={item.project.title}
-            icon={
-              <Icon
-                as={Feather}
-                name="dollar-sign"
-                size={6}
-                color="light.700"
-              />
-            }
+            title={item.quote.title}
+            icon={<Icon as={Feather} name="dollar-sign" size={6} color="light.700" />}
             onPress={() => handleViewDocument(item)}
-            status={item.project.status}
           />
         )}
         showsVerticalScrollIndicator={false}
         _contentContainerStyle={{
           paddingBottom: 20,
-          ...(!projects?.length && { flex: 1, justifyContent: 'center' }),
+          ...(!quotes?.length && { flex: 1, justifyContent: 'center' }),
         }}
         ListEmptyComponent={() => (
           <ListEmpty
             px={10}
-            icon="box"
+            icon="dollar-sign"
             title="Nenhum orçamento encontrado"
-            message="Você ainda não possui nenhum orçamento adicionada."
+            message="Você ainda não possui nenhum orçamento adicionado."
           />
         )}
       />

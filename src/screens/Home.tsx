@@ -59,7 +59,7 @@ export function Home() {
           Erro ao buscar as informações.
         </Text>
         <Pressable onPress={signOut}>
-          <Text fontFamily={'heading'} fontSize={'md'} color={'red.700'}>
+          <Text fontFamily={'heading'} fontSize={'md'} color={'light.500'}>
             Fazer login novamente
           </Text>
         </Pressable>
@@ -87,12 +87,7 @@ export function Home() {
       }
     >
       <VStack flex={1} bg={'gray.50'} pt={20} pb={20}>
-        <HStack
-          alignItems={'center'}
-          justifyContent={'space-between'}
-          mb={12}
-          px={10}
-        >
+        <HStack alignItems={'center'} justifyContent={'space-between'} mb={12} px={10}>
           <Heading fontFamily={'heading'} fontSize={'4xl'} color={'black'}>
             Bem-vindo!
           </Heading>
@@ -161,12 +156,7 @@ export function Home() {
           />
 
           <Center position={'absolute'} right={'98px'}>
-            <Heading
-              fontFamily={'body'}
-              fontSize={'md'}
-              color={'light.400'}
-              mb={1}
-            >
+            <Heading fontFamily={'body'} fontSize={'md'} color={'light.400'} mb={1}>
               Geral:
             </Heading>
             <Heading fontFamily={'heading'} fontSize={'md'} color={'light.700'}>
@@ -180,16 +170,12 @@ export function Home() {
             <MenuCard
               onPress={() => navigation.navigate('agenda')}
               title="Agenda"
-              icon={
-                <Icon as={Feather} name="calendar" size={6} color="#F9B34A" />
-              }
+              icon={<Icon as={Feather} name="calendar" size={6} color="#F9B34A" />}
             />
             <MenuCard
               onPress={() => navigation.navigate('projects')}
               title="Projetos"
-              icon={
-                <Icon as={Feather} name="layout" size={6} color="#0F25EE" />
-              }
+              icon={<Icon as={Feather} name="layout" size={6} color="#0F25EE" />}
             />
           </HStack>
           <HStack maxW={'1'} w={'full'} space={6}>
@@ -201,9 +187,7 @@ export function Home() {
             <MenuCard
               onPress={() => navigation.navigate('documents')}
               title="Documentos"
-              icon={
-                <Icon as={Feather} name="folder" size={6} color="#A9772C" />
-              }
+              icon={<Icon as={Feather} name="folder" size={6} color="#A9772C" />}
             />
           </HStack>
           <HStack maxW={'1'} w={'full'} space={6}>
@@ -215,14 +199,7 @@ export function Home() {
             <MenuCard
               onPress={() => navigation.navigate('quotes')}
               title="Orçamentos"
-              icon={
-                <Icon
-                  as={Feather}
-                  name="dollar-sign"
-                  size={6}
-                  color="#379D60"
-                />
-              }
+              icon={<Icon as={Feather} name="dollar-sign" size={6} color="#379D60" />}
             />
           </HStack>
         </VStack>

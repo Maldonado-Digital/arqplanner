@@ -20,9 +20,11 @@ import {
 import { useState } from 'react'
 import { Platform, Pressable } from 'react-native'
 import PDF from 'react-native-pdf'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 type DocumentViewRouteParams = {
   title: string
+  subTitle?: string
   hasApprovalFlow: boolean
   source: {
     uri: string
@@ -33,14 +35,12 @@ type DocumentViewRouteParams = {
 export function DocumentView() {
   const { isOpen, onOpen, onClose } = useDisclose()
   const route = useRoute()
-  const { title, source, hasApprovalFlow } =
+  const { title, subTitle, source, hasApprovalFlow } =
     route.params as DocumentViewRouteParams
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [isResolved, setIsResolved] = useState(false)
   const [comments, setComments] = useState('')
-  const [selectedOption, setSelectedOption] = useState<'approve' | 'reject'>(
-    'approve',
-  )
+  const [selectedOption, setSelectedOption] = useState<'approve' | 'reject'>('approve')
 
   function handleOpenDisclose(option: 'approve' | 'reject') {
     setSelectedOption(option)
@@ -55,8 +55,7 @@ export function DocumentView() {
   async function handleDownload(fileUri: string) {
     const callback = (downloadProgress: FileSystem.DownloadProgressData) => {
       const progress =
-        downloadProgress.totalBytesWritten /
-        downloadProgress.totalBytesExpectedToWrite
+        downloadProgress.totalBytesWritten / downloadProgress.totalBytesExpectedToWrite
       console.log('Download Progress: ', progress)
     }
 
@@ -81,182 +80,151 @@ export function DocumentView() {
   }
 
   return (
-    <VStack flex={1} bg={'gray.50'} position={'relative'}>
-      <ListScreenHeader
-        title={title}
-        subTitle="13-05-23 | 05:00"
-        mb={6}
-        borderBottomColor={'muted.200'}
-        borderBottomWidth={1}
-        onClickSettings={handleOpenSettings}
-      />
-      <PDF
-        onError={error => console.log(error)}
-        source={source}
-        style={{
-          flex: 1,
-          borderTopColor: '#00000012',
-          borderTopWidth: 1,
-          paddingBottom: 16,
-        }}
-        onLoadComplete={(nOfPages, filePath) => {
-          console.log('Number of pages', nOfPages)
-        }}
-      />
+    <SafeAreaView style={{ flex: 1 }}>
+      <VStack flex={1} bg={'gray.50'} position={'relative'}>
+        <ListScreenHeader
+          title={title}
+          subTitle={subTitle}
+          mb={6}
+          borderBottomColor={'muted.200'}
+          borderBottomWidth={1}
+          onClickSettings={handleOpenSettings}
+        />
+        <PDF
+          onError={error => console.log(error)}
+          source={source}
+          style={{
+            flex: 1,
+            borderTopColor: '#00000012',
+            borderTopWidth: 1,
+            paddingBottom: 16,
+          }}
+          onLoadComplete={(nOfPages, filePath) => {
+            console.log('Number of pages', nOfPages)
+          }}
+        />
 
-      <Actionsheet
-        isOpen={isOpen}
-        onClose={onClose}
-        hideDragIndicator={false}
-        bg={'#000000B3'}
-      >
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          p={0}
-          w={'full'}
+        <Actionsheet
+          isOpen={isOpen}
+          onClose={onClose}
+          hideDragIndicator={false}
+          bg={'#000000B3'}
         >
-          <Actionsheet.Content borderTopRadius="3xl" bg={'white'}>
-            <VStack w={'full'} pt={6}>
-              <HStack
-                alignItems={'center'}
-                justifyContent={'space-between'}
-                px={10}
-                pb={6}
-                borderBottomColor={'muted.200'}
-                borderBottomWidth={1}
-              >
-                <Heading
-                  fontSize={'2xl'}
-                  color="light.700"
-                  fontFamily={'heading'}
-                >
-                  Configurações
-                </Heading>
-
-                <IconButton
-                  w={11}
-                  h={11}
-                  variant={'outline'}
-                  rounded={'full'}
-                  bg={'white'}
-                  borderColor={'muted.200'}
-                  onPress={onClose}
-                  _pressed={{ bg: 'muted.300' }}
-                  _icon={{
-                    size: 5,
-                    as: Feather,
-                    name: 'x',
-                    color: 'light.700',
-                  }}
-                />
-              </HStack>
-
-              <Pressable onPress={() => shareAsync(source.uri)}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            p={0}
+            w={'full'}
+          >
+            <Actionsheet.Content borderTopRadius="3xl" bg={'white'}>
+              <VStack w={'full'} pt={6}>
                 <HStack
-                  bg={'white'}
                   alignItems={'center'}
+                  justifyContent={'space-between'}
                   px={10}
-                  py={6}
-                  borderBottomWidth={1}
+                  pb={6}
                   borderBottomColor={'muted.200'}
-                >
-                  <Icon
-                    as={Feather}
-                    size={5}
-                    name="share-2"
-                    color={'light.700'}
-                    mr={5}
-                  />
-
-                  <Text
-                    fontSize={'md'}
-                    fontFamily={'heading'}
-                    color={'light.700'}
-                  >
-                    Compartilhar
-                  </Text>
-                </HStack>
-              </Pressable>
-
-              <Pressable>
-                <HStack
-                  bg={'white'}
-                  alignItems={'center'}
-                  px={10}
-                  py={6}
                   borderBottomWidth={1}
-                  borderBottomColor={'muted.200'}
                 >
-                  <Icon
-                    as={Feather}
-                    size={5}
-                    name="check"
-                    color={'light.700'}
-                    mr={5}
+                  <Heading fontSize={'2xl'} color="light.700" fontFamily={'heading'}>
+                    Configurações
+                  </Heading>
+
+                  <IconButton
+                    w={11}
+                    h={11}
+                    variant={'outline'}
+                    rounded={'full'}
+                    bg={'white'}
+                    borderColor={'muted.200'}
+                    onPress={onClose}
+                    _pressed={{ bg: 'muted.300' }}
+                    _icon={{
+                      size: 5,
+                      as: Feather,
+                      name: 'x',
+                      color: 'light.700',
+                    }}
                   />
-
-                  <Text
-                    fontSize={'md'}
-                    fontFamily={'heading'}
-                    color={'light.700'}
-                  >
-                    Aprovar
-                  </Text>
                 </HStack>
-              </Pressable>
 
-              <Pressable>
-                <HStack
-                  bg={'white'}
-                  alignItems={'center'}
-                  px={10}
-                  py={6}
-                  borderBottomWidth={1}
-                  borderBottomColor={'muted.200'}
-                >
-                  <Icon
-                    as={Feather}
-                    size={5}
-                    name="x"
-                    color={'light.700'}
-                    mr={5}
-                  />
-
-                  <Text
-                    fontSize={'md'}
-                    fontFamily={'heading'}
-                    color={'light.700'}
+                <Pressable onPress={() => shareAsync(source.uri)}>
+                  <HStack
+                    bg={'white'}
+                    alignItems={'center'}
+                    px={10}
+                    py={6}
+                    borderBottomWidth={1}
+                    borderBottomColor={'muted.200'}
                   >
-                    Reprovar
-                  </Text>
-                </HStack>
-              </Pressable>
+                    <Icon
+                      as={Feather}
+                      size={5}
+                      name="share-2"
+                      color={'light.700'}
+                      mr={5}
+                    />
 
-              <Pressable onPress={() => handleDownload(source.uri)}>
-                <HStack bg={'white'} alignItems={'center'} px={10} py={6}>
-                  <Icon
-                    as={Feather}
-                    size={5}
-                    name="arrow-down-circle"
-                    color={'light.700'}
-                    mr={5}
-                  />
+                    <Text fontSize={'md'} fontFamily={'heading'} color={'light.700'}>
+                      Compartilhar
+                    </Text>
+                  </HStack>
+                </Pressable>
 
-                  <Text
-                    fontSize={'md'}
-                    fontFamily={'heading'}
-                    color={'light.700'}
+                <Pressable>
+                  <HStack
+                    bg={'white'}
+                    alignItems={'center'}
+                    px={10}
+                    py={6}
+                    borderBottomWidth={1}
+                    borderBottomColor={'muted.200'}
                   >
-                    Salvar arquivo
-                  </Text>
-                </HStack>
-              </Pressable>
-            </VStack>
-          </Actionsheet.Content>
-        </KeyboardAvoidingView>
-      </Actionsheet>
+                    <Icon as={Feather} size={5} name="check" color={'light.700'} mr={5} />
 
-      {/* {hasApprovalFlow && !isResolved && (
+                    <Text fontSize={'md'} fontFamily={'heading'} color={'light.700'}>
+                      Aprovar
+                    </Text>
+                  </HStack>
+                </Pressable>
+
+                <Pressable>
+                  <HStack
+                    bg={'white'}
+                    alignItems={'center'}
+                    px={10}
+                    py={6}
+                    borderBottomWidth={1}
+                    borderBottomColor={'muted.200'}
+                  >
+                    <Icon as={Feather} size={5} name="x" color={'light.700'} mr={5} />
+
+                    <Text fontSize={'md'} fontFamily={'heading'} color={'light.700'}>
+                      Reprovar
+                    </Text>
+                  </HStack>
+                </Pressable>
+
+                <Pressable onPress={() => handleDownload(source.uri)}>
+                  <HStack bg={'white'} alignItems={'center'} px={10} py={6}>
+                    <Icon
+                      as={Feather}
+                      size={5}
+                      name="arrow-down-circle"
+                      color={'light.700'}
+                      mr={5}
+                    />
+
+                    <Text fontSize={'md'} fontFamily={'heading'} color={'light.700'}>
+                      Salvar arquivo
+                    </Text>
+                  </HStack>
+                </Pressable>
+              </VStack>
+            </Actionsheet.Content>
+          </KeyboardAvoidingView>
+        </Actionsheet>
+
+        {/* {hasApprovalFlow && !isResolved && (
         <>
           <ApprovalFooter
             position={'absolute'}
@@ -357,6 +325,7 @@ export function DocumentView() {
           </Actionsheet>
         </>
       )} */}
-    </VStack>
+      </VStack>
+    </SafeAreaView>
   )
 }

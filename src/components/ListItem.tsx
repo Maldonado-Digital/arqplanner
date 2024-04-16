@@ -1,7 +1,8 @@
+import { Feather } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { projectStatus } from '@utils/constants'
-import { Box, HStack, Heading, Text, VStack } from 'native-base'
+import { Box, HStack, Heading, Icon, Text, VStack } from 'native-base'
 import type { ReactNode } from 'react'
 import { TouchableOpacity, type TouchableOpacityProps } from 'react-native'
 
@@ -9,11 +10,12 @@ export type ItemStatus = 'pending' | 'approved' | 'archived'
 
 type ListItemProps = TouchableOpacityProps & {
   title: string
+  subTitle?: string
   icon: ReactNode
   status?: ItemStatus
 }
 
-export function ListItem({ title, icon, status, ...rest }: ListItemProps) {
+export function ListItem({ title, subTitle, icon, status, ...rest }: ListItemProps) {
   const navigation = useNavigation<AppNavigatorRoutesProps>()
   const statusText = status
     ? (projectStatus.find(s => s.value === status)?.label as string)
@@ -43,7 +45,7 @@ export function ListItem({ title, icon, status, ...rest }: ListItemProps) {
           </Heading>
 
           <Text fontSize={'sm'} color={'light.500'} mt={1} numberOfLines={1}>
-            13-05-23 | 05:00
+            {subTitle}
           </Text>
         </VStack>
 
@@ -58,6 +60,10 @@ export function ListItem({ title, icon, status, ...rest }: ListItemProps) {
               {statusText.toLocaleUpperCase()}
             </Text>
           </Box>
+        )}
+
+        {!status && (
+          <Icon as={Feather} name="chevron-right" size={6} color={'light.700'} />
         )}
       </HStack>
     </TouchableOpacity>

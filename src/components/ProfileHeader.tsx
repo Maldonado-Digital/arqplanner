@@ -1,4 +1,4 @@
-import { HStack, Heading, IStackProps } from 'native-base'
+import { HStack, Heading, type IStackProps } from 'native-base'
 
 type ScreenHeaderType = IStackProps & {
   title: string

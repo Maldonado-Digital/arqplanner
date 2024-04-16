@@ -14,7 +14,7 @@ import {
   VStack,
   useToast,
 } from 'native-base'
-import { Controller, SubmitErrorHandler, useForm } from 'react-hook-form'
+import { Controller, type SubmitErrorHandler, useForm } from 'react-hook-form'
 import { Keyboard, Platform } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { z } from 'zod'
@@ -55,23 +55,24 @@ export function RecoverPassword() {
     navigateToPasswordRecovered()
   }
 
-  const onSubmitError: SubmitErrorHandler<RecoverPasswordFormData> = formData => {
-    Keyboard.dismiss()
+  const onSubmitError: SubmitErrorHandler<RecoverPasswordFormData> =
+    formData => {
+      Keyboard.dismiss()
 
-    const message = formData.email?.message as string
+      const message = formData.email?.message as string
 
-    toast.show({
-      duration: 3000,
-      render: ({ id }) => (
-        <Toast
-          id={id}
-          message={message}
-          status="error"
-          onClose={() => toast.close(id)}
-        />
-      ),
-    })
-  }
+      toast.show({
+        duration: 3000,
+        render: ({ id }) => (
+          <Toast
+            id={id}
+            message={message}
+            status="error"
+            onClose={() => toast.close(id)}
+          />
+        ),
+      })
+    }
 
   return (
     <KeyboardAvoidingView
@@ -106,7 +107,7 @@ export function RecoverPassword() {
         </Text>
 
         <Center>
-        <Controller
+          <Controller
             name="email"
             control={control}
             rules={{

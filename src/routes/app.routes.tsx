@@ -21,6 +21,7 @@ export type AppRoutesType = {
   home: undefined
   document_view: {
     title: string
+    subTitle?: string
     hasApprovalFlow: boolean
     source: {
       uri: string
@@ -29,7 +30,7 @@ export type AppRoutesType = {
   }
   documents: undefined
   list_screen: { title: string }
-  medias: { id: string; hasApprovalFlow: boolean }
+  medias: { id: string; hasApprovalFlow: boolean; type: 'photo' | 'render' }
   profile: undefined
   photos: undefined
   projects: undefined

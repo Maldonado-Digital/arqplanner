@@ -1,5 +1,5 @@
 import { Heading, Pressable, VStack } from 'native-base'
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 
 type MenuCard = {
   title: string

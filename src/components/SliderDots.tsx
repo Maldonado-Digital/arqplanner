@@ -1,4 +1,4 @@
-import { Circle, HStack, IStackProps } from 'native-base'
+import { Circle, HStack, type IStackProps } from 'native-base'
 
 type SliderDotsProps = IStackProps & {
   activeIndex?: 0 | 1 | 2
