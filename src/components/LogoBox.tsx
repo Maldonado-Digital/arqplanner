@@ -1,5 +1,5 @@
 import ArqWhiteTextLogoSvg from '@assets/arq_white_text_logo.svg'
-import { Box, IBoxProps } from 'native-base'
+import { Box, type IBoxProps } from 'native-base'
 
 export function LogoBox({ ...rest }: IBoxProps) {
   return (
@@ -10,7 +10,12 @@ export function LogoBox({ ...rest }: IBoxProps) {
       bg={'light.300'}
       justifyContent={'center'}
       alignItems={'center'}
-      mt={-44}
+      style={{
+        shadowColor: '#000000',
+        shadowOpacity: 0.07,
+        shadowRadius: 50,
+        shadowOffset: { width: 0, height: -15 },
+      }}
       {...rest}
     >
       <ArqWhiteTextLogoSvg width={60} style={{ marginRight: 3 }} />

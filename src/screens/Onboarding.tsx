@@ -30,7 +30,7 @@ export function Onboarding1() {
       <WhiteCircleSvg style={{ position: 'absolute', top: 466 }} />
 
       <VStack w={'full'} h={'1/2'} mt={'auto'} alignItems={'center'} px={10}>
-        <LogoBox />
+        <LogoBox mt={-44} />
 
         <Heading
           fontFamily={'heading'}
@@ -116,7 +116,7 @@ export function Onboarding2() {
       <WhiteCircleSvg style={{ position: 'absolute', top: 466 }} />
 
       <VStack w={'full'} h={'1/2'} mt={'auto'} alignItems={'center'} px={10}>
-        <LogoBox />
+        <LogoBox mt={-44} />
 
         <Heading
           fontFamily={'heading'}
@@ -202,7 +202,7 @@ export function Onboarding3() {
       <WhiteCircleSvg style={{ position: 'absolute', top: 466 }} />
 
       <VStack w={'full'} h={'1/2'} mt={'auto'} alignItems={'center'} px={10}>
-        <LogoBox />
+        <LogoBox mt={-44} />
 
         <Heading
           fontFamily={'heading'}

@@ -20,7 +20,7 @@ import {
   useToast,
 } from 'native-base'
 import { Controller, type SubmitErrorHandler, useForm } from 'react-hook-form'
-import { Platform } from 'react-native'
+import { Keyboard, Platform } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { api } from 'src/lib/api'
 import { z } from 'zod'
@@ -67,7 +67,7 @@ export function SignIn() {
       console.log('Erro', err)
       const isAppError = err instanceof AppError
       const message = isAppError
-        ? 'Email e senha incorretos'
+        ? 'Email ou senha incorreto.'
         : 'Erro ao fazer login. Tente novamente.'
 
       toast.show({
@@ -85,6 +85,8 @@ export function SignIn() {
   }
 
   const onSubmitError: SubmitErrorHandler<SignInFormData> = formData => {
+    Keyboard.dismiss()
+
     const message = (formData.email?.message ||
       formData.password?.message) as string
 
@@ -110,28 +112,18 @@ export function SignIn() {
         style={{
           flex: 1,
           paddingHorizontal: 40,
-          position: 'relative',
         }}
       >
-        <Pressable
-          pb={2}
-          pr={2}
-          onPress={handleGoBack}
-          position={'absolute'}
-          top={16}
-          left={9}
-        >
+        <Pressable onPress={handleGoBack} w={8} h={8}>
           <Icon as={Feather} name="arrow-left" color={'light.700'} size={6} />
         </Pressable>
 
         <VStack flex={1} justifyContent={'center'}>
-          <Center>
-            <LogoBox />
-          </Center>
+          <LogoBox alignSelf={'center'} />
 
           <Heading
-            mt={16}
-            mb={6}
+            pt={8}
+            pb={6}
             alignSelf={'flex-start'}
             color={'light.700'}
             fontSize={'4xl'}
@@ -140,10 +132,11 @@ export function SignIn() {
             Login
           </Heading>
           <Text
+            alignSelf={'flex-start'}
             fontSize={'md'}
             fontFamily={'body'}
             color={'light.500'}
-            mb={8}
+            pb={8}
             fontWeight={'bold'}
           >
             Seja bem-vindo ao ArqPlanner
@@ -220,7 +213,7 @@ export function SignIn() {
             title="Entrar"
             rounded={'full'}
             fontSize={'lg'}
-            mt={8}
+            my={6}
             isLoading={isSubmitting}
             variant={'solid'}
             onPress={handleSubmit(onSubmit, onSubmitError)}
