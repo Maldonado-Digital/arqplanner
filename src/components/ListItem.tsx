@@ -18,7 +18,7 @@ type ListItemProps = TouchableOpacityProps & {
 export function ListItem({ title, subTitle, icon, status, ...rest }: ListItemProps) {
   const navigation = useNavigation<AppNavigatorRoutesProps>()
   const statusText = status
-    ? (projectStatus.find(s => s.value === status)?.label as string)
+    ? (projectStatus.find(s => s.value === status)?.singular as string)
     : ''
 
   return (

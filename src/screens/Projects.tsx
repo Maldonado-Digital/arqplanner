@@ -59,7 +59,7 @@ export function Projects() {
           horizontal
           renderItem={({ item }) => (
             <Category
-              name={item.label}
+              name={item.plural}
               isActive={
                 selectedStatus.toLocaleLowerCase() === item.value.toLocaleLowerCase()
               }
@@ -102,6 +102,7 @@ export function Projects() {
           ListEmptyComponent={() => (
             <ListEmpty
               px={12}
+              py={40}
               icon="folder"
               title="Nenhum projeto foi encontrado"
               message="Você ainda não possui nenhum projeto adicionado."

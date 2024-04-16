@@ -40,19 +40,23 @@ export const documentsCategories = [
 
 export const projectStatus = [
   {
-    label: 'Todos',
+    singular: 'Todos',
+    plural: 'Todos',
     value: 'all',
   },
   {
-    label: 'Aprovado',
+    singular: 'Aprovado',
+    plural: 'Aprovados',
     value: 'approved',
   },
   {
-    label: 'Pendente',
+    singular: 'Pendente',
+    plural: 'Pendentes',
     value: 'pending',
   },
   {
-    label: 'Arquivado',
+    singular: 'Arquivado',
+    plural: 'Arquivados',
     value: 'archived',
   },
 ]

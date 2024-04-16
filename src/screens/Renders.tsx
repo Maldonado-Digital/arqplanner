@@ -50,7 +50,7 @@ export function Renders() {
           horizontal
           renderItem={({ item }) => (
             <Category
-              name={item.label}
+              name={item.plural}
               isActive={
                 selectedStatus.toLocaleLowerCase() === item.value.toLocaleLowerCase()
               }
