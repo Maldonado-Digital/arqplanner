@@ -49,7 +49,9 @@ export function Agenda() {
     return isSameDay(selectedDate, day.event.date)
   })
 
-  const markedDates: MarkedDates = {}
+  const markedDates: MarkedDates = {
+    [formattedDate]: { selected: true, disableTouchEvent: true },
+  }
 
   works?.docs[0].events?.forEach(({ event, id }, index) => {
     const eventDate = event.date.split('T')[0]
@@ -77,6 +79,15 @@ export function Agenda() {
           calendarEventColors[index] ||
           calendarEventColors[index - calendarEventColors.length],
       })
+    } else {
+      markedDates[eventDate].dots = [
+        {
+          key: id,
+          color:
+            calendarEventColors[index] ||
+            calendarEventColors[index - calendarEventColors.length],
+        },
+      ]
     }
   })
 
@@ -132,14 +143,10 @@ export function Agenda() {
         <Pressable alignSelf={'flex-start'} onPress={handleGoBack} mb={6}>
           <Icon as={Feather} name="arrow-left" color={'light.700'} size={6} />
         </Pressable>
-        <HStack w={'full'} mb={6} alignItems={'center'} justifyContent={'space-between'}>
+        <HStack w={'full'} mb={6} alignItems={'center'}>
           <Heading fontFamily={'heading'} fontSize={'4xl'}>
             Agenda
           </Heading>
-
-          <Pressable>
-            <Icon as={Feather} name="more-vertical" color={'light.700'} size={6} />
-          </Pressable>
         </HStack>
 
         <Calendar

@@ -54,11 +54,7 @@ type CalendarProps = ReactNativeCalendarProps & {
   onSelect: (day: string) => void
 }
 
-export function Calendar({
-  onSelect,
-  initialDate,
-  markedDates,
-}: CalendarProps) {
+export function Calendar({ onSelect, initialDate, markedDates }: CalendarProps) {
   const { colors, fonts, fontSizes } = useTheme()
 
   return (
