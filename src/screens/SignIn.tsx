@@ -13,13 +13,15 @@ import {
   HStack,
   Heading,
   Icon,
+  KeyboardAvoidingView,
   Pressable,
-  ScrollView,
   Text,
   VStack,
   useToast,
 } from 'native-base'
 import { Controller, type SubmitErrorHandler, useForm } from 'react-hook-form'
+import { Platform } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import { api } from 'src/lib/api'
 import { z } from 'zod'
 
@@ -100,46 +102,53 @@ export function SignIn() {
   }
 
   return (
-    <ScrollView
-      contentContainerStyle={{ flexGrow: 1 }}
-      showsVerticalScrollIndicator={false}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <VStack flex={1} px={10} pb={16}>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          paddingHorizontal: 40,
+          position: 'relative',
+        }}
+      >
         <Pressable
-          alignSelf={'flex-start'}
+          pb={2}
+          pr={2}
           onPress={handleGoBack}
-          mt={12}
-          pt={4}
-          pr={4}
+          position={'absolute'}
+          top={16}
+          left={9}
         >
           <Icon as={Feather} name="arrow-left" color={'light.700'} size={6} />
         </Pressable>
 
-        <Center mt={32}>
-          <LogoBox />
-        </Center>
+        <VStack flex={1} justifyContent={'center'}>
+          <Center>
+            <LogoBox />
+          </Center>
 
-        <Heading
-          mt={16}
-          mb={6}
-          alignSelf={'flex-start'}
-          color={'light.700'}
-          fontSize={'4xl'}
-          fontFamily={'heading'}
-        >
-          Login
-        </Heading>
-        <Text
-          fontSize={'md'}
-          fontFamily={'body'}
-          color={'light.500'}
-          mb={8}
-          fontWeight={'bold'}
-        >
-          Seja bem-vindo ao ArqPlanner
-        </Text>
+          <Heading
+            mt={16}
+            mb={6}
+            alignSelf={'flex-start'}
+            color={'light.700'}
+            fontSize={'4xl'}
+            fontFamily={'heading'}
+          >
+            Login
+          </Heading>
+          <Text
+            fontSize={'md'}
+            fontFamily={'body'}
+            color={'light.500'}
+            mb={8}
+            fontWeight={'bold'}
+          >
+            Seja bem-vindo ao ArqPlanner
+          </Text>
 
-        <Center>
           <Controller
             name="email"
             control={control}
@@ -192,11 +201,12 @@ export function SignIn() {
                 onChangeText={onChange}
                 value={value}
                 isInvalid={!!errors.password}
+                onSubmitEditing={handleSubmit(onSubmit, onSubmitError)}
               />
             )}
           />
 
-          <HStack>
+          <HStack justifyContent={'center'}>
             <Text fontFamily={'body'} fontSize={'md'} color={'light.400'}>
               Esqueceu sua senha?{' '}
             </Text>
@@ -206,7 +216,6 @@ export function SignIn() {
               </Text>
             </Pressable>
           </HStack>
-
           <Button
             title="Entrar"
             rounded={'full'}
@@ -216,8 +225,8 @@ export function SignIn() {
             variant={'solid'}
             onPress={handleSubmit(onSubmit, onSubmitError)}
           />
-        </Center>
-      </VStack>
-    </ScrollView>
+        </VStack>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
