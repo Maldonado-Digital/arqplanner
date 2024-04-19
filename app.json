@@ -3,6 +3,7 @@
     "name": "ArqPlanner",
     "slug": "arqplanner",
     "version": "1.0.0",
+    "autoIncrement": true,
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
