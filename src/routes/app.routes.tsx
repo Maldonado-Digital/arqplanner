@@ -8,7 +8,6 @@ import { DocumentView } from '@screens/DocumentView'
 import { Documents } from '@screens/Documents'
 import { Event } from '@screens/Event'
 import { Home } from '@screens/Home'
-import { ListScreen } from '@screens/ListScreen'
 import { Medias } from '@screens/Medias'
 import { Photos } from '@screens/Photos'
 import { Profile } from '@screens/Profile'
@@ -20,6 +19,7 @@ export type AppRoutesType = {
   agenda: undefined
   home: undefined
   document_view: {
+    id: string
     title: string
     subTitle?: string
     hasApprovalFlow: boolean

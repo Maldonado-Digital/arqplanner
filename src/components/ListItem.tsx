@@ -1,6 +1,4 @@
 import { Feather } from '@expo/vector-icons'
-import { useNavigation } from '@react-navigation/native'
-import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { projectStatus } from '@utils/constants'
 import { Box, HStack, Heading, Icon, Text, VStack } from 'native-base'
 import type { ReactNode } from 'react'
@@ -16,10 +14,14 @@ type ListItemProps = TouchableOpacityProps & {
 }
 
 export function ListItem({ title, subTitle, icon, status, ...rest }: ListItemProps) {
-  const navigation = useNavigation<AppNavigatorRoutesProps>()
   const statusText = status
     ? (projectStatus.find(s => s.value === status)?.singular as string)
     : ''
+  const statusColor = {
+    pending: '#F8C40E26',
+    approved: '#0AAF8726',
+    archived: '#00000012',
+  }
 
   return (
     <TouchableOpacity {...rest}>
@@ -50,12 +52,7 @@ export function ListItem({ title, subTitle, icon, status, ...rest }: ListItemPro
         </VStack>
 
         {!!status && (
-          <Box
-            py={1}
-            px={2}
-            rounded={'xl'}
-            bg={status === 'pending' ? '#F8C40E26' : '#0AAF8726'}
-          >
+          <Box py={1} px={2} rounded={'xl'} bg={statusColor[status]}>
             <Text fontSize={'xs'} fontFamily={'heading'} color={'light.700'}>
               {statusText.toLocaleUpperCase()}
             </Text>

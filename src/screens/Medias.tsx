@@ -47,6 +47,7 @@ export function Medias() {
   const { isOpen, onOpen, onClose } = useDisclose()
   const { width } = useWindowDimensions()
   const [isViewing, setIsViewing] = useState(false)
+  const [currentIndex, setCurrentIndex] = useState(0)
   const [comments, setComments] = useState('')
   const [isResolved, setIsResolved] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -79,6 +80,11 @@ export function Medias() {
     onOpen()
   }
 
+  function handleImagePress(idx: number) {
+    setIsViewing(true)
+    setCurrentIndex(idx)
+  }
+
   async function handleSubmit() {
     setIsResolved(true)
     setIsLoading(true)
@@ -108,7 +114,7 @@ export function Medias() {
           title={data?.title as string}
           subTitle={format(
             data?.files[0].uploads.updatedAt as string,
-            "dd-MM-yy' | 'hh:mm",
+            "dd-MM-yy' | 'H:mm",
           )}
           borderBottomColor={'muted.200'}
           borderBottomWidth={1}
@@ -121,8 +127,8 @@ export function Medias() {
           contentContainerStyle={{ gap }}
           numColumns={numColumns}
           keyExtractor={item => item.key}
-          renderItem={({ item }) => (
-            <Pressable onPress={() => setIsViewing(true)}>
+          renderItem={({ item, index }) => (
+            <Pressable onPress={() => handleImagePress(index)}>
               <Image
                 source={{
                   uri: item.uri,
@@ -161,7 +167,7 @@ export function Medias() {
         />
         <ImageView
           images={images}
-          imageIndex={0}
+          imageIndex={currentIndex}
           visible={isViewing}
           onRequestClose={() => setIsViewing(false)}
           onLongPress={handleOpenSettings}
@@ -176,12 +182,7 @@ export function Medias() {
               onOpenDisclose={handleOpenDisclose}
             />
 
-            <Actionsheet
-              isOpen={isOpen}
-              onClose={onClose}
-              hideDragIndicator={false}
-              bg={'#000000B3'}
-            >
+            <Actionsheet isOpen={isOpen} onClose={onClose} hideDragIndicator={false}>
               <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 p={0}
@@ -229,7 +230,7 @@ export function Medias() {
                       bg={'gray.50'}
                       rounded={'xl'}
                       autoFocus={false}
-                      placeholder="Comentários"
+                      placeholder="Comentários (opcional)"
                       borderColor={'muted.200'}
                       autoCompleteType={false}
                       focusOutlineColor="light.700"

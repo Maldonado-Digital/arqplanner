@@ -68,16 +68,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         updateUserAndToken(data.user, data.token)
       }
     } catch (error) {
-      const isAppError = error instanceof AppError
-
-      if (isAppError) {
-        toast.show({
-          duration: 3000,
-          render: ({ id }) => (
-            <Toast id={id} message="Erro ao carregar as informações" status="error" />
-          ),
-        })
-      }
+      toast.show({
+        duration: 3000,
+        render: ({ id }) => (
+          <Toast id={id} message="Erro ao fazer login. Tente novamente." status="error" />
+        ),
+      })
     } finally {
       setIsLoadingUserFromStorage(false)
     }

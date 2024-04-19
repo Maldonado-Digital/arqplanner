@@ -87,18 +87,13 @@ export function SignIn() {
   const onSubmitError: SubmitErrorHandler<SignInFormData> = formData => {
     Keyboard.dismiss()
 
-    const message = (formData.email?.message ||
-      formData.password?.message) as string
+    const message = (formData.email?.message || formData.password?.message) as string
+    console.log('Erro', formData)
 
     toast.show({
       duration: 3000,
       render: ({ id }) => (
-        <Toast
-          id={id}
-          message={message}
-          status="error"
-          onClose={() => toast.close(id)}
-        />
+        <Toast id={id} message={message} status="error" onClose={() => toast.close(id)} />
       ),
     })
   }
@@ -155,12 +150,7 @@ export function SignIn() {
                 autoCapitalize="none"
                 mb={4}
                 InputLeftElement={
-                  <Icon
-                    as={<Feather name="mail" />}
-                    size={4}
-                    ml={4}
-                    color="light.400"
-                  />
+                  <Icon as={<Feather name="mail" />} size={4} ml={4} color="light.400" />
                 }
                 onBlur={onBlur}
                 onChangeText={onChange}
@@ -183,12 +173,7 @@ export function SignIn() {
                 secureTextEntry
                 mb={4}
                 InputLeftElement={
-                  <Icon
-                    as={<Feather name="lock" />}
-                    size={4}
-                    ml={4}
-                    color="light.400"
-                  />
+                  <Icon as={<Feather name="lock" />} size={4} ml={4} color="light.400" />
                 }
                 onBlur={onBlur}
                 onChangeText={onChange}

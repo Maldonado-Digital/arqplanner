@@ -5,8 +5,7 @@ import { Box, useTheme } from 'native-base'
 import { type AppNavigatorRoutesProps, AppRoutes } from './app.routes'
 import { type AuthNavigatorRoutesProps, AuthRoutes } from './auth.routes'
 
-export type AllNavigatorRoutesProps = AppNavigatorRoutesProps &
-  AuthNavigatorRoutesProps
+export type AllNavigatorRoutesProps = AppNavigatorRoutesProps & AuthNavigatorRoutesProps
 
 export function Routes() {
   const { colors } = useTheme()

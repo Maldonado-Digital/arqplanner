@@ -113,44 +113,45 @@ export type Photo = {
 export type Quote = {
   quote: {
     title: string
-    file: 
-      {
-          id: string
-          organization: string
-          filename: string
-          mimeType: string
-          filesize: number
-          width: number
-          height: number
-          createdAt: string
-          updatedAt: string
-          url: string
-        }
-        id: string
+    file: {
+      id: string
+      organization: string
+      filename: string
+      mimeType: string
+      filesize: number
+      width: number
+      height: number
+      createdAt: string
+      updatedAt: string
+      url: string
+    }
+    id: string
   }
   id: string
 }
 
-type GetWorksResponse = {
-  docs: Array<{
+export type Work = {
+  id: string
+  title: string
+  steps: Array<Step>
+  events: Array<Event>
+  projects: Array<Project>
+  renders: Array<Render>
+  documents: Array<Document>
+  photos: Array<Photo>
+  quotes: Array<Quote>
+  organization: {
     id: string
-    title: string
-    steps: Array<Step>
-    events: Array<Event>
-    projects: Array<Project>
-    renders: Array<Render>
-    documents: Array<Document>
-    photos: Array<Photo>
-    quotes: Array<Quote>
-    organization: {
-      id: string
-      name: string
-      createdAt: string
-      updatedAt: string
-    }
+    name: string
     createdAt: string
     updatedAt: string
-  }>
+  }
+  createdAt: string
+  updatedAt: string
+}
+
+type GetWorksResponse = {
+  docs: Array<Work>
   totalDocs: number
   limit: number
   totalPages: number
@@ -163,9 +164,7 @@ type GetWorksResponse = {
 }
 
 export async function getWorks() {
-  const response = await api.get<GetWorksResponse>(
-    '/api/works?locale=pt-BR&depth=1',
-  )
+  const response = await api.get<GetWorksResponse>('/api/works?locale=pt-BR&depth=1')
 
   return response.data
 }

@@ -33,6 +33,7 @@ export function Documents() {
 
   function handleViewDocument(document: Document) {
     navigation.navigate('document_view', {
+      id: document.id,
       title: document.document.title,
       hasApprovalFlow: false,
       source: {
@@ -76,16 +77,10 @@ export function Documents() {
         <FlatList
           data={filteredDocuments}
           keyExtractor={item => item.id}
-          style={{
-            shadowColor: '#000000',
-            shadowOpacity: 0.05,
-            shadowRadius: 30,
-            shadowOffset: { width: 0, height: 4 },
-          }}
           renderItem={({ item }) => (
             <ListItem
               title={item.document.title}
-              subTitle={format(item.document.file.updatedAt, "dd-MM-yy' | 'hh:mm")}
+              subTitle={format(item.document.file.updatedAt, "dd-MM-yy' | 'H:mm")}
               icon={<Icon as={Feather} name="folder" size={6} color="light.700" />}
               onPress={() => handleViewDocument(item)}
             />

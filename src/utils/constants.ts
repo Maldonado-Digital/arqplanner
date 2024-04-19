@@ -6,9 +6,10 @@ export const calendarEventColors = [
   '#0F25EE',
   '#F8C40E',
   '#FF38A4',
-  '#797979',
   '#AD00FF',
+  '#ED254E',
   '#0AAF87',
+  '#FC2F00',
 ]
 
 export const documentsCategories = [

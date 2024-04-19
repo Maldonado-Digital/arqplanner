@@ -26,16 +26,21 @@ export function Projects() {
   })
 
   const projects = works?.docs[0].projects
-  const filteredProjects = projects?.filter(
-    project => project.project.status === selectedStatus || selectedStatus === 'all',
-  )
+  const filteredProjects = projects?.filter(project => {
+    if (selectedStatus === 'all') {
+      return project.project.status !== 'archived'
+    }
+
+    return project.project.status === selectedStatus
+  })
 
   const navigation = useNavigation<AppNavigatorRoutesProps>()
 
   function handleViewDocument(project: Project) {
     navigation.navigate('document_view', {
+      id: project.id,
       title: project.project.title,
-      subTitle: format(project.project.file.updatedAt, "dd-MM-yy' | 'hh:mm"),
+      subTitle: format(project.project.file.updatedAt, "dd-MM-yy' | 'H:mm"),
       hasApprovalFlow: true,
       source: {
         // uri: `https://arqplanner-cms-staging.payloadcms.app${project.project.file.url}`,
@@ -79,16 +84,11 @@ export function Projects() {
         <FlatList
           data={filteredProjects}
           keyExtractor={item => item.id}
-          style={{
-            shadowColor: '#000000',
-            shadowOpacity: 0.05,
-            shadowRadius: 30,
-            shadowOffset: { width: 0, height: 4 },
-          }}
           renderItem={({ item }) => (
             <ListItem
+              id={item.id}
               title={item.project.title}
-              subTitle={format(item.project.file.updatedAt, "dd-MM-yy' | 'hh:mm")}
+              subTitle={format(item.project.file.updatedAt, "dd-MM-yy' | 'H:mm")}
               icon={<Icon as={Feather} name="layout" size={6} color="light.700" />}
               onPress={() => handleViewDocument(item)}
               status={item.project.status}
