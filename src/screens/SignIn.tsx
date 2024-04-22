@@ -17,6 +17,7 @@ import {
   Pressable,
   Text,
   VStack,
+  View,
   useToast,
 } from 'native-base'
 import { Controller, type SubmitErrorHandler, useForm } from 'react-hook-form'
@@ -99,15 +100,15 @@ export function SignIn() {
   }
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    <SafeAreaView
+      style={{
+        flex: 1,
+        paddingHorizontal: 40,
+      }}
     >
-      <SafeAreaView
-        style={{
-          flex: 1,
-          paddingHorizontal: 40,
-        }}
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         <Pressable onPress={handleGoBack} w={8} h={8}>
           <Icon as={Feather} name="arrow-left" color={'light.700'} size={6} />
@@ -116,33 +117,33 @@ export function SignIn() {
         <VStack flex={1} justifyContent={'center'}>
           <LogoBox alignSelf={'center'} />
 
-          <Heading
-            pt={8}
-            pb={6}
-            alignSelf={'flex-start'}
-            color={'light.700'}
-            fontSize={'4xl'}
-            fontFamily={'heading'}
-          >
-            Login
-          </Heading>
-          <Text
-            alignSelf={'flex-start'}
-            fontSize={'md'}
-            fontFamily={'body'}
-            color={'light.500'}
-            pb={8}
-            fontWeight={'bold'}
-          >
-            Seja bem-vindo ao ArqPlanner
-          </Text>
+          <Center>
+            <Heading
+              mt={8}
+              mb={6}
+              alignSelf={'flex-start'}
+              color={'light.700'}
+              fontSize={'4xl'}
+              fontFamily={'heading'}
+            >
+              Login
+            </Heading>
+            <Text
+              alignSelf={'flex-start'}
+              fontSize={'md'}
+              fontFamily={'body'}
+              color={'light.500'}
+              mb={8}
+              fontWeight={'bold'}
+            >
+              Seja bem-vindo ao ArqPlanner
+            </Text>
+          </Center>
 
           <Controller
             name="email"
             control={control}
-            rules={{
-              required: true,
-            }}
+            rules={{ required: true }}
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
                 placeholder="Insira seu email"
@@ -204,7 +205,7 @@ export function SignIn() {
             onPress={handleSubmit(onSubmit, onSubmitError)}
           />
         </VStack>
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   )
 }

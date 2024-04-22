@@ -106,8 +106,6 @@ export function DocumentView() {
       })
 
       handleCloseActionSheet()
-
-      console.log(response)
     } catch (error) {
       toast.show({
         duration: 3000,

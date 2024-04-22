@@ -8,6 +8,7 @@ import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { useQuery } from '@tanstack/react-query'
 import { projectStatus } from '@utils/constants'
 import { format } from 'date-fns'
+import { env } from 'env'
 import { FlatList, Icon, VStack, View } from 'native-base'
 import { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -34,8 +35,7 @@ export function Quotes() {
       subTitle: format(quote.quote.file.updatedAt, "dd-MM-yy' | 'H:mm"),
       hasApprovalFlow: false,
       source: {
-        // uri: `https://arqplanner-cms-staging.payloadcms.app${project.project.file.url}`,
-        uri: `http://192.168.1.100:3000${quote.quote.file.url}`,
+        uri: `${env.EXPO_PUBLIC_API_URL}${quote.quote.file.url}`,
         cache: true,
       },
     })

@@ -9,11 +9,11 @@ export type AllNavigatorRoutesProps = AppNavigatorRoutesProps & AuthNavigatorRou
 
 export function Routes() {
   const { colors } = useTheme()
-  const { user, isLoadingUserFromStorage } = useAuth()
+  const { user, isLoadingAuthData } = useAuth()
 
   DefaultTheme.colors.background = colors.white
 
-  if (isLoadingUserFromStorage) return <Loading />
+  if (isLoadingAuthData) return <Loading />
 
   return (
     <Box flex={1} bg={user.id ? 'muted.50' : 'white'}>

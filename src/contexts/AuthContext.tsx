@@ -1,6 +1,11 @@
 import { Toast } from '@components/Toast'
 import type { UserDTO } from '@dtos/UserDTO'
 import {
+  getExpirationFromStorage,
+  removeExpirationFromStorage,
+  saveExpirationInStorage,
+} from '@storage/storageExpiration'
+import {
   getTokenFromStorage,
   removeTokenFromStorage,
   saveTokenInStorage,
@@ -13,13 +18,25 @@ import {
 import { AppError } from '@utils/AppError'
 import { useToast } from 'native-base'
 import { type ReactNode, createContext, useEffect, useState } from 'react'
+import { refreshToken } from 'src/api/mutations/refreshToken'
 import { api } from 'src/lib/api'
 
 export type AuthContextProps = {
   user: UserDTO
-  isLoadingUserFromStorage: boolean
+  isLoadingAuthData: boolean
   signIn: (email: string, password: string) => Promise<void>
   signOut: () => Promise<void>
+}
+
+type SetAuthConfigsDTO = {
+  userData: UserDTO
+  token: string
+}
+
+type SaveAuthConfigsInStorageDTO = {
+  userData: UserDTO
+  token: string
+  exp: number
 }
 
 export const AuthContext = createContext<AuthContextProps>({} as AuthContextProps)
@@ -27,29 +44,28 @@ export const AuthContext = createContext<AuthContextProps>({} as AuthContextProp
 export function AuthProvider({ children }: { children: ReactNode }) {
   const toast = useToast()
   const [user, setUser] = useState<UserDTO>({} as UserDTO)
-  const [isLoadingUserFromStorage, setIsLoadingUserFromStorage] = useState(true)
+  const [isLoadingAuthData, setIsLoadingAuthData] = useState(true)
 
-  async function updateUserAndToken(userData: UserDTO, token: string) {
+  async function setAuthConfig({ userData, token }: SetAuthConfigsDTO) {
     api.defaults.headers.common.Authorization = `JWT ${token}`
     setUser(userData)
   }
 
-  async function updateUserAndTokenInStorage(userData: UserDTO, token: string) {
-    try {
-      setIsLoadingUserFromStorage(true)
-      await saveUserInStorage(userData)
-      await saveTokenInStorage(token)
-    } catch (error) {
-      // biome-ignore lint/complexity/noUselessCatch: <explanation>
-      throw error
-    } finally {
-      setIsLoadingUserFromStorage(false)
-    }
+  async function saveAuthConfigInStorage({
+    userData,
+    token,
+    exp,
+  }: SaveAuthConfigsInStorageDTO) {
+    setIsLoadingAuthData(true)
+    await saveUserInStorage(userData)
+    await saveTokenInStorage(token)
+    await saveExpirationInStorage(exp)
+    setIsLoadingAuthData(false)
   }
 
   async function signIn(email: string, password: string) {
     try {
-      const { data } = await api.post<{ user?: UserDTO; token?: string }>(
+      const { data } = await api.post<{ user?: UserDTO; token?: string; exp: number }>(
         '/api/customers/login?locale=pt-BR',
         {
           email,
@@ -64,8 +80,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       if (data.user && data.token) {
-        await updateUserAndTokenInStorage(data.user, data.token)
-        updateUserAndToken(data.user, data.token)
+        await saveAuthConfigInStorage({
+          userData: data.user,
+          token: data.token,
+          exp: data.exp,
+        })
+        setAuthConfig({
+          userData: data.user,
+          token: data.token,
+        })
       }
     } catch (error) {
       toast.show({
@@ -74,39 +97,47 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           <Toast id={id} message="Erro ao fazer login. Tente novamente." status="error" />
         ),
       })
-    } finally {
-      setIsLoadingUserFromStorage(false)
     }
   }
 
   async function signOut() {
-    setIsLoadingUserFromStorage(true)
+    setIsLoadingAuthData(true)
     setUser({} as UserDTO)
     await removeUserFromStorage()
     await removeTokenFromStorage()
-    setIsLoadingUserFromStorage(false)
+    await removeExpirationFromStorage()
+    setIsLoadingAuthData(false)
   }
 
-  async function loadUserData() {
-    try {
-      setIsLoadingUserFromStorage(true)
-      const loggedUser = await getUserFromStorage()
-      const token = await getTokenFromStorage()
+  async function loadAuthData() {
+    setIsLoadingAuthData(true)
 
-      if (loggedUser && token) {
-        updateUserAndToken(loggedUser, token)
-      }
-    } catch (error) {
-      // biome-ignore lint/complexity/noUselessCatch: <explanation>
-      throw error
-    } finally {
-      setIsLoadingUserFromStorage(false)
-    }
+    const loggedUser = await getUserFromStorage()
+    const token = await getTokenFromStorage()
+    const expiration = await getExpirationFromStorage()
+
+    if (!loggedUser || !token || !expiration) return setIsLoadingAuthData(false)
+    if (Math.floor(Date.now() / 1000) > expiration) return setIsLoadingAuthData(false)
+
+    const { refreshedToken, exp } = await refreshToken({ token })
+
+    await saveAuthConfigInStorage({
+      userData: loggedUser,
+      token: refreshedToken,
+      exp,
+    })
+
+    setAuthConfig({
+      userData: loggedUser,
+      token,
+    })
+
+    setIsLoadingAuthData(false)
   }
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    loadUserData()
+    loadAuthData()
   }, [])
 
   return (
@@ -115,18 +146,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user,
         signIn,
         signOut,
-        isLoadingUserFromStorage,
+        isLoadingAuthData,
       }}
     >
       {children}
     </AuthContext.Provider>
   )
 }
-
-// {
-//   email: 'bruno@jab.com',
-//   id: '65f06f4a35b7e8add45601ee',
-//   name: 'Bruno Jab',
-//   works: ['65f06ff035b7e8add4560230'],
-//   organization: { id: '65f06e4e35b7e8add4560172', name: 'NB Arquitetura' },
-// }

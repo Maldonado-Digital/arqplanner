@@ -1,10 +1,10 @@
 import { AppError } from '@utils/AppError'
 import axios from 'axios'
+import { env } from 'env'
 
 const api = axios.create({
   withCredentials: true,
-  // baseURL: 'https://arqplanner-cms-staging.payloadcms.app',
-  baseURL: 'http://192.168.1.100:3000',
+  baseURL: env.EXPO_PUBLIC_API_URL,
 })
 
 api.interceptors.response.use(
