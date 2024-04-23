@@ -49,6 +49,7 @@ export type Project = {
     status: 'pending' | 'approved' | 'archived'
     type: 'executive' | 'wood_detailing' | 'wet_spaces_detailing'
     file: FileType
+    comments?: string | null
   }
   id: string
 }
@@ -130,7 +131,7 @@ export type Work = {
   updatedAt: string
 }
 
-type GetWorksResponse = {
+export type GetWorksResponse = {
   docs: Array<Work>
   totalDocs: number
   limit: number

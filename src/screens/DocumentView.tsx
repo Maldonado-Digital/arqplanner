@@ -6,7 +6,9 @@ import { Toast } from '@components/Toast'
 import { Feather } from '@expo/vector-icons'
 import { useAuth } from '@hooks/useAuth'
 import { useRoute } from '@react-navigation/native'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import type { DocumentViewRouteParams } from '@routes/app.routes'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { AppError } from '@utils/AppError'
 import { downloadFile } from '@utils/downloadFile'
 import { type ViewableDocumentTypes, digViewingDocumentData } from '@utils/helpers'
 import { format } from 'date-fns'
@@ -31,23 +33,18 @@ import { useState } from 'react'
 import { Platform, Pressable } from 'react-native'
 import PDF from 'react-native-pdf'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { resolveProject } from 'src/api/mutations/resolveProject'
-import { type Work, getWorks } from 'src/api/queries/getWorks'
-
-type DocumentViewRouteParams = {
-  id: string
-  documentType: ViewableDocumentTypes
-}
+import { type ResolveProjectDTO, resolveProject } from 'src/api/mutations/resolveProject'
+import { type GetWorksResponse, type Work, getWorks } from 'src/api/queries/getWorks'
 
 export function DocumentView() {
   const route = useRoute()
   const toast = useToast()
-  const { user } = useAuth()
+  const queryClient = useQueryClient()
+
   const { onOpen, onClose } = useDisclose()
-  const { id, documentType } = route.params as DocumentViewRouteParams
+  const { documentId, documentType } = route.params as DocumentViewRouteParams
 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  // const [isLoading, setIsLoading] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
   const [comments, setComments] = useState('')
   const [selectedOption, setSelectedOption] = useState<'approve' | 'reject' | null>(null)
@@ -56,7 +53,6 @@ export function DocumentView() {
     data: works,
     error,
     isLoading,
-    refetch,
   } = useQuery({
     queryKey: ['works'],
     queryFn: getWorks,
@@ -64,18 +60,40 @@ export function DocumentView() {
 
   if (isLoading) return <Loading />
 
-  if (error || !works?.docs[0]) return <Loading />
+  if (error || !works?.docs[0]) return <Loading /> // fix this
 
   const { title, subTitle, status, file } = digViewingDocumentData(
     works.docs[0],
     documentType,
-    id,
+    documentId,
   )
 
   const hasApprovalFlow = documentType === 'project' && status === 'pending'
 
-  const { mutateAsync: resolveProjectFn } = useMutation({
+  function updateWorksCache({
+    projectId,
+    status: newStatus,
+    comments: newComments,
+  }: ResolveProjectDTO) {
+    const cached = queryClient.getQueryData<GetWorksResponse>(['works'])
+
+    if (cached) {
+      const newData = { ...cached }
+      const projectIndex = newData.docs[0].projects.findIndex(
+        project => project.id === projectId,
+      )
+      newData.docs[0].projects[projectIndex].project.status = newStatus
+      newData.docs[0].projects[projectIndex].project.comments = newComments
+
+      queryClient.setQueryData<GetWorksResponse>(['works'], newData)
+    }
+  }
+
+  const { mutateAsync: resolveProjectFn, isPending } = useMutation({
     mutationFn: resolveProject,
+    onSuccess(_, { workId, projectId, status: newStatus, comments }) {
+      updateWorksCache({ workId, projectId, status: newStatus, comments })
+    },
   })
 
   function handleOpenActionSheet(option: 'approve' | 'reject') {
@@ -109,7 +127,12 @@ export function DocumentView() {
       await toast.show({
         duration: 3000,
         render: ({ id }) => (
-          <Toast id={id} message="Download concluído com sucesso." status="success" />
+          <Toast
+            id={id}
+            message="Download concluído com sucesso."
+            status="success"
+            onClose={() => toast.close(id)}
+          />
         ),
       })
 
@@ -125,6 +148,7 @@ export function DocumentView() {
             id={id}
             message="Erro ao baixar arquivo. Tente novamente."
             status="error"
+            onClose={() => toast.close(id)}
           />
         ),
       })
@@ -135,17 +159,37 @@ export function DocumentView() {
     shareAsync(`${env.EXPO_PUBLIC_API_URL}${file.url}`)
   }
 
-  async function submitApproval() {
-    // setIsLoading(true)
+  async function handleSubmit() {
+    if (!selectedOption) throw new AppError('Erro ao atualizar informações')
+
     try {
-      const response = await resolveProject({
-        workId: (user.works[0] as Work).id,
-        projectId: id,
+      await resolveProjectFn({
+        workId: works?.docs[0].id as string,
+        projectId: documentId,
         status: selectedOption === 'approve' ? 'approved' : 'archived',
+        comments,
+      })
+
+      toast.show({
+        duration: 3000,
+        render: ({ id }) => (
+          <Toast
+            id={id}
+            message={
+              selectedOption === 'approve'
+                ? 'Aprovação confirmada'
+                : 'Reprovação confirmada'
+            }
+            status="success"
+            onClose={() => toast.close(id)}
+          />
+        ),
       })
 
       handleCloseActionSheet()
     } catch (error) {
+      handleCloseActionSheet()
+
       toast.show({
         duration: 3000,
         render: ({ id }) => (
@@ -153,31 +197,11 @@ export function DocumentView() {
             id={id}
             message="Erro ao atualizar informações. Tente novamente."
             status="error"
-          />
-        ),
-      })
-    } finally {
-      // setIsLoading(false)
-    }
-  }
-
-  function handleSubmit() {
-    if (!selectedOption) {
-      toast.show({
-        duration: 3000,
-        placement: 'top',
-        render: ({ id }) => (
-          <Toast
-            id={id}
-            message={'Erro ao enviar resposta. Tente novamente'}
-            status="error"
             onClose={() => toast.close(id)}
           />
         ),
       })
     }
-
-    submitApproval()
   }
 
   return (
@@ -363,6 +387,7 @@ export function DocumentView() {
               isOpen={!!selectedOption}
               onClose={handleCloseActionSheet}
               hideDragIndicator={false}
+              useRNModal={false}
             >
               <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -430,7 +455,7 @@ export function DocumentView() {
                       fontSize={'md'}
                       variant={selectedOption === 'reject' ? 'subtle' : 'solid'}
                       onPress={handleSubmit}
-                      isLoading={isLoading}
+                      isLoading={isPending}
                     />
                   </VStack>
                 </Actionsheet.Content>

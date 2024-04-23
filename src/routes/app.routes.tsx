@@ -17,7 +17,7 @@ import { Renders } from '@screens/Renders'
 import type { ViewableDocumentTypes } from '@utils/helpers'
 
 export type DocumentViewRouteParams = {
-  id: string
+  documentId: string
   documentType: ViewableDocumentTypes
 }
 

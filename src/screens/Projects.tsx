@@ -47,6 +47,7 @@ export function Projects() {
   } = useQuery({
     queryKey: ['works'],
     queryFn: getWorks,
+    refetchOnWindowFocus: true,
   })
   const { refreshing, handleRefresh } = useRefresh(refetch)
 
@@ -91,7 +92,12 @@ export function Projects() {
       await toast.show({
         duration: 3000,
         render: ({ id }) => (
-          <Toast id={id} message="Download concluído com sucesso." status="success" />
+          <Toast
+            id={id}
+            message="Download concluído com sucesso."
+            status="success"
+            onClose={() => toast.close(id)}
+          />
         ),
       })
 
@@ -107,6 +113,7 @@ export function Projects() {
             id={id}
             message="Erro ao baixar arquivo. Tente novamente."
             status="error"
+            onClose={() => toast.close(id)}
           />
         ),
       })
@@ -131,7 +138,7 @@ export function Projects() {
 
   function handleViewDocument(project: Project) {
     navigation.navigate('document_view', {
-      id: project.id,
+      documentId: project.id,
       documentType: 'project',
     })
   }
