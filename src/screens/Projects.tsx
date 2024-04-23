@@ -77,6 +77,9 @@ export function Projects() {
     return project.project.status === selectedStatus
   })
 
+  const selectedProject = filteredProjects?.find(p => p.id === selectedProjectID)
+  const hasApprovalFlow = selectedProject?.project.status === 'pending'
+
   function updateWorksCache({
     projectId,
     status: newStatus,
@@ -126,8 +129,9 @@ export function Projects() {
   }
 
   async function handleDownload() {
-    const selectedProject = projects?.find(p => p.id === selectedProjectID) as Project
     try {
+      if (!selectedProject) throw new AppError('Nenhuma opção selecionada.')
+
       setIsDownloading(true)
 
       await new Promise(resolve => setTimeout(resolve, 1000))
@@ -167,8 +171,15 @@ export function Projects() {
   }
 
   function handleShare() {
-    const selectedProject = projects?.find(p => p.id === selectedProjectID) as Project
+    if (!selectedProject) throw new AppError('Nenhuma opção selecionada.')
     shareAsync(`${process.env.EXPO_PUBLIC_API_URL}${selectedProject.project.file.url}`)
+  }
+
+  function handleViewDocument(project: Project) {
+    navigation.navigate('document_view', {
+      documentId: project.id,
+      documentType: 'project',
+    })
   }
 
   function handleItemPressed(project: Project) {
@@ -180,13 +191,6 @@ export function Projects() {
     }
 
     handleOpenMenu()
-  }
-
-  function handleViewDocument(project: Project) {
-    navigation.navigate('document_view', {
-      documentId: project.id,
-      documentType: 'project',
-    })
   }
 
   async function handleSubmit() {
@@ -377,49 +381,59 @@ export function Projects() {
                 </HStack>
               </Pressable>
 
-              <Pressable
-                onPress={() => handleOpenActionSheet('approve')}
-                style={({ pressed }) => ({
-                  opacity: pressed ? 0.3 : 1,
-                })}
-              >
-                <HStack
-                  bg={'white'}
-                  alignItems={'center'}
-                  px={10}
-                  py={6}
-                  borderBottomWidth={1}
-                  borderBottomColor={'muted.200'}
-                >
-                  <Icon as={Feather} size={5} name="check" color={'light.700'} mr={5} />
+              {hasApprovalFlow && (
+                <>
+                  <Pressable
+                    onPress={() => handleOpenActionSheet('approve')}
+                    style={({ pressed }) => ({
+                      opacity: pressed ? 0.3 : 1,
+                    })}
+                  >
+                    <HStack
+                      bg={'white'}
+                      alignItems={'center'}
+                      px={10}
+                      py={6}
+                      borderBottomWidth={1}
+                      borderBottomColor={'muted.200'}
+                    >
+                      <Icon
+                        as={Feather}
+                        size={5}
+                        name="check"
+                        color={'light.700'}
+                        mr={5}
+                      />
 
-                  <Text fontSize={'md'} fontFamily={'heading'} color={'light.700'}>
-                    Aprovar
-                  </Text>
-                </HStack>
-              </Pressable>
+                      <Text fontSize={'md'} fontFamily={'heading'} color={'light.700'}>
+                        Aprovar
+                      </Text>
+                    </HStack>
+                  </Pressable>
 
-              <Pressable
-                onPress={() => handleOpenActionSheet('reject')}
-                style={({ pressed }) => ({
-                  opacity: pressed ? 0.3 : 1,
-                })}
-              >
-                <HStack
-                  bg={'white'}
-                  alignItems={'center'}
-                  px={10}
-                  py={6}
-                  borderBottomWidth={1}
-                  borderBottomColor={'muted.200'}
-                >
-                  <Icon as={Feather} size={5} name="x" color={'light.700'} mr={5} />
+                  <Pressable
+                    onPress={() => handleOpenActionSheet('reject')}
+                    style={({ pressed }) => ({
+                      opacity: pressed ? 0.3 : 1,
+                    })}
+                  >
+                    <HStack
+                      bg={'white'}
+                      alignItems={'center'}
+                      px={10}
+                      py={6}
+                      borderBottomWidth={1}
+                      borderBottomColor={'muted.200'}
+                    >
+                      <Icon as={Feather} size={5} name="x" color={'light.700'} mr={5} />
 
-                  <Text fontSize={'md'} fontFamily={'heading'} color={'light.700'}>
-                    Reprovar
-                  </Text>
-                </HStack>
-              </Pressable>
+                      <Text fontSize={'md'} fontFamily={'heading'} color={'light.700'}>
+                        Reprovar
+                      </Text>
+                    </HStack>
+                  </Pressable>
+                </>
+              )}
 
               <Pressable
                 onPress={handleDownload}

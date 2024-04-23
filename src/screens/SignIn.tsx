@@ -13,17 +13,16 @@ import {
   HStack,
   Heading,
   Icon,
-  KeyboardAvoidingView,
   Pressable,
+  ScrollView,
   Text,
   VStack,
   View,
   useToast,
 } from 'native-base'
 import { Controller, type SubmitErrorHandler, useForm } from 'react-hook-form'
-import { Keyboard, Platform } from 'react-native'
+import { Keyboard, KeyboardAvoidingView, Platform } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { api } from 'src/lib/api'
 import { z } from 'zod'
 
 const signInFormSchema = z.object({
@@ -62,10 +61,10 @@ export function SignIn() {
   }
 
   async function onSubmit({ email, password }: SignInFormData) {
+    Keyboard.dismiss()
     try {
       await signIn(email, password)
     } catch (err) {
-      console.log('Erro', err)
       const isAppError = err instanceof AppError
       const message = isAppError
         ? 'Email ou senha inválidos.'
@@ -100,112 +99,107 @@ export function SignIn() {
   }
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    <SafeAreaView
+      style={{
+        flex: 1,
+        paddingHorizontal: 40,
+      }}
     >
-      <SafeAreaView
-        style={{
-          flex: 1,
-          paddingHorizontal: 40,
-        }}
-      >
-        <Pressable onPress={handleGoBack} w={8} h={8}>
-          <Icon as={Feather} name="arrow-left" color={'light.700'} size={6} />
-        </Pressable>
+      <Pressable onPress={handleGoBack} w={8} h={8}>
+        <Icon as={Feather} name="arrow-left" color={'light.700'} size={6} />
+      </Pressable>
 
-        <VStack flex={1} justifyContent={'center'}>
-          <LogoBox alignSelf={'center'} />
+      <ScrollView>
+        <LogoBox alignSelf={'center'} />
 
-          <Center>
-            <Heading
-              mt={8}
-              mb={6}
-              alignSelf={'flex-start'}
-              color={'light.700'}
-              fontSize={'4xl'}
-              fontFamily={'heading'}
-            >
-              Login
-            </Heading>
-            <Text
-              alignSelf={'flex-start'}
-              fontSize={'md'}
-              fontFamily={'body'}
-              color={'light.500'}
-              mb={8}
-              fontWeight={'bold'}
-            >
-              Seja bem-vindo ao ArqPlanner
+        <Center>
+          <Heading
+            mt={8}
+            mb={4}
+            alignSelf={'flex-start'}
+            color={'light.700'}
+            fontSize={'4xl'}
+            fontFamily={'heading'}
+          >
+            Login
+          </Heading>
+          <Text
+            alignSelf={'flex-start'}
+            fontSize={'md'}
+            fontFamily={'body'}
+            color={'light.500'}
+            mb={6}
+            fontWeight={'bold'}
+          >
+            Seja bem-vindo ao ArqPlanner
+          </Text>
+        </Center>
+
+        <Controller
+          name="email"
+          control={control}
+          rules={{ required: true }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <Input
+              placeholder="Insira seu email"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              mb={4}
+              InputLeftElement={
+                <Icon as={<Feather name="mail" />} size={4} ml={4} color="light.400" />
+              }
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              isInvalid={!!errors.email}
+            />
+          )}
+        />
+
+        <Controller
+          name="password"
+          control={control}
+          rules={{
+            minLength: 4,
+            required: true,
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <Input
+              placeholder="Insira sua senha"
+              secureTextEntry
+              mb={4}
+              InputLeftElement={
+                <Icon as={<Feather name="lock" />} size={4} ml={4} color="light.400" />
+              }
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              isInvalid={!!errors.password}
+              onSubmitEditing={handleSubmit(onSubmit, onSubmitError)}
+            />
+          )}
+        />
+
+        <HStack justifyContent={'center'}>
+          <Text fontFamily={'body'} fontSize={'md'} color={'light.400'}>
+            Esqueceu sua senha?{' '}
+          </Text>
+          <Pressable onPress={navigateToRecoverPassword}>
+            <Text fontFamily={'body'} fontSize={'md'} color={'light.700'}>
+              Recuperar agora.
             </Text>
-          </Center>
-
-          <Controller
-            name="email"
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <Input
-                placeholder="Insira seu email"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                mb={4}
-                InputLeftElement={
-                  <Icon as={<Feather name="mail" />} size={4} ml={4} color="light.400" />
-                }
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                isInvalid={!!errors.email}
-              />
-            )}
-          />
-
-          <Controller
-            name="password"
-            control={control}
-            rules={{
-              minLength: 4,
-              required: true,
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <Input
-                placeholder="Insira sua senha"
-                secureTextEntry
-                mb={4}
-                InputLeftElement={
-                  <Icon as={<Feather name="lock" />} size={4} ml={4} color="light.400" />
-                }
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                isInvalid={!!errors.password}
-                onSubmitEditing={handleSubmit(onSubmit, onSubmitError)}
-              />
-            )}
-          />
-
-          <HStack justifyContent={'center'}>
-            <Text fontFamily={'body'} fontSize={'md'} color={'light.400'}>
-              Esqueceu sua senha?{' '}
-            </Text>
-            <Pressable onPress={navigateToRecoverPassword}>
-              <Text fontFamily={'body'} fontSize={'md'} color={'light.700'}>
-                Recuperar agora.
-              </Text>
-            </Pressable>
-          </HStack>
-          <Button
-            title="Entrar"
-            rounded={'full'}
-            fontSize={'lg'}
-            my={6}
-            isLoading={isSubmitting}
-            variant={'solid'}
-            onPress={handleSubmit(onSubmit, onSubmitError)}
-          />
-        </VStack>
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+          </Pressable>
+        </HStack>
+        <Button
+          title="Entrar"
+          rounded={'full'}
+          fontSize={'lg'}
+          mt={6}
+          isLoading={isSubmitting}
+          variant={'solid'}
+          onPress={handleSubmit(onSubmit, onSubmitError)}
+        />
+      </ScrollView>
+    </SafeAreaView>
   )
 }
