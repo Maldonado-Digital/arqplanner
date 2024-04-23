@@ -6,13 +6,10 @@ import { Feather } from '@expo/vector-icons'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { useQuery } from '@tanstack/react-query'
-import { projectStatus } from '@utils/constants'
 import { format } from 'date-fns'
-import { env } from 'env'
 import { FlatList, Icon, VStack, View } from 'native-base'
-import { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { type Project, type Quote, type Render, getWorks } from 'src/api/queries/getWorks'
+import { type Quote, type Render, getWorks } from 'src/api/queries/getWorks'
 
 export function Quotes() {
   const navigation = useNavigation<AppNavigatorRoutesProps>()
@@ -30,14 +27,8 @@ export function Quotes() {
 
   function handleViewDocument(quote: Quote) {
     navigation.navigate('document_view', {
-      id: quote.id,
-      title: quote.quote.title,
-      subTitle: format(quote.quote.file.updatedAt, "dd-MM-yy' | 'H:mm"),
-      hasApprovalFlow: false,
-      source: {
-        uri: `${env.EXPO_PUBLIC_API_URL}${quote.quote.file.url}`,
-        cache: true,
-      },
+      documentId: quote.id,
+      documentType: 'quote',
     })
   }
 

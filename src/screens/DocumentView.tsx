@@ -10,7 +10,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { AppError } from '@utils/AppError'
 import { downloadFile } from '@utils/downloadFile'
 import { digViewingDocumentData } from '@utils/helpers'
-import { env } from 'env'
 import { shareAsync } from 'expo-sharing'
 import {
   Actionsheet,
@@ -37,13 +36,13 @@ export function DocumentView() {
   const route = useRoute()
   const toast = useToast()
   const queryClient = useQueryClient()
-
   const { onOpen, onClose } = useDisclose()
+
   const { documentId, documentType } = route.params as DocumentViewRouteParams
 
+  const [comments, setComments] = useState('')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
-  const [comments, setComments] = useState('')
   const [selectedOption, setSelectedOption] = useState<'approve' | 'reject' | null>(null)
 
   const {
@@ -119,7 +118,7 @@ export function DocumentView() {
       setIsDownloading(true)
 
       await new Promise(resolve => setTimeout(resolve, 1000))
-      await downloadFile(`${env.EXPO_PUBLIC_API_URL}${file.url}`)
+      await downloadFile(`${process.env.EXPO_PUBLIC_API_URL}${file.url}`)
 
       await toast.show({
         duration: 3000,
@@ -153,12 +152,12 @@ export function DocumentView() {
   }
 
   function handleShare() {
-    shareAsync(`${env.EXPO_PUBLIC_API_URL}${file.url}`)
+    shareAsync(`${process.env.EXPO_PUBLIC_API_URL}${file.url}`)
   }
 
   async function handleSubmit() {
     try {
-      if (!selectedOption) throw new AppError('Erro ao atualizar informações')
+      if (!selectedOption) throw new AppError('Nenhuma opção selecionada')
 
       await resolveProjectFn({
         workId: works?.docs[0].id as string,
@@ -213,7 +212,7 @@ export function DocumentView() {
         <PDF
           onError={error => console.log(error)}
           source={{
-            uri: `${env.EXPO_PUBLIC_API_URL}${file.url}`,
+            uri: `${process.env.EXPO_PUBLIC_API_URL}${file.url}`,
             cache: true,
           }}
           style={{

@@ -2,14 +2,15 @@ import { Category } from '@components/Category'
 import { ListEmpty } from '@components/ListEmpty'
 import { type ItemStatus, ListItem } from '@components/ListItem'
 import { ListScreenHeader } from '@components/ListScreenHeader'
+import { Loading } from '@components/Loading'
 import { Feather } from '@expo/vector-icons'
-import { useNavigation, useRoute } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { useQuery } from '@tanstack/react-query'
 import { documentsCategories } from '@utils/constants'
 import { format } from 'date-fns'
 import { FlatList, Icon, VStack } from 'native-base'
-import { Fragment, useState } from 'react'
+import { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { type Document, getWorks } from 'src/api/queries/getWorks'
 
@@ -33,15 +34,14 @@ export function Documents() {
 
   function handleViewDocument(document: Document) {
     navigation.navigate('document_view', {
-      id: document.id,
-      title: document.document.title,
-      hasApprovalFlow: false,
-      source: {
-        uri: `https://arqplanner-cms-staging.payloadcms.app${document.document.file.url}`,
-        cache: true,
-      },
+      documentId: document.id,
+      documentType: 'document',
     })
   }
+
+  if (isLoading) return <Loading />
+
+  if (error) return null
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top']}>

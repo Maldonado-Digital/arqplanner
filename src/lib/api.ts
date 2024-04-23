@@ -1,10 +1,9 @@
 import { AppError } from '@utils/AppError'
 import axios from 'axios'
-import { env } from 'env'
 
 const api = axios.create({
   withCredentials: true,
-  baseURL: env.EXPO_PUBLIC_API_URL,
+  baseURL: process.env.EXPO_PUBLIC_API_URL,
 })
 
 api.interceptors.response.use(

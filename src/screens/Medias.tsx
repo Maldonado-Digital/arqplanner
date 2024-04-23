@@ -7,7 +7,6 @@ import { Feather } from '@expo/vector-icons'
 import { useRoute } from '@react-navigation/native'
 import { useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
-import { env } from 'env'
 import {
   Actionsheet,
   FlatList,
@@ -66,7 +65,7 @@ export function Medias() {
 
   const images = data?.files.map(({ uploads, id }) => ({
     key: id,
-    uri: `${env.EXPO_PUBLIC_API_URL}${uploads.url}`,
+    uri: `${process.env.EXPO_PUBLIC_API_URL}${uploads.url}`,
   })) as Array<ImageProps>
 
   const shouldShowApprovalFooter = hasApprovalFlow && !isResolved && !!images.length
