@@ -100,15 +100,15 @@ export function SignIn() {
   }
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        paddingHorizontal: 40,
-      }}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      <SafeAreaView
+        style={{
+          flex: 1,
+          paddingHorizontal: 40,
+        }}
       >
         <Pressable onPress={handleGoBack} w={8} h={8}>
           <Icon as={Feather} name="arrow-left" color={'light.700'} size={6} />
@@ -205,7 +205,7 @@ export function SignIn() {
             onPress={handleSubmit(onSubmit, onSubmitError)}
           />
         </VStack>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
