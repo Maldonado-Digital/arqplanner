@@ -5,6 +5,7 @@ import { Toast } from '@components/Toast'
 import { Feather } from '@expo/vector-icons'
 import { useAuth } from '@hooks/useAuth'
 import { useRoute } from '@react-navigation/native'
+import { downloadFile } from '@utils/downloadFile'
 import * as FileSystem from 'expo-file-system'
 import { shareAsync } from 'expo-sharing'
 import {
@@ -47,7 +48,7 @@ export function DocumentView() {
   const { id, title, subTitle, source, hasApprovalFlow } =
     route.params as DocumentViewRouteParams
 
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isResolved, setIsResolved] = useState(false)
   const [comments, setComments] = useState('')
@@ -63,36 +64,36 @@ export function DocumentView() {
     onClose()
   }
 
-  function handleOpenSettings() {
-    setIsSettingsOpen(true)
+  function handleOpenMenu() {
+    setIsMenuOpen(true)
     onOpen()
   }
 
-  function handleCloseSettings() {
-    setIsSettingsOpen(false)
+  function handleCloseMenu() {
+    setIsMenuOpen(false)
     onClose()
   }
 
   async function handleDownload(fileUri: string) {
-    const callback = (downloadProgress: FileSystem.DownloadProgressData) => {
-      const progress =
-        downloadProgress.totalBytesWritten / downloadProgress.totalBytesExpectedToWrite
-      console.log('Download Progress: ', progress)
-    }
-
-    const downloadResumable = FileSystem.createDownloadResumable(
-      fileUri,
-      `${FileSystem.documentDirectory}${fileUri.split('/').pop()}`,
-      {},
-      callback,
-    )
-
     try {
-      const { uri } =
-        (await downloadResumable.downloadAsync()) as FileSystem.FileSystemDownloadResult
-      console.log('Finished downloading to ', uri)
-    } catch (e) {
-      console.error(e)
+      await downloadFile(fileUri)
+      toast.show({
+        duration: 3000,
+        render: ({ id }) => (
+          <Toast id={id} message="Download concluído com sucesso." status="success" />
+        ),
+      })
+    } catch (error) {
+      toast.show({
+        duration: 3000,
+        render: ({ id }) => (
+          <Toast
+            id={id}
+            message="Erro ao baixar arquivo. Tente novamente."
+            status="error"
+          />
+        ),
+      })
     }
   }
 
@@ -150,7 +151,7 @@ export function DocumentView() {
           subTitle={subTitle}
           borderBottomColor={'muted.200'}
           borderBottomWidth={1}
-          onClickSettings={handleOpenSettings}
+          onClickSettings={handleOpenMenu}
         />
         <PDF
           onError={error => console.log(error)}
@@ -168,8 +169,8 @@ export function DocumentView() {
         />
 
         <Actionsheet
-          isOpen={isSettingsOpen}
-          onClose={handleCloseSettings}
+          isOpen={isMenuOpen}
+          onClose={handleCloseMenu}
           hideDragIndicator={false}
         >
           <Actionsheet.Content borderTopRadius="3xl" bg={'white'}>
@@ -193,7 +194,7 @@ export function DocumentView() {
                   rounded={'full'}
                   bg={'white'}
                   borderColor={'muted.200'}
-                  onPress={handleCloseSettings}
+                  onPress={handleCloseMenu}
                   _pressed={{ bg: 'muted.300' }}
                   _icon={{
                     size: 5,

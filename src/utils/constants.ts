@@ -61,3 +61,5 @@ export const projectStatus = [
     value: 'archived',
   },
 ]
+
+export const PDF_MIME_TYPE = 'application/pdf'
