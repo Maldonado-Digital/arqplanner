@@ -115,7 +115,6 @@ export function Projects() {
 
   function handleShare() {
     const selectedProject = projects?.find(p => p.id === selectedProjectID) as Project
-    console.log(`${env.EXPO_PUBLIC_API_URL}${selectedProject.project.file.url}`)
     shareAsync(`${env.EXPO_PUBLIC_API_URL}${selectedProject.project.file.url}`)
   }
 
@@ -133,13 +132,7 @@ export function Projects() {
   function handleViewDocument(project: Project) {
     navigation.navigate('document_view', {
       id: project.id,
-      title: project.project.title,
-      subTitle: format(project.project.file.updatedAt, "dd-MM-yy' | 'H:mm"),
-      hasApprovalFlow: true,
-      source: {
-        uri: `${env.EXPO_PUBLIC_API_URL}${project.project.file.url}`,
-        cache: true,
-      },
+      documentType: 'project',
     })
   }
 

@@ -68,7 +68,7 @@ export function SignIn() {
       console.log('Erro', err)
       const isAppError = err instanceof AppError
       const message = isAppError
-        ? 'Email ou senha incorreto.'
+        ? 'Email ou senha inválidos.'
         : 'Erro ao fazer login. Tente novamente.'
 
       toast.show({

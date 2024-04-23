@@ -1,11 +1,16 @@
 import { ApprovalFooter } from '@components/ApprovalFooter'
 import { Button } from '@components/Button'
 import { ListScreenHeader } from '@components/ListScreenHeader'
+import { Loading } from '@components/Loading'
 import { Toast } from '@components/Toast'
 import { Feather } from '@expo/vector-icons'
 import { useAuth } from '@hooks/useAuth'
 import { useRoute } from '@react-navigation/native'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { downloadFile } from '@utils/downloadFile'
+import { type ViewableDocumentTypes, digViewingDocumentData } from '@utils/helpers'
+import { format } from 'date-fns'
+import { env } from 'env'
 import * as FileSystem from 'expo-file-system'
 import { shareAsync } from 'expo-sharing'
 import {
@@ -15,6 +20,7 @@ import {
   Icon,
   IconButton,
   KeyboardAvoidingView,
+  Spinner,
   Text,
   TextArea,
   VStack,
@@ -26,18 +32,11 @@ import { Platform, Pressable } from 'react-native'
 import PDF from 'react-native-pdf'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { resolveProject } from 'src/api/mutations/resolveProject'
-import type { Work } from 'src/api/queries/getWorks'
-import { api } from 'src/lib/api'
+import { type Work, getWorks } from 'src/api/queries/getWorks'
 
 type DocumentViewRouteParams = {
   id: string
-  title: string
-  subTitle?: string
-  hasApprovalFlow: boolean
-  source: {
-    uri: string
-    cache: boolean
-  }
+  documentType: ViewableDocumentTypes
 }
 
 export function DocumentView() {
@@ -45,16 +44,42 @@ export function DocumentView() {
   const toast = useToast()
   const { user } = useAuth()
   const { onOpen, onClose } = useDisclose()
-  const { id, title, subTitle, source, hasApprovalFlow } =
-    route.params as DocumentViewRouteParams
+  const { id, documentType } = route.params as DocumentViewRouteParams
 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [isResolved, setIsResolved] = useState(false)
+  // const [isLoading, setIsLoading] = useState(false)
+  const [isDownloading, setIsDownloading] = useState(false)
   const [comments, setComments] = useState('')
   const [selectedOption, setSelectedOption] = useState<'approve' | 'reject' | null>(null)
 
+  const {
+    data: works,
+    error,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ['works'],
+    queryFn: getWorks,
+  })
+
+  if (isLoading) return <Loading />
+
+  if (error || !works?.docs[0]) return <Loading />
+
+  const { title, subTitle, status, file } = digViewingDocumentData(
+    works.docs[0],
+    documentType,
+    id,
+  )
+
+  const hasApprovalFlow = documentType === 'project' && status === 'pending'
+
+  const { mutateAsync: resolveProjectFn } = useMutation({
+    mutationFn: resolveProject,
+  })
+
   function handleOpenActionSheet(option: 'approve' | 'reject') {
+    setIsMenuOpen(false)
     setSelectedOption(option)
     onOpen()
   }
@@ -74,16 +99,25 @@ export function DocumentView() {
     onClose()
   }
 
-  async function handleDownload(fileUri: string) {
+  async function handleDownload() {
     try {
-      await downloadFile(fileUri)
-      toast.show({
+      setIsDownloading(true)
+
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      await downloadFile(`${env.EXPO_PUBLIC_API_URL}${file.url}`)
+
+      await toast.show({
         duration: 3000,
         render: ({ id }) => (
           <Toast id={id} message="Download concluído com sucesso." status="success" />
         ),
       })
+
+      setIsDownloading(false)
+      handleCloseMenu()
     } catch (error) {
+      setIsDownloading(false)
+
       toast.show({
         duration: 3000,
         render: ({ id }) => (
@@ -97,8 +131,12 @@ export function DocumentView() {
     }
   }
 
+  function handleShare() {
+    shareAsync(`${env.EXPO_PUBLIC_API_URL}${file.url}`)
+  }
+
   async function submitApproval() {
-    setIsLoading(true)
+    // setIsLoading(true)
     try {
       const response = await resolveProject({
         workId: (user.works[0] as Work).id,
@@ -119,7 +157,7 @@ export function DocumentView() {
         ),
       })
     } finally {
-      setIsLoading(false)
+      // setIsLoading(false)
     }
   }
 
@@ -155,7 +193,10 @@ export function DocumentView() {
         />
         <PDF
           onError={error => console.log(error)}
-          source={source}
+          source={{
+            uri: `${env.EXPO_PUBLIC_API_URL}${file.url}`,
+            cache: true,
+          }}
           style={{
             backgroundColor: 'transparent',
             flex: 1,
@@ -205,7 +246,12 @@ export function DocumentView() {
                 />
               </HStack>
 
-              <Pressable onPress={() => shareAsync(source.uri)}>
+              <Pressable
+                onPress={handleShare}
+                style={({ pressed }) => ({
+                  opacity: pressed ? 0.3 : 1,
+                })}
+              >
                 <HStack
                   bg={'white'}
                   alignItems={'center'}
@@ -224,7 +270,12 @@ export function DocumentView() {
 
               {hasApprovalFlow && (
                 <>
-                  <Pressable>
+                  <Pressable
+                    onPress={() => handleOpenActionSheet('approve')}
+                    style={({ pressed }) => ({
+                      opacity: pressed ? 0.3 : 1,
+                    })}
+                  >
                     <HStack
                       bg={'white'}
                       alignItems={'center'}
@@ -247,7 +298,12 @@ export function DocumentView() {
                     </HStack>
                   </Pressable>
 
-                  <Pressable>
+                  <Pressable
+                    onPress={() => handleOpenActionSheet('reject')}
+                    style={({ pressed }) => ({
+                      opacity: pressed ? 0.3 : 1,
+                    })}
+                  >
                     <HStack
                       bg={'white'}
                       alignItems={'center'}
@@ -258,7 +314,7 @@ export function DocumentView() {
                     >
                       <Icon as={Feather} size={5} name="x" color={'light.700'} mr={5} />
 
-                      <Text fontSize={'md'} fontFamily={'heading'} color={'light.700'}>
+                      <Text fontSize={'md'} fontFamily={'heading'} color={''}>
                         Reprovar
                       </Text>
                     </HStack>
@@ -266,15 +322,24 @@ export function DocumentView() {
                 </>
               )}
 
-              <Pressable onPress={() => handleDownload(source.uri)}>
+              <Pressable
+                onPress={handleDownload}
+                style={({ pressed }) => ({
+                  opacity: pressed || isDownloading ? 0.3 : 1,
+                })}
+              >
                 <HStack bg={'white'} alignItems={'center'} px={10} py={6}>
-                  <Icon
-                    as={Feather}
-                    size={5}
-                    name="arrow-down-circle"
-                    color={'light.700'}
-                    mr={5}
-                  />
+                  {isDownloading && <Spinner w={5} color={'light.700'} mr={5} />}
+
+                  {!isDownloading && (
+                    <Icon
+                      as={Feather}
+                      size={5}
+                      name="arrow-down-circle"
+                      color={'light.700'}
+                      mr={5}
+                    />
+                  )}
 
                   <Text fontSize={'md'} fontFamily={'heading'} color={'light.700'}>
                     Salvar arquivo
@@ -285,7 +350,7 @@ export function DocumentView() {
           </Actionsheet.Content>
         </Actionsheet>
 
-        {hasApprovalFlow && !isResolved && (
+        {hasApprovalFlow && (
           <>
             <ApprovalFooter
               position={'absolute'}

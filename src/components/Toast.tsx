@@ -1,17 +1,6 @@
 import { Feather } from '@expo/vector-icons'
-import {
-  Alert,
-  CloseIcon,
-  HStack,
-  Icon,
-  IconButton,
-  Text,
-  VStack,
-} from 'native-base'
-import {
-  type IAlertProps,
-  InterfaceAlertProps,
-} from 'native-base/lib/typescript/components/composites/Alert/types'
+import { Alert, CloseIcon, HStack, Heading, Icon, IconButton } from 'native-base'
+import type { IAlertProps } from 'native-base/lib/typescript/components/composites/Alert/types'
 
 interface ToastProps extends IAlertProps {
   id: string
@@ -29,10 +18,12 @@ export function Toast({ id, status, message, onClose, ...rest }: ToastProps) {
       status={status}
       bg="white"
       p={4}
-      rounded={'md'}
+      rounded={'xl'}
+      borderColor={'#00000012'}
+      borderWidth={1}
       style={{
         shadowColor: '#000000',
-        shadowOpacity: 0.15,
+        shadowOpacity: 0.1,
         shadowRadius: 30,
         shadowOffset: { width: 0, height: 4 },
       }}
@@ -47,9 +38,9 @@ export function Toast({ id, status, message, onClose, ...rest }: ToastProps) {
             size={4}
             mr={3}
           />
-          <Text fontSize="sm" fontFamily="heading" color="light.700" pr={10}>
+          <Heading fontSize="sm" fontFamily="heading" color="light.700" pr={10}>
             {message}
-          </Text>
+          </Heading>
         </HStack>
         <IconButton
           variant="unstyled"

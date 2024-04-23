@@ -64,38 +64,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function signIn(email: string, password: string) {
-    try {
-      const { data } = await api.post<{ user?: UserDTO; token?: string; exp: number }>(
-        '/api/customers/login?locale=pt-BR',
-        {
-          email,
-          password,
-        },
-      )
+    const { data } = await api.post<{ user?: UserDTO; token?: string; exp: number }>(
+      '/api/customers/login?locale=pt-BR',
+      {
+        email,
+        password,
+      },
+    )
 
-      console.log(data)
+    console.log(data)
 
-      if (!data.user?.organization?.id || !data.user.works[0]) {
-        throw new AppError('Erro ao carregar as informações')
-      }
+    if (!data.user?.organization?.id || !data.user.works[0]) {
+      throw new AppError('Erro ao carregar as informações')
+    }
 
-      if (data.user && data.token) {
-        await saveAuthConfigInStorage({
-          userData: data.user,
-          token: data.token,
-          exp: data.exp,
-        })
-        setAuthConfig({
-          userData: data.user,
-          token: data.token,
-        })
-      }
-    } catch (error) {
-      toast.show({
-        duration: 3000,
-        render: ({ id }) => (
-          <Toast id={id} message="Erro ao fazer login. Tente novamente." status="error" />
-        ),
+    if (data.user && data.token) {
+      await saveAuthConfigInStorage({
+        userData: data.user,
+        token: data.token,
+        exp: data.exp,
+      })
+      setAuthConfig({
+        userData: data.user,
+        token: data.token,
       })
     }
   }

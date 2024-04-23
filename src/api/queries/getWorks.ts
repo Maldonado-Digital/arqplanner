@@ -1,5 +1,16 @@
 import { api } from 'src/lib/api'
 
+export type FileType = {
+  id: string
+  organization: string
+  filename: string
+  mimeType: string
+  filesize: number
+  createdAt: string
+  updatedAt: string
+  url: string
+}
+
 type Step = {
   step: {
     title: string
@@ -27,17 +38,7 @@ export type Document = {
   document: {
     title: string
     type: 'briefings' | 'contracts' | 'meeting_minutes' | 'other'
-
-    file: {
-      id: string
-      organization: string
-      filename: string
-      mimeType: string
-      filesize: number
-      createdAt: string
-      updatedAt: string
-      url: string
-    }
+    file: FileType
   }
   id: string
 }
@@ -47,16 +48,7 @@ export type Project = {
     title: string
     status: 'pending' | 'approved' | 'archived'
     type: 'executive' | 'wood_detailing' | 'wet_spaces_detailing'
-    file: {
-      id: string
-      organization: string
-      filename: string
-      mimeType: string
-      filesize: number
-      createdAt: string
-      updatedAt: string
-      url: string
-    }
+    file: FileType
   }
   id: string
 }
@@ -113,19 +105,7 @@ export type Photo = {
 export type Quote = {
   quote: {
     title: string
-    file: {
-      id: string
-      organization: string
-      filename: string
-      mimeType: string
-      filesize: number
-      width: number
-      height: number
-      createdAt: string
-      updatedAt: string
-      url: string
-    }
-    id: string
+    file: FileType
   }
   id: string
 }
