@@ -4,16 +4,13 @@ import { ListScreenHeader } from '@components/ListScreenHeader'
 import { Loading } from '@components/Loading'
 import { Toast } from '@components/Toast'
 import { Feather } from '@expo/vector-icons'
-import { useAuth } from '@hooks/useAuth'
 import { useRoute } from '@react-navigation/native'
 import type { DocumentViewRouteParams } from '@routes/app.routes'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { AppError } from '@utils/AppError'
 import { downloadFile } from '@utils/downloadFile'
-import { type ViewableDocumentTypes, digViewingDocumentData } from '@utils/helpers'
-import { format } from 'date-fns'
+import { digViewingDocumentData } from '@utils/helpers'
 import { env } from 'env'
-import * as FileSystem from 'expo-file-system'
 import { shareAsync } from 'expo-sharing'
 import {
   Actionsheet,
@@ -34,7 +31,7 @@ import { Platform, Pressable } from 'react-native'
 import PDF from 'react-native-pdf'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { type ResolveProjectDTO, resolveProject } from 'src/api/mutations/resolveProject'
-import { type GetWorksResponse, type Work, getWorks } from 'src/api/queries/getWorks'
+import { type GetWorksResponse, getWorks } from 'src/api/queries/getWorks'
 
 export function DocumentView() {
   const route = useRoute()
@@ -160,9 +157,9 @@ export function DocumentView() {
   }
 
   async function handleSubmit() {
-    if (!selectedOption) throw new AppError('Erro ao atualizar informações')
-
     try {
+      if (!selectedOption) throw new AppError('Erro ao atualizar informações')
+
       await resolveProjectFn({
         workId: works?.docs[0].id as string,
         projectId: documentId,
@@ -188,8 +185,6 @@ export function DocumentView() {
 
       handleCloseActionSheet()
     } catch (error) {
-      handleCloseActionSheet()
-
       toast.show({
         duration: 3000,
         render: ({ id }) => (
@@ -338,7 +333,7 @@ export function DocumentView() {
                     >
                       <Icon as={Feather} size={5} name="x" color={'light.700'} mr={5} />
 
-                      <Text fontSize={'md'} fontFamily={'heading'} color={''}>
+                      <Text fontSize={'md'} fontFamily={'heading'} color={'light.700'}>
                         Reprovar
                       </Text>
                     </HStack>
@@ -387,7 +382,6 @@ export function DocumentView() {
               isOpen={!!selectedOption}
               onClose={handleCloseActionSheet}
               hideDragIndicator={false}
-              useRNModal={false}
             >
               <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

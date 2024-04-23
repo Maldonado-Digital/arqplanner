@@ -56,4 +56,11 @@ export const THEME = extendTheme({
     41: 164,
     1934: 1934,
   },
+  components: {
+    Toast: {
+      defaultProps: {
+        _overlay: { style: { zIndex: 999 } },
+      },
+    },
+  },
 })
