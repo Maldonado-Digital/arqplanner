@@ -99,7 +99,8 @@ export function Medias() {
     uri: `${process.env.EXPO_PUBLIC_API_URL}${uploads.url}`,
   })) as Array<ImageProps>
 
-  const hasApprovalFlow = mediaType === 'render' && status === 'pending' && !images.length
+  const hasApprovalFlow =
+    mediaType === 'render' && status === 'pending' && !!images.length
 
   function handleOpenActionSheet(option: 'approve' | 'reject') {
     setIsMenuOpen(false)
