@@ -1,5 +1,3 @@
-import { useNavigation } from '@react-navigation/native'
-import type { AuthNavigatorRoutesProps } from '@routes/auth.routes'
 import { BlurView } from 'expo-blur'
 import { Box, HStack, type IBoxProps, Text } from 'native-base'
 import { Button } from './Button'

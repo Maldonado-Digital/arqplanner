@@ -1,6 +1,6 @@
 import { Category } from '@components/Category'
 import { ListEmpty } from '@components/ListEmpty'
-import { type ApprovalStatus, ListItem } from '@components/ListItem'
+import { ListItem } from '@components/ListItem'
 import { ListScreenHeader } from '@components/ListScreenHeader'
 import { Feather } from '@expo/vector-icons'
 import { useNavigation, useRoute } from '@react-navigation/native'
@@ -9,7 +9,7 @@ import { useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { FlatList, Icon, VStack, View } from 'native-base'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { type Quote, type Render, getWorks } from 'src/api/queries/getWorks'
+import { type Quote, getWorks } from 'src/api/queries/getWorks'
 
 export function Quotes() {
   const navigation = useNavigation<AppNavigatorRoutesProps>()

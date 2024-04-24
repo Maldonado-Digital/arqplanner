@@ -1,21 +1,21 @@
 import { api } from 'src/lib/api'
 
-export type ResolveProjectDTO = {
+export type ResolveRenderDTO = {
   workId: string
-  projectId: string
+  renderId: string
   status: 'approved' | 'archived'
   comments: string
 }
 
-export async function resolveProject({
+export async function resolveRender({
   workId,
-  projectId,
+  renderId,
   status,
   comments,
-}: ResolveProjectDTO) {
+}: ResolveRenderDTO) {
   await new Promise(resolve => setTimeout(resolve, 300))
   const { data } = await api.patch(
-    `/api/works/${workId}/resolve-project/${projectId}?locale=pt-BR`,
+    `/api/works/${workId}/resolve-render/${renderId}?locale=pt-BR`,
     {
       status,
       comments,

@@ -12,12 +12,13 @@ import {
   Text,
   VStack,
 } from 'native-base'
-import type { ApprovalStatus } from './ListItem'
+import type { ApprovalStatus } from 'src/api/queries/getWorks'
 
 type ScreenHeaderType = IStackProps & {
   title: string
   subTitle?: string
   status?: ApprovalStatus | null
+  isMenuDisabled?: boolean
   onClickMenu?: () => void
 }
 
@@ -26,6 +27,7 @@ export function ListScreenHeader({
   subTitle,
   status,
   onClickMenu,
+  isMenuDisabled,
   ...rest
 }: ScreenHeaderType) {
   const navigation = useNavigation<AppNavigatorRoutesProps>()
@@ -74,8 +76,14 @@ export function ListScreenHeader({
         )}
       </VStack>
 
-      <Pressable onPress={onClickMenu}>
-        <Icon as={Feather} name="more-vertical" color={'light.700'} size={6} />
+      <Pressable onPress={onClickMenu} isDisabled={isMenuDisabled}>
+        <Icon
+          as={Feather}
+          name="more-vertical"
+          color={'light.700'}
+          opacity={isMenuDisabled ? 0.2 : 1}
+          size={6}
+        />
       </Pressable>
     </HStack>
   )

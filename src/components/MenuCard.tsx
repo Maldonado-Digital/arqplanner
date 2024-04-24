@@ -10,7 +10,7 @@ type MenuCard = {
 export function MenuCard({ title, icon, onPress }: MenuCard) {
   return (
     <Pressable onPress={onPress}>
-      {({ isHovered, isFocused, isPressed }) => (
+      {({ isPressed }) => (
         <VStack
           p={6}
           bg={isPressed ? 'gray.50' : 'white'}

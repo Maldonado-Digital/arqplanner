@@ -30,7 +30,7 @@ export function Photos() {
   const navigation = useNavigation<AppNavigatorRoutesProps>()
 
   function handleViewMedia(id: string) {
-    navigation.navigate('medias', { id, mediaType: 'photo' })
+    navigation.navigate('medias', { mediaId: id, mediaType: 'photo' })
   }
 
   return (

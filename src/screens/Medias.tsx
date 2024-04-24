@@ -8,7 +8,8 @@ import { Feather } from '@expo/vector-icons'
 import { useAuth } from '@hooks/useAuth'
 import { useRoute } from '@react-navigation/native'
 import type { MediasRouteParams } from '@routes/app.routes'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { AppError } from '@utils/AppError'
 import { downloadFile } from '@utils/downloadFile'
 import { digViewingMediaData } from '@utils/helpers'
 import * as MediaLibrary from 'expo-media-library'
@@ -32,11 +33,12 @@ import {
   useToast,
 } from 'native-base'
 import { useState } from 'react'
-import { Platform, useWindowDimensions } from 'react-native'
+import { Platform, Vibration, useWindowDimensions } from 'react-native'
 
 import ImageView from 'react-native-image-viewing'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { getWorks } from 'src/api/queries/getWorks'
+import { type ResolveRenderDTO, resolveRender } from 'src/api/mutations/resolveRender'
+import { type GetWorksResponse, getWorks } from 'src/api/queries/getWorks'
 
 type ImageProps = {
   key: string
@@ -46,6 +48,7 @@ type ImageProps = {
 export function Medias() {
   const route = useRoute()
   const toast = useToast()
+  const queryClient = useQueryClient()
 
   const { signOut } = useAuth()
   const { onOpen, onClose } = useDisclose()
@@ -102,6 +105,32 @@ export function Medias() {
   const hasApprovalFlow =
     mediaType === 'render' && status === 'pending' && !!images.length
 
+  function updateWorksCache({
+    renderId,
+    status: newStatus,
+    comments: newComments,
+  }: ResolveRenderDTO) {
+    const cached = queryClient.getQueryData<GetWorksResponse>(['works'])
+
+    if (cached) {
+      const newData = { ...cached }
+      const renderIndex = newData.docs[0].renders.findIndex(
+        render => render.id === renderId,
+      )
+      newData.docs[0].renders[renderIndex].render.status = newStatus
+      newData.docs[0].renders[renderIndex].render.comments = newComments
+
+      queryClient.setQueryData<GetWorksResponse>(['works'], newData)
+    }
+  }
+
+  const { mutateAsync: resolveRenderFn, isPending } = useMutation({
+    mutationFn: resolveRender,
+    onSuccess(_, { workId, renderId, status: newStatus, comments }) {
+      updateWorksCache({ workId, renderId, status: newStatus, comments })
+    },
+  })
+
   function handleOpenActionSheet(option: 'approve' | 'reject') {
     setIsMenuOpen(false)
     setSelectedOption(option)
@@ -126,7 +155,14 @@ export function Medias() {
   function handleImagePress(idx: number, isLongPress = false) {
     setCurrentIndex(idx)
 
-    isLongPress ? handleOpenMenu() : setIsViewing(true)
+    if (isLongPress) {
+      Vibration.vibrate(50)
+      handleOpenMenu()
+
+      return
+    }
+
+    setIsViewing(true)
   }
 
   async function saveMediaToLibrary(mediaUri: string) {
@@ -202,15 +238,46 @@ export function Medias() {
   }
 
   async function handleSubmit() {
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    onClose()
+    try {
+      if (!selectedOption) throw new AppError('Nenhuma opção selecionada')
 
-    toast.show({
-      duration: 5000,
-      render: ({ id }) => (
-        <Toast id={id} message="Aprovação confirmada!" status="success" />
-      ),
-    })
+      await resolveRenderFn({
+        workId: works?.docs[0].id as string,
+        renderId: mediaId,
+        status: selectedOption === 'approve' ? 'approved' : 'archived',
+        comments,
+      })
+
+      toast.show({
+        duration: 3000,
+        render: ({ id }) => (
+          <Toast
+            id={id}
+            message={
+              selectedOption === 'approve'
+                ? 'Aprovação confirmada'
+                : 'Reprovação confirmada'
+            }
+            status="success"
+            onClose={() => toast.close(id)}
+          />
+        ),
+      })
+
+      handleCloseActionSheet()
+    } catch (err) {
+      toast.show({
+        duration: 3000,
+        render: ({ id }) => (
+          <Toast
+            id={id}
+            message="Erro ao atualizar informações. Tente novamente."
+            status="error"
+            onClose={() => toast.close(id)}
+          />
+        ),
+      })
+    }
   }
 
   const numColumns = 3
@@ -230,6 +297,7 @@ export function Medias() {
           borderBottomColor={'muted.200'}
           borderBottomWidth={1}
           onClickMenu={handleOpenMenu}
+          isMenuDisabled={!hasApprovalFlow}
         />
         <FlatList
           flex={1}
@@ -242,22 +310,28 @@ export function Medias() {
             <Pressable
               onPress={() => handleImagePress(index)}
               onLongPress={() => handleImagePress(index, true)}
-              style={({ pressed }) => [
-                {
-                  opacity: pressed ? 0.5 : 1,
-                },
-              ]}
+              delayLongPress={300}
             >
-              <Image
-                source={{
-                  uri: item.uri,
-                  width: itemSize,
-                  height: itemSize,
-                }}
-                resizeMode="cover"
-                alt=""
-                style={{ aspectRatio: 1 }}
-              />
+              {({ isPressed }) => (
+                <Image
+                  source={{
+                    uri: item.uri,
+                    width: itemSize,
+                    height: itemSize,
+                  }}
+                  resizeMode="cover"
+                  alt=""
+                  style={{
+                    aspectRatio: 1,
+                    opacity: isPressed ? 0.8 : 1,
+                    transform: [
+                      {
+                        scale: isPressed ? 1.03 : 1,
+                      },
+                    ],
+                  }}
+                />
+              )}
             </Pressable>
           )}
           showsVerticalScrollIndicator={false}
@@ -515,7 +589,7 @@ export function Medias() {
                       fontSize={'md'}
                       variant={selectedOption === 'reject' ? 'subtle' : 'solid'}
                       onPress={handleSubmit}
-                      isLoading={isLoading}
+                      isLoading={isPending}
                     />
                   </VStack>
                 </Actionsheet.Content>

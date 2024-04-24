@@ -1,6 +1,6 @@
 import { Category } from '@components/Category'
 import { ListEmpty } from '@components/ListEmpty'
-import { type ApprovalStatus, ListItem } from '@components/ListItem'
+import { ListItem } from '@components/ListItem'
 import { ListScreenHeader } from '@components/ListScreenHeader'
 import { Loading } from '@components/Loading'
 import { Feather } from '@expo/vector-icons'
