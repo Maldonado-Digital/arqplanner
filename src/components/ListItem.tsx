@@ -3,8 +3,7 @@ import { approvalStatus, statusColor } from '@utils/constants'
 import { Center, HStack, Heading, Icon, Text, VStack } from 'native-base'
 import type { ReactNode } from 'react'
 import { TouchableOpacity, type TouchableOpacityProps } from 'react-native'
-
-export type ApprovalStatus = 'pending' | 'approved' | 'archived'
+import type { ApprovalStatus } from 'src/api/queries/getWorks'
 
 type ListItemProps = TouchableOpacityProps & {
   title: string

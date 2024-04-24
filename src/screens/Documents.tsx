@@ -48,7 +48,7 @@ export function Documents() {
       <VStack flex={1} bg={'gray.50'}>
         <ListScreenHeader
           title={'Documentos'}
-          onClickSettings={() => navigation.navigate('profile')}
+          onClickMenu={() => navigation.navigate('profile')}
         />
 
         <FlatList
@@ -80,7 +80,7 @@ export function Documents() {
           renderItem={({ item }) => (
             <ListItem
               title={item.document.title}
-              subTitle={format(item.document.file.updatedAt, "dd-MM-yy' | 'H:mm")}
+              subTitle={format(item.document.file.updatedAt, "dd-MM-yy' | 'HH:mm")}
               icon={<Icon as={Feather} name="folder" size={6} color="light.700" />}
               onPress={() => handleViewDocument(item)}
             />

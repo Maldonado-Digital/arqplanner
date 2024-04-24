@@ -28,11 +28,11 @@
     "expo-sharing": "~11.10.0",
     "expo-splash-screen": "~0.26.4",
     "expo-status-bar": "~1.11.1",
+    "expo-system-ui": "~2.9.4",
     "native-base": "^3.4.28",
     "react": "18.2.0",
     "react-hook-form": "^7.51.0",
     "react-native": "0.73.2",
-    "react-native-awesome-gallery": "^0.3.8",
     "react-native-blob-util": "^0.19.6",
     "react-native-calendars": "^1.1303.0",
     "react-native-gesture-handler": "~2.14.0",
@@ -43,7 +43,8 @@
     "react-native-screens": "~3.29.0",
     "react-native-svg": "12.1.1",
     "react-native-svg-charts": "^5.4.0",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "expo-media-library": "~15.9.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

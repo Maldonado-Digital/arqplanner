@@ -17,12 +17,13 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.bernardoamim.arqplanner"
+      "bundleIdentifier": "com.bernardoamim.arqplanner",
+      "backgroundColor": "#fafafa"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#fafafa"
       },
       "package": "com.bernardoamim.arqplanner"
     },
@@ -37,6 +38,14 @@
             "./assets/fonts/Proxima_Nova_Regular.otf",
             "./assets/fonts/Proxima_Nova_Semibold.otf"
           ]
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
+          "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
+          "isAccessMediaLocationEnabled": true
         }
       ],
       "@config-plugins/react-native-blob-util",

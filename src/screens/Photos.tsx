@@ -1,12 +1,11 @@
 import { Category } from '@components/Category'
 import { ListEmpty } from '@components/ListEmpty'
-import { type ApprovalStatus, ListItem } from '@components/ListItem'
+import { ListItem } from '@components/ListItem'
 import { ListScreenHeader } from '@components/ListScreenHeader'
 import { Feather } from '@expo/vector-icons'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { useQuery } from '@tanstack/react-query'
-import { approvalStatus } from '@utils/constants'
 import { format } from 'date-fns'
 import { FlatList, Icon, VStack } from 'native-base'
 import { useState } from 'react'
@@ -31,7 +30,7 @@ export function Photos() {
   const navigation = useNavigation<AppNavigatorRoutesProps>()
 
   function handleViewMedia(id: string) {
-    navigation.navigate('medias', { id, hasApprovalFlow: false, type: 'photo' })
+    navigation.navigate('medias', { id, mediaType: 'photo' })
   }
 
   return (
@@ -39,7 +38,7 @@ export function Photos() {
       <VStack flex={1} bg={'gray.50'}>
         <ListScreenHeader
           title={'Fotos'}
-          onClickSettings={() => navigation.navigate('profile')}
+          onClickMenu={() => navigation.navigate('profile')}
         />
 
         <FlatList
@@ -71,7 +70,7 @@ export function Photos() {
               title={item.photo.title}
               subTitle={format(
                 item.photo.files[0].uploads.updatedAt,
-                "dd-MM-yy' | 'H:mm",
+                "dd-MM-yy' | 'HH:mm",
               )}
               icon={<Icon as={Feather} name="image" size={6} color="light.700" />}
               onPress={() => handleViewMedia(item.id)}

@@ -1,19 +1,23 @@
 import { Category } from '@components/Category'
 import { ListEmpty } from '@components/ListEmpty'
-import { type ApprovalStatus, ListItem } from '@components/ListItem'
+import { ListItem } from '@components/ListItem'
 import { ListScreenHeader } from '@components/ListScreenHeader'
+import { Loading } from '@components/Loading'
 import { Feather } from '@expo/vector-icons'
+import { useAuth } from '@hooks/useAuth'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { useQuery } from '@tanstack/react-query'
 import { approvalStatus } from '@utils/constants'
 import { format } from 'date-fns'
-import { FlatList, Icon, VStack } from 'native-base'
+import { Center, FlatList, Icon, Text, VStack } from 'native-base'
 import { useState } from 'react'
+import { Pressable } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { type Render, getWorks } from 'src/api/queries/getWorks'
+import { getWorks } from 'src/api/queries/getWorks'
 
 export function Renders() {
+  const { signOut } = useAuth()
   const [selectedStatus, setSelectedStatus] = useState('all')
 
   const {
@@ -23,9 +27,27 @@ export function Renders() {
   } = useQuery({
     queryKey: ['works'],
     queryFn: getWorks,
+    retry: false,
   })
 
-  const renders = works?.docs[0].renders
+  if (isLoading) return <Loading />
+
+  if (error || !works?.docs[0]) {
+    return (
+      <Center flex={1}>
+        <Text fontFamily={'heading'} fontSize={'xl'} mb={4} color={'light.700'}>
+          Erro ao buscar as informações.
+        </Text>
+        <Pressable onPress={signOut}>
+          <Text fontFamily={'heading'} fontSize={'md'} color={'light.500'}>
+            Fazer login novamente
+          </Text>
+        </Pressable>
+      </Center>
+    )
+  }
+
+  const renders = works.docs[0].renders
   const filteredRenders = renders?.filter(
     render => render.render.status === selectedStatus || selectedStatus === 'all',
   )
@@ -33,7 +55,7 @@ export function Renders() {
   const navigation = useNavigation<AppNavigatorRoutesProps>()
 
   function handleViewMedia(renderId: string) {
-    navigation.navigate('medias', { id: renderId, hasApprovalFlow: true, type: 'render' })
+    navigation.navigate('medias', { mediaId: renderId, mediaType: 'render' })
   }
 
   return (
@@ -41,7 +63,7 @@ export function Renders() {
       <VStack flex={1} bg={'gray.50'}>
         <ListScreenHeader
           title={'Imagens 3D'}
-          onClickSettings={() => navigation.navigate('profile')}
+          onClickMenu={() => navigation.navigate('profile')}
         />
 
         <FlatList
@@ -75,7 +97,7 @@ export function Renders() {
               title={item.render.title}
               subTitle={format(
                 item.render.files[0].uploads.updatedAt,
-                "dd-MM-yy' | 'H:mm",
+                "dd-MM-yy' | 'HH:mm",
               )}
               icon={<Icon as={Feather} name="box" size={6} color="light.700" />}
               onPress={() => handleViewMedia(item.id)}
@@ -85,11 +107,18 @@ export function Renders() {
           showsVerticalScrollIndicator={false}
           _contentContainerStyle={{
             paddingBottom: 20,
+            ...(!!renders?.length && {
+              shadowColor: '#000000',
+              shadowOpacity: 0.05,
+              shadowRadius: 30,
+              shadowOffset: { width: 0, height: 4 },
+            }),
             ...(!renders?.length && { flex: 1, justifyContent: 'center' }),
           }}
           ListEmptyComponent={() => (
             <ListEmpty
               px={10}
+              py={40}
               icon="box"
               title="Nenhuma imagem 3D foi encontrada"
               message="Você ainda não possui nenhuma imagem 3D adicionada."

@@ -18,14 +18,14 @@ type ScreenHeaderType = IStackProps & {
   title: string
   subTitle?: string
   status?: ApprovalStatus | null
-  onClickSettings?: () => void
+  onClickMenu?: () => void
 }
 
 export function ListScreenHeader({
   title,
   subTitle,
   status,
-  onClickSettings,
+  onClickMenu,
   ...rest
 }: ScreenHeaderType) {
   const navigation = useNavigation<AppNavigatorRoutesProps>()
@@ -74,7 +74,7 @@ export function ListScreenHeader({
         )}
       </VStack>
 
-      <Pressable onPress={onClickSettings}>
+      <Pressable onPress={onClickMenu}>
         <Icon as={Feather} name="more-vertical" color={'light.700'} size={6} />
       </Pressable>
     </HStack>

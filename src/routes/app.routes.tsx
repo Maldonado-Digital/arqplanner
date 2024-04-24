@@ -14,11 +14,16 @@ import { Profile } from '@screens/Profile'
 import { Projects } from '@screens/Projects'
 import { Quotes } from '@screens/Quotes'
 import { Renders } from '@screens/Renders'
-import type { ViewableDocumentTypes } from '@utils/helpers'
+import type { ViewableDocumentTypes, ViewableMediaTypes } from '@utils/helpers'
 
 export type DocumentViewRouteParams = {
   documentId: string
   documentType: ViewableDocumentTypes
+}
+
+export type MediasRouteParams = {
+  mediaId: string
+  mediaType: ViewableMediaTypes
 }
 
 export type AppRoutesType = {
@@ -27,7 +32,7 @@ export type AppRoutesType = {
   document_view: DocumentViewRouteParams
   documents: undefined
   list_screen: { title: string }
-  medias: { id: string; hasApprovalFlow: boolean; type: 'photo' | 'render' }
+  medias: MediasRouteParams
   profile: undefined
   photos: undefined
   projects: undefined

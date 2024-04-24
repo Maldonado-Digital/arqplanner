@@ -11,7 +11,24 @@ export type FileType = {
   url: string
 }
 
+export type MediaFileType = {
+  uploads: {
+    id: string
+    organization: string
+    filename: string
+    mimeType: string
+    filesize: number
+    width: number
+    height: number
+    createdAt: string
+    updatedAt: string
+    url: string
+  }
+  id: string
+}
+
 export type ProjectType = 'executive' | 'wood_detailing' | 'wet_spaces_detailing'
+export type ApprovalStatus = 'pending' | 'approved' | 'archived'
 
 type Step = {
   step: {
@@ -48,7 +65,7 @@ export type Document = {
 export type Project = {
   project: {
     title: string
-    status: 'pending' | 'approved' | 'archived'
+    status: ApprovalStatus
     type: ProjectType
     file: FileType
     comments?: string | null
@@ -59,24 +76,9 @@ export type Project = {
 export type Render = {
   render: {
     title: string
-    status: 'pending' | 'approved' | 'archived'
-    files: [
-      {
-        uploads: {
-          id: string
-          organization: string
-          filename: string
-          mimeType: string
-          filesize: number
-          width: number
-          height: number
-          createdAt: string
-          updatedAt: string
-          url: string
-        }
-        id: string
-      },
-    ]
+    status: ApprovalStatus
+    comments?: string | null
+    files: MediaFileType[]
   }
   id: string
 }
@@ -84,23 +86,7 @@ export type Render = {
 export type Photo = {
   photo: {
     title: string
-    files: [
-      {
-        uploads: {
-          id: string
-          organization: string
-          filename: string
-          mimeType: string
-          filesize: number
-          width: number
-          height: number
-          createdAt: string
-          updatedAt: string
-          url: string
-        }
-        id: string
-      },
-    ]
+    files: MediaFileType[]
   }
   id: string
 }

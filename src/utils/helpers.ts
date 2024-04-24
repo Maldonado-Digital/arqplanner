@@ -1,7 +1,10 @@
 import { format } from 'date-fns'
 import type {
+  ApprovalStatus,
   Document,
   FileType,
+  MediaFileType,
+  Photo,
   Project,
   Quote,
   Render,
@@ -44,13 +47,26 @@ type ViewingDocumentData = {
   title: string
   subTitle: string
   file: FileType
-  status: 'pending' | 'approved' | 'archived' | null
+  status: ApprovalStatus | null
+}
+
+type ViewingMediaData = {
+  title: string
+  subTitle: string
+  files: MediaFileType[]
+  status: ApprovalStatus | null
 }
 
 export type ViewableDocumentTypes = 'project' | 'document' | 'quote'
 
+export type ViewableMediaTypes = 'render' | 'photo'
+
 type DocumentTypesFactory = {
   [k in ViewableDocumentTypes]: () => ViewingDocumentData
+}
+
+type MediaTypesFactory = {
+  [k in ViewableMediaTypes]: () => ViewingMediaData
 }
 
 export function digViewingDocumentData(
@@ -59,31 +75,31 @@ export function digViewingDocumentData(
   id: string,
 ) {
   const getProjectViewData = () => {
-    const project = work.projects.find(p => p.id === id) as Project
+    const { project } = work.projects.find(p => p.id === id) as Project
     return {
-      title: project.project.title,
-      subTitle: format(project.project.file.updatedAt, "dd-MM-yy' | 'H:mm"),
-      file: project.project.file,
-      status: project.project.status,
+      title: project.title,
+      subTitle: format(project.file.updatedAt, "dd-MM-yy' | 'HH:mm"),
+      file: project.file,
+      status: project.status,
     }
   }
 
   const getDocumentViewData = () => {
-    const document = work.documents.find(d => d.id === id) as Document
+    const { document } = work.documents.find(d => d.id === id) as Document
     return {
-      title: document.document.title,
-      subTitle: format(document.document.file.updatedAt, "dd-MM-yy' | 'H:mm"),
-      file: document.document.file,
+      title: document.title,
+      subTitle: format(document.file.updatedAt, "dd-MM-yy' | 'HH:mm"),
+      file: document.file,
       status: null,
     }
   }
 
   const getQuoteViewData = () => {
-    const quote = work.quotes.find(quote => quote.id === id) as Quote
+    const { quote } = work.quotes.find(quote => quote.id === id) as Quote
     return {
-      title: quote.quote.title,
-      subTitle: format(quote.quote.file.updatedAt, "dd-MM-yy' | 'H:mm"),
-      file: quote.quote.file,
+      title: quote.title,
+      subTitle: format(quote.file.updatedAt, "dd-MM-yy' | 'HH:mm"),
+      file: quote.file,
       status: null,
     }
   }
@@ -95,5 +111,39 @@ export function digViewingDocumentData(
   }
 
   const fn = documentTypesFactory[documentType]
+  return fn()
+}
+
+export function digViewingMediaData(
+  work: Work,
+  mediaType: ViewableMediaTypes,
+  id: string,
+) {
+  const getRenderViewData = () => {
+    const { render } = work.renders.find(r => r.id === id) as Render
+    return {
+      title: render.title,
+      subTitle: format(render.files[0].uploads.updatedAt, "dd-MM-yy' | 'HH:mm"),
+      files: render.files,
+      status: render.status,
+    }
+  }
+
+  const getPhotoViewData = () => {
+    const { photo } = work.photos.find(p => p.id === id) as Photo
+    return {
+      title: photo.title,
+      subTitle: format(photo.files[0].uploads.updatedAt, "dd-MM-yy' | 'HH:mm"),
+      files: photo.files,
+      status: null,
+    }
+  }
+
+  const mediaTypesFactory: MediaTypesFactory = {
+    render: getRenderViewData,
+    photo: getPhotoViewData,
+  }
+
+  const fn = mediaTypesFactory[mediaType]
   return fn()
 }

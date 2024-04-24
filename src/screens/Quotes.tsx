@@ -37,7 +37,7 @@ export function Quotes() {
       <VStack flex={1} bg={'gray.50'}>
         <ListScreenHeader
           title={'Orçamentos'}
-          onClickSettings={() => navigation.navigate('profile')}
+          onClickMenu={() => navigation.navigate('profile')}
         />
 
         <FlatList
@@ -63,7 +63,7 @@ export function Quotes() {
         <View
           style={{
             shadowColor: '#000000',
-            shadowOpacity: 0.07,
+            shadowOpacity: 0.05,
             shadowRadius: 30,
             shadowOffset: { width: 0, height: 4 },
           }}
@@ -74,7 +74,7 @@ export function Quotes() {
             renderItem={({ item, index }) => (
               <ListItem
                 title={item.quote.title}
-                subTitle={format(item.quote.file.updatedAt, "dd-MM-yy' | 'H:mm")}
+                subTitle={format(item.quote.file.updatedAt, "dd-MM-yy' | 'HH:mm")}
                 icon={<Icon as={Feather} name="dollar-sign" size={6} color="light.700" />}
                 onPress={() => handleViewDocument(item)}
               />

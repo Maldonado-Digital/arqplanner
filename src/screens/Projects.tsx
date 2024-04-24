@@ -1,7 +1,7 @@
 import { Button } from '@components/Button'
 import { Category } from '@components/Category'
 import { ListEmpty } from '@components/ListEmpty'
-import { type ApprovalStatus, ListItem } from '@components/ListItem'
+import { ListItem } from '@components/ListItem'
 import { ListScreenHeader } from '@components/ListScreenHeader'
 import { Loading } from '@components/Loading'
 import { Toast } from '@components/Toast'
@@ -270,7 +270,7 @@ export function Projects() {
       <VStack flex={1} bg={'gray.50'}>
         <ListScreenHeader
           title={'Projetos'}
-          onClickSettings={() => navigation.navigate('profile')}
+          onClickMenu={() => navigation.navigate('profile')}
         />
 
         <FlatList
@@ -329,9 +329,8 @@ export function Projects() {
               }}
               renderItem={({ item }) => (
                 <ListItem
-                  id={item.id}
                   title={item.project.title}
-                  subTitle={format(item.project.file.updatedAt, "dd-MM-yy' | 'H:mm")}
+                  subTitle={format(item.project.file.updatedAt, "dd-MM-yy' | 'HH:mm")}
                   icon={<Icon as={Feather} name="layout" size={6} color="light.700" />}
                   onPress={() => handleItemPressed(item)}
                   status={item.project.status}
@@ -359,46 +358,6 @@ export function Projects() {
                 />
               )}
             />
-            {/* <FlatList
-              refreshControl={
-                <RefreshControl
-                  refreshing={refreshing}
-                  onRefresh={handleRefresh}
-                  style={{
-                    height: refreshing ? 30 : 0,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                />
-              }
-              data={filteredProjects}
-              keyExtractor={item => item.id}
-              renderItem={({ item }) => (
-                <ListItem
-                  id={item.id}
-                  title={item.project.title}
-                  subTitle={format(item.project.file.updatedAt, "dd-MM-yy' | 'H:mm")}
-                  icon={<Icon as={Feather} name="layout" size={6} color="light.700" />}
-                  onPress={() => handleItemPressed(item)}
-                  status={item.project.status}
-                />
-              )}
-              showsVerticalScrollIndicator={false}
-              _contentContainerStyle={{
-                paddingBottom: 20,
-                ...(!projects?.length && { flex: 1, justifyContent: 'center' }),
-              }}
-              ListEmptyComponent={() => (
-                <ListEmpty
-                  px={12}
-                  py={40}
-                  icon="folder"
-                  title="Nenhum projeto foi encontrado"
-                  message="Você ainda não possui nenhum projeto adicionado."
-                />
-              )}
-            /> */}
           </View>
         )}
 

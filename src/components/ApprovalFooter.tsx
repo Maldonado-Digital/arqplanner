@@ -4,11 +4,16 @@ import { BlurView } from 'expo-blur'
 import { Box, HStack, type IBoxProps, Text } from 'native-base'
 import { Button } from './Button'
 
-type DisclosureFooter = IBoxProps & {
+type DisclosureFooterProps = IBoxProps & {
+  title?: string
   onOpenDisclose: (disclose: 'approve' | 'reject') => void
 }
 
-export function ApprovalFooter({ onOpenDisclose, ...rest }: DisclosureFooter) {
+export function ApprovalFooter({
+  title = 'Aprovar arquivo?',
+  onOpenDisclose,
+  ...rest
+}: DisclosureFooterProps) {
   return (
     <Box w={'full'} borderTopColor={'muted.200'} borderTopWidth={1} {...rest}>
       <BlurView
@@ -29,7 +34,7 @@ export function ApprovalFooter({ onOpenDisclose, ...rest }: DisclosureFooter) {
             flexGrow={1}
             style={{ opacity: 1 }}
           >
-            Aprovar arquivo?
+            {title}
           </Text>
           <Button
             title="Reprovar"

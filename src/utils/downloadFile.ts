@@ -14,7 +14,8 @@ export async function downloadFile(fileUri: string) {
     callback,
   )
 
-  const { uri } =
+  const response =
     (await downloadResumable.downloadAsync()) as FileSystem.FileSystemDownloadResult
-  console.log('Finished downloading to ', uri)
+
+  return response
 }

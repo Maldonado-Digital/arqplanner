@@ -4,6 +4,7 @@ import { ListScreenHeader } from '@components/ListScreenHeader'
 import { Loading } from '@components/Loading'
 import { Toast } from '@components/Toast'
 import { Feather } from '@expo/vector-icons'
+import { useAuth } from '@hooks/useAuth'
 import { useRoute } from '@react-navigation/native'
 import type { DocumentViewRouteParams } from '@routes/app.routes'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -13,6 +14,7 @@ import { digViewingDocumentData } from '@utils/helpers'
 import { shareAsync } from 'expo-sharing'
 import {
   Actionsheet,
+  Center,
   HStack,
   Heading,
   Icon,
@@ -36,6 +38,8 @@ export function DocumentView() {
   const route = useRoute()
   const toast = useToast()
   const queryClient = useQueryClient()
+
+  const { signOut } = useAuth()
   const { onOpen, onClose } = useDisclose()
 
   const { documentId, documentType } = route.params as DocumentViewRouteParams
@@ -57,7 +61,20 @@ export function DocumentView() {
 
   if (isLoading) return <Loading />
 
-  if (error || !works?.docs[0]) return <Loading /> // fix this
+  if (error || !works?.docs[0]) {
+    return (
+      <Center flex={1}>
+        <Text fontFamily={'heading'} fontSize={'xl'} mb={4} color={'light.700'}>
+          Erro ao buscar as informações.
+        </Text>
+        <Pressable onPress={signOut}>
+          <Text fontFamily={'heading'} fontSize={'md'} color={'light.500'}>
+            Fazer login novamente
+          </Text>
+        </Pressable>
+      </Center>
+    )
+  }
 
   const { title, subTitle, status, file } = digViewingDocumentData(
     works.docs[0],
@@ -135,7 +152,7 @@ export function DocumentView() {
 
       setIsDownloading(false)
       handleCloseMenu()
-    } catch (error) {
+    } catch (err) {
       setIsDownloading(false)
 
       toast.show({
@@ -184,7 +201,7 @@ export function DocumentView() {
       })
 
       handleCloseActionSheet()
-    } catch (error) {
+    } catch (err) {
       toast.show({
         duration: 3000,
         render: ({ id }) => (
@@ -199,6 +216,20 @@ export function DocumentView() {
     }
   }
 
+  function onLoadPDFError() {
+    toast.show({
+      duration: 3000,
+      render: ({ id }) => (
+        <Toast
+          id={id}
+          message="Erro ao carregar o PDF. Tente novamente."
+          status="error"
+          onClose={() => toast.close(id)}
+        />
+      ),
+    })
+  }
+
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top']}>
       <VStack flex={1} bg={'gray.50'} position={'relative'}>
@@ -209,10 +240,10 @@ export function DocumentView() {
           status={status}
           borderBottomColor={'muted.200'}
           borderBottomWidth={1}
-          onClickSettings={handleOpenMenu}
+          onClickMenu={handleOpenMenu}
         />
         <PDF
-          onError={error => console.log(error)}
+          onError={onLoadPDFError}
           source={{
             uri: `${process.env.EXPO_PUBLIC_API_URL}${file.url}`,
             cache: true,
@@ -436,6 +467,7 @@ export function DocumentView() {
                       autoCompleteType={false}
                       focusOutlineColor="light.700"
                       _focus={{ bg: 'gray.50' }}
+                      fontSize={'sm'}
                       onChangeText={setComments}
                     />
 

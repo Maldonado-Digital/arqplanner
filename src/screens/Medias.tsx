@@ -2,20 +2,29 @@ import { ApprovalFooter } from '@components/ApprovalFooter'
 import { Button } from '@components/Button'
 import { ListEmpty } from '@components/ListEmpty'
 import { ListScreenHeader } from '@components/ListScreenHeader'
+import { Loading } from '@components/Loading'
 import { Toast } from '@components/Toast'
 import { Feather } from '@expo/vector-icons'
+import { useAuth } from '@hooks/useAuth'
 import { useRoute } from '@react-navigation/native'
+import type { MediasRouteParams } from '@routes/app.routes'
 import { useQuery } from '@tanstack/react-query'
-import { format } from 'date-fns'
+import { downloadFile } from '@utils/downloadFile'
+import { digViewingMediaData } from '@utils/helpers'
+import * as MediaLibrary from 'expo-media-library'
+import { shareAsync } from 'expo-sharing'
 import {
   Actionsheet,
+  Center,
   FlatList,
   HStack,
   Heading,
+  Icon,
   IconButton,
   Image,
   KeyboardAvoidingView,
   Pressable,
+  Spinner,
   Text,
   TextArea,
   VStack,
@@ -24,16 +33,10 @@ import {
 } from 'native-base'
 import { useState } from 'react'
 import { Platform, useWindowDimensions } from 'react-native'
-import Gallery from 'react-native-awesome-gallery'
+
 import ImageView from 'react-native-image-viewing'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { type Photo, type Render, getWorks } from 'src/api/queries/getWorks'
-
-type MediasRouteParams = {
-  id: string
-  hasApprovalFlow: boolean
-  type: 'photo' | 'render'
-}
+import { getWorks } from 'src/api/queries/getWorks'
 
 type ImageProps = {
   key: string
@@ -41,56 +44,165 @@ type ImageProps = {
 }
 
 export function Medias() {
-  const toast = useToast()
   const route = useRoute()
-  const { id, hasApprovalFlow, type } = route.params as MediasRouteParams
-  const { isOpen, onOpen, onClose } = useDisclose()
-  const { width } = useWindowDimensions()
-  const [isViewing, setIsViewing] = useState(false)
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [comments, setComments] = useState('')
-  const [isResolved, setIsResolved] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [selectedOption, setSelectedOption] = useState<'approve' | 'reject'>('approve')
+  const toast = useToast()
 
-  const { data: works, error } = useQuery({
+  const { signOut } = useAuth()
+  const { onOpen, onClose } = useDisclose()
+  const { width } = useWindowDimensions()
+  const [permissionResponse, requestPermission] = MediaLibrary.usePermissions()
+
+  const { mediaId, mediaType } = route.params as MediasRouteParams
+
+  const [comments, setComments] = useState('')
+  const [isViewing, setIsViewing] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [isDownloading, setIsDownloading] = useState(false)
+  const [selectedOption, setSelectedOption] = useState<'approve' | 'reject' | null>(null)
+
+  const {
+    data: works,
+    error,
+    isLoading,
+  } = useQuery({
     queryKey: ['works'],
     queryFn: getWorks,
+    retry: false,
   })
 
-  const data =
-    type === 'photo'
-      ? works?.docs[0].photos.find(p => p.id === id)?.photo
-      : works?.docs[0].renders.find(r => r.id === id)?.render
+  if (isLoading) return <Loading />
 
-  const images = data?.files.map(({ uploads, id }) => ({
+  if (error || !works?.docs[0]) {
+    return (
+      <Center flex={1}>
+        <Text fontFamily={'heading'} fontSize={'xl'} mb={4} color={'light.700'}>
+          Erro ao buscar as informações.
+        </Text>
+        <Pressable onPress={signOut}>
+          <Text fontFamily={'heading'} fontSize={'md'} color={'light.500'}>
+            Fazer login novamente
+          </Text>
+        </Pressable>
+      </Center>
+    )
+  }
+
+  const { title, subTitle, status, files } = digViewingMediaData(
+    works.docs[0],
+    mediaType,
+    mediaId,
+  )
+
+  const images = files.map(({ uploads, id }) => ({
     key: id,
     uri: `${process.env.EXPO_PUBLIC_API_URL}${uploads.url}`,
   })) as Array<ImageProps>
 
-  const shouldShowApprovalFooter = hasApprovalFlow && !isResolved && !!images.length
+  const hasApprovalFlow = mediaType === 'render' && status === 'pending' && !images.length
 
-  function handleOpenDisclose(disclose: 'approve' | 'reject') {
+  function handleOpenActionSheet(option: 'approve' | 'reject') {
+    setIsMenuOpen(false)
+    setSelectedOption(option)
     onOpen()
   }
 
-  function handleOpenSettings() {
-    // setIsSettingsOpen(true)
+  function handleCloseActionSheet() {
+    setSelectedOption(null)
+    onClose()
+  }
+
+  function handleOpenMenu() {
+    setIsMenuOpen(true)
     onOpen()
   }
 
-  function handleImagePress(idx: number) {
-    setIsViewing(true)
+  function handleCloseMenu() {
+    setIsMenuOpen(false)
+    onClose()
+  }
+
+  function handleImagePress(idx: number, isLongPress = false) {
     setCurrentIndex(idx)
+
+    isLongPress ? handleOpenMenu() : setIsViewing(true)
+  }
+
+  async function saveMediaToLibrary(mediaUri: string) {
+    if (permissionResponse?.status !== 'granted') {
+      const response = await requestPermission()
+
+      if (!response.granted) {
+        toast.show({
+          duration: 3000,
+          render: ({ id }) => (
+            <Toast
+              id={id}
+              message="Você precisa conceder acesso à suas fotos para poder fazer o download."
+              status="error"
+              onClose={() => toast.close(id)}
+            />
+          ),
+        })
+      }
+    }
+
+    const asset = await MediaLibrary.createAssetAsync(mediaUri)
+    const album = await MediaLibrary.getAlbumAsync('ArqPlanner')
+
+    await MediaLibrary.createAlbumAsync('ArqPlanner', asset, false)
+    await MediaLibrary.addAssetsToAlbumAsync([asset], album, false)
+  }
+
+  async function handleDownload() {
+    try {
+      setIsDownloading(true)
+
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      const { uri } = await downloadFile(
+        `${process.env.EXPO_PUBLIC_API_URL}${files[currentIndex].uploads.url}`,
+      )
+
+      await saveMediaToLibrary(uri)
+
+      await toast.show({
+        duration: 3000,
+        render: ({ id }) => (
+          <Toast
+            id={id}
+            message="Download concluído com sucesso."
+            status="success"
+            onClose={() => toast.close(id)}
+          />
+        ),
+      })
+
+      setIsDownloading(false)
+      handleCloseMenu()
+    } catch (err) {
+      setIsDownloading(false)
+
+      toast.show({
+        duration: 3000,
+        render: ({ id }) => (
+          <Toast
+            id={id}
+            message="Ocorreu um erro ao salvar a imagem. Tente novamente."
+            status="error"
+            onClose={() => toast.close(id)}
+          />
+        ),
+      })
+    }
+  }
+
+  function handleShare() {
+    shareAsync(`${process.env.EXPO_PUBLIC_API_URL}${files[currentIndex].uploads.url}`)
   }
 
   async function handleSubmit() {
-    setIsResolved(true)
-    setIsLoading(true)
     await new Promise(resolve => setTimeout(resolve, 1000))
     onClose()
-    setComments('')
-    setIsLoading(false)
 
     toast.show({
       duration: 5000,
@@ -110,14 +222,13 @@ export function Medias() {
     <SafeAreaView style={{ flex: 1 }} edges={['top']}>
       <VStack flex={1} bg={'gray.50'}>
         <ListScreenHeader
-          title={data?.title as string}
-          subTitle={format(
-            data?.files[0].uploads.updatedAt as string,
-            "dd-MM-yy' | 'H:mm",
-          )}
+          mb={6}
+          title={title}
+          subTitle={subTitle}
+          status={status}
           borderBottomColor={'muted.200'}
           borderBottomWidth={1}
-          onClickSettings={handleOpenSettings}
+          onClickMenu={handleOpenMenu}
         />
         <FlatList
           flex={1}
@@ -127,7 +238,15 @@ export function Medias() {
           numColumns={numColumns}
           keyExtractor={item => item.key}
           renderItem={({ item, index }) => (
-            <Pressable onPress={() => handleImagePress(index)}>
+            <Pressable
+              onPress={() => handleImagePress(index)}
+              onLongPress={() => handleImagePress(index, true)}
+              style={({ pressed }) => [
+                {
+                  opacity: pressed ? 0.5 : 1,
+                },
+              ]}
+            >
               <Image
                 source={{
                   uri: item.uri,
@@ -154,34 +273,180 @@ export function Medias() {
               h={'full'}
               px={10}
               my={48}
-              icon={type === 'photo' ? 'image' : 'box'}
+              icon={mediaType === 'photo' ? 'image' : 'box'}
               title={`Nenhuma ${
-                type === 'render' ? 'imagem 3D' : 'foto'
-              } foi encontrada nos arquivos`}
-              message={`Por enquanto, nenhuma imagem ${
-                type === 'render' ? '3D ' : ''
-              }foi adicionada a essa coleção.`}
+                mediaType === 'render' ? 'perspectiva' : 'foto'
+              } foi encontrada`}
+              message={`Você não possui nenhuma ${
+                mediaType === 'render' ? 'perspectiva' : 'foto'
+              } cadastrada ainda.`}
             />
           )}
         />
+
         <ImageView
           images={images}
           imageIndex={currentIndex}
           visible={isViewing}
           onRequestClose={() => setIsViewing(false)}
-          onLongPress={handleOpenSettings}
         />
 
-        {shouldShowApprovalFooter && (
+        <Actionsheet
+          isOpen={isMenuOpen}
+          onClose={handleCloseMenu}
+          hideDragIndicator={false}
+        >
+          <Actionsheet.Content borderTopRadius="3xl" bg={'white'}>
+            <VStack w={'full'} pt={6}>
+              <HStack
+                alignItems={'center'}
+                justifyContent={'space-between'}
+                px={10}
+                pb={6}
+                borderBottomColor={'muted.200'}
+                borderBottomWidth={1}
+              >
+                <Heading fontSize={'2xl'} color="light.700" fontFamily={'heading'}>
+                  Configurações
+                </Heading>
+
+                <IconButton
+                  w={11}
+                  h={11}
+                  variant={'outline'}
+                  rounded={'full'}
+                  bg={'white'}
+                  borderColor={'muted.200'}
+                  onPress={handleCloseMenu}
+                  _pressed={{ bg: 'muted.300' }}
+                  _icon={{
+                    size: 5,
+                    as: Feather,
+                    name: 'x',
+                    color: 'light.700',
+                  }}
+                />
+              </HStack>
+
+              <Pressable
+                onPress={handleShare}
+                style={({ pressed }) => ({
+                  opacity: pressed ? 0.3 : 1,
+                })}
+              >
+                <HStack
+                  bg={'white'}
+                  alignItems={'center'}
+                  px={10}
+                  py={6}
+                  borderBottomWidth={1}
+                  borderBottomColor={'muted.200'}
+                >
+                  <Icon as={Feather} size={5} name="share-2" color={'light.700'} mr={5} />
+
+                  <Text fontSize={'md'} fontFamily={'heading'} color={'light.700'}>
+                    Compartilhar
+                  </Text>
+                </HStack>
+              </Pressable>
+
+              {hasApprovalFlow && (
+                <>
+                  <Pressable
+                    onPress={() => handleOpenActionSheet('approve')}
+                    style={({ pressed }) => ({
+                      opacity: pressed ? 0.3 : 1,
+                    })}
+                  >
+                    <HStack
+                      bg={'white'}
+                      alignItems={'center'}
+                      px={10}
+                      py={6}
+                      borderBottomWidth={1}
+                      borderBottomColor={'muted.200'}
+                    >
+                      <Icon
+                        as={Feather}
+                        size={5}
+                        name="check"
+                        color={'light.700'}
+                        mr={5}
+                      />
+
+                      <Text fontSize={'md'} fontFamily={'heading'} color={'light.700'}>
+                        Aprovar
+                      </Text>
+                    </HStack>
+                  </Pressable>
+
+                  <Pressable
+                    onPress={() => handleOpenActionSheet('reject')}
+                    style={({ pressed }) => ({
+                      opacity: pressed ? 0.3 : 1,
+                    })}
+                  >
+                    <HStack
+                      bg={'white'}
+                      alignItems={'center'}
+                      px={10}
+                      py={6}
+                      borderBottomWidth={1}
+                      borderBottomColor={'muted.200'}
+                    >
+                      <Icon as={Feather} size={5} name="x" color={'light.700'} mr={5} />
+
+                      <Text fontSize={'md'} fontFamily={'heading'} color={'light.700'}>
+                        Reprovar
+                      </Text>
+                    </HStack>
+                  </Pressable>
+                </>
+              )}
+
+              <Pressable
+                onPress={handleDownload}
+                style={({ pressed }) => ({
+                  opacity: pressed || isDownloading ? 0.3 : 1,
+                })}
+              >
+                <HStack bg={'white'} alignItems={'center'} px={10} py={6}>
+                  {isDownloading && <Spinner w={5} color={'light.700'} mr={5} />}
+
+                  {!isDownloading && (
+                    <Icon
+                      as={Feather}
+                      size={5}
+                      name="arrow-down-circle"
+                      color={'light.700'}
+                      mr={5}
+                    />
+                  )}
+
+                  <Text fontSize={'md'} fontFamily={'heading'} color={'light.700'}>
+                    Salvar arquivo
+                  </Text>
+                </HStack>
+              </Pressable>
+            </VStack>
+          </Actionsheet.Content>
+        </Actionsheet>
+
+        {hasApprovalFlow && (
           <>
             <ApprovalFooter
+              title={'Aprovar imagens?'}
               position={'absolute'}
               bottom={0}
               left={0}
-              onOpenDisclose={handleOpenDisclose}
+              onOpenDisclose={handleOpenActionSheet}
             />
 
-            <Actionsheet isOpen={isOpen} onClose={onClose} hideDragIndicator={false}>
+            <Actionsheet
+              isOpen={!!selectedOption}
+              onClose={handleCloseActionSheet}
+              hideDragIndicator={false}
+            >
               <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 p={0}
@@ -203,7 +468,7 @@ export function Medias() {
                         rounded={'full'}
                         bg={'white'}
                         borderColor={'muted.200'}
-                        onPress={onClose}
+                        onPress={handleCloseActionSheet}
                         _pressed={{ bg: 'muted.300' }}
                         _icon={{
                           size: 5,

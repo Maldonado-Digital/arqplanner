@@ -46,7 +46,7 @@ export function Event() {
       <VStack flex={1} bg={'gray.50'}>
         <ListScreenHeader
           title={'Visita técnica'}
-          onClickSettings={() => navigation.navigate('profile')}
+          onClickMenu={() => navigation.navigate('profile')}
         />
         <VStack
           flex={1}
