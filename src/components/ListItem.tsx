@@ -1,27 +1,22 @@
 import { Feather } from '@expo/vector-icons'
-import { projectStatus } from '@utils/constants'
-import { Box, HStack, Heading, Icon, Text, VStack } from 'native-base'
+import { approvalStatus, statusColor } from '@utils/constants'
+import { Center, HStack, Heading, Icon, Text, VStack } from 'native-base'
 import type { ReactNode } from 'react'
 import { TouchableOpacity, type TouchableOpacityProps } from 'react-native'
 
-export type ItemStatus = 'pending' | 'approved' | 'archived'
+export type ApprovalStatus = 'pending' | 'approved' | 'archived'
 
 type ListItemProps = TouchableOpacityProps & {
   title: string
   subTitle?: string
   icon: ReactNode
-  status?: ItemStatus
+  status?: ApprovalStatus
 }
 
 export function ListItem({ title, subTitle, icon, status, ...rest }: ListItemProps) {
   const statusText = status
-    ? (projectStatus.find(s => s.value === status)?.singular as string)
+    ? (approvalStatus.find(s => s.value === status)?.singular as string)
     : ''
-  const statusColor = {
-    pending: '#F8C40E26',
-    approved: '#0AAF8726',
-    archived: '#00000012',
-  }
 
   return (
     <TouchableOpacity {...rest}>
@@ -52,11 +47,11 @@ export function ListItem({ title, subTitle, icon, status, ...rest }: ListItemPro
         </VStack>
 
         {!!status && (
-          <Box py={1} px={2} rounded={'xl'} bg={statusColor[status]}>
+          <Center py={1} px={2} rounded={'lg'} bg={statusColor[status]}>
             <Text fontSize={'xs'} fontFamily={'heading'} color={'light.700'}>
               {statusText.toLocaleUpperCase()}
             </Text>
-          </Box>
+          </Center>
         )}
 
         {!status && (

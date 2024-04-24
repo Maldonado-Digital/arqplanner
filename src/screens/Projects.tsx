@@ -1,7 +1,7 @@
 import { Button } from '@components/Button'
 import { Category } from '@components/Category'
 import { ListEmpty } from '@components/ListEmpty'
-import { type ItemStatus, ListItem } from '@components/ListItem'
+import { type ApprovalStatus, ListItem } from '@components/ListItem'
 import { ListScreenHeader } from '@components/ListScreenHeader'
 import { Loading } from '@components/Loading'
 import { Toast } from '@components/Toast'
@@ -11,7 +11,7 @@ import { useNavigation } from '@react-navigation/native'
 import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { AppError } from '@utils/AppError'
-import { PDF_MIME_TYPE, projectStatus } from '@utils/constants'
+import { PDF_MIME_TYPE, approvalStatus, projectTypes } from '@utils/constants'
 import { downloadFile } from '@utils/downloadFile'
 import { format } from 'date-fns'
 import { shareAsync } from 'expo-sharing'
@@ -23,20 +23,27 @@ import {
   Icon,
   IconButton,
   KeyboardAvoidingView,
+  SectionList,
   Spinner,
   Text,
   TextArea,
   VStack,
   View,
-  ZStack,
   useDisclose,
   useToast,
 } from 'native-base'
 import { useState } from 'react'
-import { Platform, Pressable, RefreshControl, TouchableOpacity } from 'react-native'
+import { Platform, Pressable, RefreshControl } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { type ResolveProjectDTO, resolveProject } from 'src/api/mutations/resolveProject'
-import { type GetWorksResponse, type Project, getWorks } from 'src/api/queries/getWorks'
+import {
+  type GetWorksResponse,
+  type Project,
+  type ProjectType,
+  getWorks,
+} from 'src/api/queries/getWorks'
+
+type GroupedProjects = Record<ProjectType, Project[]>
 
 export function Projects() {
   const toast = useToast()
@@ -51,7 +58,7 @@ export function Projects() {
   } = useQuery({
     queryKey: ['works'],
     queryFn: getWorks,
-    refetchOnWindowFocus: true,
+    retry: false,
   })
   const { refreshing, handleRefresh } = useRefresh(refetch)
 
@@ -69,6 +76,12 @@ export function Projects() {
     )
   })
 
+  const groupedProjects: GroupedProjects = {
+    executive: [],
+    wet_spaces_detailing: [],
+    wood_detailing: [],
+  }
+
   const filteredProjects = projects?.filter(project => {
     if (selectedStatus === 'all') {
       return project.project.status !== 'archived'
@@ -76,6 +89,22 @@ export function Projects() {
 
     return project.project.status === selectedStatus
   })
+
+  // biome-ignore lint/complexity/noForEach: <explanation>
+  filteredProjects?.forEach(p => {
+    groupedProjects[p.project.type].push(p)
+  })
+
+  const sectionListData: Array<{ title: string; data: Project[] }> = []
+
+  for (const key in groupedProjects) {
+    if (groupedProjects[key as ProjectType].length) {
+      sectionListData.push({
+        title: projectTypes[key as ProjectType],
+        data: groupedProjects[key as ProjectType],
+      })
+    }
+  }
 
   const selectedProject = filteredProjects?.find(p => p.id === selectedProjectID)
   const hasApprovalFlow = selectedProject?.project.status === 'pending'
@@ -153,7 +182,7 @@ export function Projects() {
 
       setIsDownloading(false)
       handleCloseMenu()
-    } catch (error) {
+    } catch (err) {
       setIsDownloading(false)
 
       toast.show({
@@ -221,7 +250,7 @@ export function Projects() {
       })
 
       handleCloseActionSheet()
-    } catch (error) {
+    } catch (err) {
       toast.show({
         duration: 3000,
         render: ({ id }) => (
@@ -245,7 +274,7 @@ export function Projects() {
         />
 
         <FlatList
-          data={projectStatus}
+          data={approvalStatus}
           keyExtractor={item => item.value}
           horizontal
           renderItem={({ item }) => (
@@ -264,22 +293,73 @@ export function Projects() {
           bg={'white'}
           borderBottomWidth={1}
           borderBottomColor={'#00000012'}
-          mb={6}
         />
 
         {isLoading && <Loading bg={'gray.50'} />}
 
         {!isLoading && !error && (
-          <View
-            flex={1}
-            style={{
-              shadowColor: '#000000',
-              shadowOpacity: 0.07,
-              shadowRadius: 30,
-              shadowOffset: { width: 0, height: 4 },
-            }}
-          >
-            <FlatList
+          <View flex={1}>
+            <SectionList
+              bg={'gray.50'}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={handleRefresh}
+                  style={{
+                    height: refreshing ? 30 : 0,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                />
+              }
+              sections={sectionListData}
+              keyExtractor={item => item.id}
+              showsVerticalScrollIndicator={false}
+              stickySectionHeadersEnabled={false}
+              contentContainerStyle={{
+                paddingBottom: 20,
+                ...(!!projects?.length && {
+                  shadowColor: '#000000',
+                  shadowOpacity: 0.05,
+                  shadowRadius: 30,
+                  shadowOffset: { width: 0, height: 4 },
+                }),
+                ...(!projects?.length && { flex: 1, justifyContent: 'center' }),
+              }}
+              renderItem={({ item }) => (
+                <ListItem
+                  id={item.id}
+                  title={item.project.title}
+                  subTitle={format(item.project.file.updatedAt, "dd-MM-yy' | 'H:mm")}
+                  icon={<Icon as={Feather} name="layout" size={6} color="light.700" />}
+                  onPress={() => handleItemPressed(item)}
+                  status={item.project.status}
+                />
+              )}
+              renderSectionHeader={({ section: { title } }) => (
+                <Heading
+                  fontSize={'lg'}
+                  color={'light.700'}
+                  fontFamily={'heading'}
+                  px={10}
+                  mt={8}
+                  mb={4}
+                >
+                  {title}
+                </Heading>
+              )}
+              ListEmptyComponent={() => (
+                <ListEmpty
+                  px={12}
+                  py={40}
+                  icon="layout"
+                  title="Nenhum projeto foi encontrado"
+                  message="Você ainda não possui nenhum projeto adicionado."
+                />
+              )}
+            />
+            {/* <FlatList
               refreshControl={
                 <RefreshControl
                   refreshing={refreshing}
@@ -318,7 +398,7 @@ export function Projects() {
                   message="Você ainda não possui nenhum projeto adicionado."
                 />
               )}
-            />
+            /> */}
           </View>
         )}
 

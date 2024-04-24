@@ -1,6 +1,19 @@
 import { Platform } from 'react-native'
+import type { ProjectType } from 'src/api/queries/getWorks'
 
 export const statusBarHeight = Platform.OS === 'android' ? 4 : 12
+
+export const statusColor = {
+  pending: '#F8C40E26',
+  approved: '#0AAF8726',
+  archived: '#00000012',
+}
+
+export const projectTypes: Record<ProjectType, string> = {
+  executive: 'Executivo',
+  wet_spaces_detailing: 'Detalhamento Áreas Molhadas',
+  wood_detailing: 'Detalhamento Marcenaria',
+}
 
 export const calendarEventColors = [
   '#0F25EE',
@@ -39,7 +52,7 @@ export const documentsCategories = [
   },
 ]
 
-export const projectStatus = [
+export const approvalStatus = [
   {
     singular: 'Todos',
     plural: 'Todos',
@@ -63,3 +76,4 @@ export const projectStatus = [
 ]
 
 export const PDF_MIME_TYPE = 'application/pdf'
+export const NOT_ALLOWED_API_ERROR_MESSAGE = 'You are not allowed to perform this action.'

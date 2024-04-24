@@ -37,6 +37,7 @@ export function Home() {
   } = useQuery({
     queryKey: ['works'],
     queryFn: getWorks,
+    retry: false,
   })
   const { refreshing, handleRefresh } = useRefresh(refetch)
 
@@ -53,6 +54,7 @@ export function Home() {
   if (isLoading) return <Loading />
 
   if (error) {
+    error.message
     return (
       <Center flex={1}>
         <Text fontFamily={'heading'} fontSize={'xl'} mb={4} color={'light.700'}>

@@ -1,6 +1,6 @@
 import { Category } from '@components/Category'
 import { ListEmpty } from '@components/ListEmpty'
-import { type ItemStatus, ListItem } from '@components/ListItem'
+import { type ApprovalStatus, ListItem } from '@components/ListItem'
 import { ListScreenHeader } from '@components/ListScreenHeader'
 import { Feather } from '@expo/vector-icons'
 import { useNavigation, useRoute } from '@react-navigation/native'

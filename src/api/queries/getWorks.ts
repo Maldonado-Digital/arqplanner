@@ -11,6 +11,8 @@ export type FileType = {
   url: string
 }
 
+export type ProjectType = 'executive' | 'wood_detailing' | 'wet_spaces_detailing'
+
 type Step = {
   step: {
     title: string
@@ -47,7 +49,7 @@ export type Project = {
   project: {
     title: string
     status: 'pending' | 'approved' | 'archived'
-    type: 'executive' | 'wood_detailing' | 'wet_spaces_detailing'
+    type: ProjectType
     file: FileType
     comments?: string | null
   }

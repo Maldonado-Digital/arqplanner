@@ -52,6 +52,7 @@ export function DocumentView() {
   } = useQuery({
     queryKey: ['works'],
     queryFn: getWorks,
+    retry: false,
   })
 
   if (isLoading) return <Loading />
@@ -205,6 +206,7 @@ export function DocumentView() {
           mb={6}
           title={title}
           subTitle={subTitle}
+          status={status}
           borderBottomColor={'muted.200'}
           borderBottomWidth={1}
           onClickSettings={handleOpenMenu}
