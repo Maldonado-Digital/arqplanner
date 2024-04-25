@@ -217,7 +217,7 @@ export function DocumentView() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }} edges={['top']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#ffffff' }} edges={['top']}>
       <VStack flex={1} bg={'gray.50'} position={'relative'}>
         <ListScreenHeader
           mb={6}

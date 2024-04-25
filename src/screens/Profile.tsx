@@ -11,11 +11,11 @@ import {
   Heading,
   Icon,
   IconButton,
-  Pressable,
   Text,
   VStack,
   useToast,
 } from 'native-base'
+import { TouchableOpacity } from 'react-native'
 
 export function Profile() {
   const { user, signOut } = useAuth()
@@ -165,11 +165,11 @@ export function Profile() {
               </Text>
             </Pressable>
           </HStack> */}
-          <Pressable onPress={handleSignOut}>
+          <TouchableOpacity onPress={handleSignOut}>
             <Text fontFamily={'heading'} fontSize={'sm'} color={'red.700'}>
               Sair do app agora
             </Text>
-          </Pressable>
+          </TouchableOpacity>
         </VStack>
       </VStack>
     </VStack>

@@ -150,7 +150,7 @@ export function Documents() {
     shareAsync(`${process.env.EXPO_PUBLIC_API_URL}${selectedDocument.document.file.url}`)
   }
 
-  if (isPending) return <Loading />
+  // if (isPending) return <Loading />
 
   if (isError) return <SessionExpired />
 

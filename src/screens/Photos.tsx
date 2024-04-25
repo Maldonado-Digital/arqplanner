@@ -34,7 +34,7 @@ export function Photos() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }} edges={['top']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#ffffff' }} edges={['top']}>
       <VStack flex={1} bg={'gray.50'}>
         <ListScreenHeader
           title={'Fotos'}

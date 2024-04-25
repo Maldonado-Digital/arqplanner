@@ -18,14 +18,25 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.bernardoamim.arqplanner",
-      "backgroundColor": "#fafafa"
+      "backgroundColor": "#fafafa",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos.",
+        "NSPhotoLibraryAddUsageDescription": "Allow $(PRODUCT_NAME) to save photos."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#fafafa"
       },
-      "package": "com.bernardoamim.arqplanner"
+      "package": "com.bernardoamim.arqplanner",
+      "permissions": [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.ACCESS_MEDIA_LOCATION",
+        "android.permission.DOWNLOAD_WITHOUT_NOTIFICATION",
+        "android.permission.ACCESS_NETWORK_STATE"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -55,6 +66,12 @@
       "eas": {
         "projectId": "aac43cdf-1124-4412-8b25-8e2b303425a7"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/aac43cdf-1124-4412-8b25-8e2b303425a7"
     }
   }
 }
