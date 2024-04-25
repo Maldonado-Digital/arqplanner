@@ -29,7 +29,6 @@ import {
   Text,
   TextArea,
   VStack,
-  View,
   useDisclose,
   useToast,
 } from 'native-base'

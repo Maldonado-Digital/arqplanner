@@ -1,4 +1,5 @@
 import { Feather } from '@expo/vector-icons'
+import * as Haptics from 'expo-haptics'
 import { Center, Icon, useTheme } from 'native-base'
 import {
   LocaleConfig,
@@ -57,6 +58,11 @@ type CalendarProps = ReactNativeCalendarProps & {
 export function Calendar({ onSelect, initialDate, markedDates }: CalendarProps) {
   const { colors, fonts, fontSizes } = useTheme()
 
+  function handleMonthChange(method: () => void) {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+    method()
+  }
+
   return (
     <ReactNativeCalendar
       style={{ paddingLeft: 0, paddingRight: 0 }}
@@ -78,6 +84,8 @@ export function Calendar({ onSelect, initialDate, markedDates }: CalendarProps) 
       enableSwipeMonths
       renderArrow={direction => <CalendarArrow direction={direction} />}
       onDayPress={day => onSelect(day.dateString)}
+      onPressArrowLeft={handleMonthChange}
+      onPressArrowRight={handleMonthChange}
       initialDate={initialDate}
       markingType={'multi-dot'}
       markedDates={markedDates}

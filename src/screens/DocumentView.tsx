@@ -2,6 +2,7 @@ import { ApprovalFooter } from '@components/ApprovalFooter'
 import { Button } from '@components/Button'
 import { ListScreenHeader } from '@components/ListScreenHeader'
 import { Loading } from '@components/Loading'
+import { SessionExpired } from '@components/SessionExpired'
 import { Toast } from '@components/Toast'
 import { Feather } from '@expo/vector-icons'
 import { useAuth } from '@hooks/useAuth'
@@ -61,26 +62,12 @@ export function DocumentView() {
 
   if (isPending) return <Loading />
 
-  if (isError || !works?.docs[0]) {
-    return (
-      <Center flex={1}>
-        <Text fontFamily={'heading'} fontSize={'xl'} mb={4} color={'light.700'}>
-          Erro ao buscar as informações.
-        </Text>
-        <Pressable onPress={signOut}>
-          <Text fontFamily={'heading'} fontSize={'md'} color={'light.500'}>
-            Fazer login novamente
-          </Text>
-        </Pressable>
-      </Center>
-    )
-  }
+  if (isError) return <SessionExpired />
 
-  const { title, subTitle, status, file } = digViewingDocumentData(
-    works.docs[0],
-    documentType,
-    documentId,
-  )
+  const { data } = digViewingDocumentData(works.docs[0], documentType, documentId)
+
+  if (!data) return <SessionExpired />
+  const { title, subTitle, status, file } = data
 
   const hasApprovalFlow = documentType === 'project' && status === 'pending'
 

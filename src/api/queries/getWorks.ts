@@ -133,7 +133,7 @@ export type GetWorksResponse = {
 }
 
 export async function getWorks() {
-  const response = await api.get<GetWorksResponse>('/api/works?locale=pt-BR&depth=1')
+  const { data } = await api.get<GetWorksResponse>('/api/works?locale=pt-BR&depth=1')
 
-  return response.data
+  return data
 }

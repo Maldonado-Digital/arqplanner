@@ -3,15 +3,18 @@ import { Button } from '@components/Button'
 import { ListEmpty } from '@components/ListEmpty'
 import { ListScreenHeader } from '@components/ListScreenHeader'
 import { Loading } from '@components/Loading'
+import { SessionExpired } from '@components/SessionExpired'
 import { Toast } from '@components/Toast'
 import { Feather } from '@expo/vector-icons'
 import { useAuth } from '@hooks/useAuth'
+import { useRefresh } from '@hooks/useRefresh'
 import { useRoute } from '@react-navigation/native'
 import type { MediasRouteParams } from '@routes/app.routes'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { AppError } from '@utils/AppError'
 import { downloadFile } from '@utils/downloadFile'
 import { digViewingMediaData } from '@utils/helpers'
+import * as Haptics from 'expo-haptics'
 import * as MediaLibrary from 'expo-media-library'
 import { shareAsync } from 'expo-sharing'
 import {
@@ -33,7 +36,7 @@ import {
   useToast,
 } from 'native-base'
 import { useState } from 'react'
-import { Platform, Vibration, useWindowDimensions } from 'react-native'
+import { Platform, RefreshControl, Vibration, useWindowDimensions } from 'react-native'
 
 import ImageView from 'react-native-image-viewing'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -66,36 +69,25 @@ export function Medias() {
 
   const {
     data: works,
-    error,
-    isLoading,
+    isError,
+    isPending,
+    refetch,
   } = useQuery({
     queryKey: ['works'],
     queryFn: getWorks,
     retry: false,
   })
+  const { refreshing, handleRefresh } = useRefresh(refetch)
 
-  if (isLoading) return <Loading />
+  if (isPending) return <Loading />
 
-  if (error || !works?.docs[0]) {
-    return (
-      <Center flex={1}>
-        <Text fontFamily={'heading'} fontSize={'xl'} mb={4} color={'light.700'}>
-          Erro ao buscar as informações.
-        </Text>
-        <Pressable onPress={signOut}>
-          <Text fontFamily={'heading'} fontSize={'md'} color={'light.500'}>
-            Fazer login novamente
-          </Text>
-        </Pressable>
-      </Center>
-    )
-  }
+  if (isError) return <SessionExpired />
 
-  const { title, subTitle, status, files } = digViewingMediaData(
-    works.docs[0],
-    mediaType,
-    mediaId,
-  )
+  const { data } = digViewingMediaData(works.docs[0], mediaType, mediaId)
+
+  if (!data) return <SessionExpired />
+
+  const { title, subTitle, files, status } = data
 
   const images = files.map(({ uploads, id }) => ({
     key: id,
@@ -124,7 +116,7 @@ export function Medias() {
     }
   }
 
-  const { mutateAsync: resolveRenderFn, isPending } = useMutation({
+  const { mutateAsync: resolveRenderFn, isPending: isMutating } = useMutation({
     mutationFn: resolveRender,
     onSuccess(_, { workId, renderId, status: newStatus, comments }) {
       updateWorksCache({ workId, renderId, status: newStatus, comments })
@@ -156,7 +148,7 @@ export function Medias() {
     setCurrentIndex(idx)
 
     if (isLongPress) {
-      Vibration.vibrate(50)
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
       handleOpenMenu()
 
       return
@@ -299,6 +291,7 @@ export function Medias() {
           onClickMenu={handleOpenMenu}
           isMenuDisabled={!hasApprovalFlow}
         />
+
         <FlatList
           flex={1}
           data={images}
@@ -306,6 +299,18 @@ export function Medias() {
           contentContainerStyle={{ gap }}
           numColumns={numColumns}
           keyExtractor={item => item.key}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={handleRefresh}
+              style={{
+                height: refreshing ? 30 : 0,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            />
+          }
           renderItem={({ item, index }) => (
             <Pressable
               onPress={() => handleImagePress(index)}
@@ -589,7 +594,7 @@ export function Medias() {
                       fontSize={'md'}
                       variant={selectedOption === 'reject' ? 'subtle' : 'solid'}
                       onPress={handleSubmit}
-                      isLoading={isPending}
+                      isLoading={isMutating}
                     />
                   </VStack>
                 </Actionsheet.Content>

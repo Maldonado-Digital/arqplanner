@@ -10,6 +10,7 @@ import type {
   Render,
   Work,
 } from 'src/api/queries/getWorks'
+import { AppError } from './AppError'
 
 export function getInitials(name: string) {
   const splitted = name.trim().split(' ')
@@ -61,12 +62,20 @@ export type ViewableDocumentTypes = 'project' | 'document' | 'quote'
 
 export type ViewableMediaTypes = 'render' | 'photo'
 
+type GetViewingDocumentDataReturnType = {
+  data: ViewingDocumentData | null
+}
+
 type DocumentTypesFactory = {
-  [k in ViewableDocumentTypes]: () => ViewingDocumentData
+  [k in ViewableDocumentTypes]: () => GetViewingDocumentDataReturnType
+}
+
+type GetViewingMediaDataReturnType = {
+  data: ViewingMediaData | null
 }
 
 type MediaTypesFactory = {
-  [k in ViewableMediaTypes]: () => ViewingMediaData
+  [k in ViewableMediaTypes]: () => GetViewingMediaDataReturnType
 }
 
 export function digViewingDocumentData(
@@ -75,33 +84,48 @@ export function digViewingDocumentData(
   id: string,
 ) {
   const getProjectViewData = () => {
-    const { project } = work.projects.find(p => p.id === id) as Project
-    return {
-      title: project.title,
-      subTitle: format(project.file.updatedAt, "dd-MM-yy' | 'HH:mm"),
-      file: project.file,
-      status: project.status,
+    const project = work.projects.find(p => p.id === id)
+
+    if (!project) return { data: null }
+
+    const data = {
+      title: project.project.title,
+      subTitle: format(project.project.file.updatedAt, "dd-MM-yy' | 'HH:mm"),
+      file: project.project.file,
+      status: project.project.status,
     }
+
+    return { data }
   }
 
   const getDocumentViewData = () => {
-    const { document } = work.documents.find(d => d.id === id) as Document
-    return {
-      title: document.title,
-      subTitle: format(document.file.updatedAt, "dd-MM-yy' | 'HH:mm"),
-      file: document.file,
+    const document = work.documents.find(d => d.id === id)
+
+    if (!document) return { data: null }
+
+    const data = {
+      title: document.document.title,
+      subTitle: format(document.document.file.updatedAt, "dd-MM-yy' | 'HH:mm"),
+      file: document.document.file,
       status: null,
     }
+
+    return { data }
   }
 
   const getQuoteViewData = () => {
-    const { quote } = work.quotes.find(quote => quote.id === id) as Quote
-    return {
-      title: quote.title,
-      subTitle: format(quote.file.updatedAt, "dd-MM-yy' | 'HH:mm"),
-      file: quote.file,
+    const quote = work.quotes.find(quote => quote.id === id)
+
+    if (!quote) return { data: null }
+
+    const data = {
+      title: quote.quote.title,
+      subTitle: format(quote.quote.file.updatedAt, "dd-MM-yy' | 'HH:mm"),
+      file: quote.quote.file,
       status: null,
     }
+
+    return { data }
   }
 
   const documentTypesFactory: DocumentTypesFactory = {
@@ -120,23 +144,33 @@ export function digViewingMediaData(
   id: string,
 ) {
   const getRenderViewData = () => {
-    const { render } = work.renders.find(r => r.id === id) as Render
-    return {
-      title: render.title,
-      subTitle: format(render.files[0].uploads.updatedAt, "dd-MM-yy' | 'HH:mm"),
-      files: render.files,
-      status: render.status,
+    const render = work.renders.find(r => r.id === id)
+
+    if (!render) return { data: null }
+
+    const data = {
+      title: render.render.title,
+      subTitle: format(render.render.files[0].uploads.updatedAt, "dd-MM-yy' | 'HH:mm"),
+      files: render.render.files,
+      status: render.render.status,
     }
+
+    return { data }
   }
 
   const getPhotoViewData = () => {
-    const { photo } = work.photos.find(p => p.id === id) as Photo
-    return {
-      title: photo.title,
-      subTitle: format(photo.files[0].uploads.updatedAt, "dd-MM-yy' | 'HH:mm"),
-      files: photo.files,
+    const photo = work.photos.find(p => p.id === id)
+
+    if (!photo) return { data: null }
+
+    const data = {
+      title: photo.photo.title,
+      subTitle: format(photo.photo.files[0].uploads.updatedAt, "dd-MM-yy' | 'HH:mm"),
+      files: photo.photo.files,
       status: null,
     }
+
+    return { data }
   }
 
   const mediaTypesFactory: MediaTypesFactory = {
