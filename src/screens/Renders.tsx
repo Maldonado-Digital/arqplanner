@@ -3,6 +3,7 @@ import { ListEmpty } from '@components/ListEmpty'
 import { ListItem } from '@components/ListItem'
 import { ListScreenHeader } from '@components/ListScreenHeader'
 import { Loading } from '@components/Loading'
+import { SessionExpired } from '@components/SessionExpired'
 import { Feather } from '@expo/vector-icons'
 import { useAuth } from '@hooks/useAuth'
 import { useRefresh } from '@hooks/useRefresh'
@@ -13,8 +14,7 @@ import { approvalStatus } from '@utils/constants'
 import { format } from 'date-fns'
 import { Center, FlatList, Icon, Text, VStack } from 'native-base'
 import { useState } from 'react'
-import { Pressable } from 'react-native'
-import { RefreshControl } from 'react-native-gesture-handler'
+import { RefreshControl } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { getWorks } from 'src/api/queries/getWorks'
 
@@ -34,21 +34,6 @@ export function Renders() {
   })
   const { refreshing, handleRefresh } = useRefresh(refetch)
 
-  if (!isPending && (isError || !works?.docs[0])) {
-    return (
-      <Center flex={1}>
-        <Text fontFamily={'heading'} fontSize={'xl'} mb={4} color={'light.700'}>
-          Erro ao buscar as informações.
-        </Text>
-        <Pressable onPress={signOut}>
-          <Text fontFamily={'heading'} fontSize={'md'} color={'light.500'}>
-            Fazer login novamente
-          </Text>
-        </Pressable>
-      </Center>
-    )
-  }
-
   const renders = works?.docs[0].renders
   const filteredRenders = renders?.filter(
     render => render.render.status === selectedStatus || selectedStatus === 'all',
@@ -59,6 +44,8 @@ export function Renders() {
   function handleViewMedia(renderId: string) {
     navigation.navigate('medias', { mediaId: renderId, mediaType: 'render' })
   }
+
+  if (!isPending && isError) return <SessionExpired />
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top']}>
@@ -91,54 +78,58 @@ export function Renders() {
           mb={6}
         />
 
-        <FlatList
-          data={filteredRenders}
-          keyExtractor={item => item.id}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={handleRefresh}
-              style={{
-                height: refreshing ? 30 : 0,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            />
-          }
-          renderItem={({ item }) => (
-            <ListItem
-              title={item.render.title}
-              subTitle={format(
-                item.render.files[0].uploads.updatedAt,
-                "dd-MM-yy' | 'HH:mm",
-              )}
-              icon={<Icon as={Feather} name="box" size={6} color="light.700" />}
-              onPress={() => handleViewMedia(item.id)}
-              status={item.render.status}
-            />
-          )}
-          showsVerticalScrollIndicator={false}
-          _contentContainerStyle={{
-            paddingBottom: 20,
-            ...(!!renders?.length && {
-              shadowColor: '#000000',
-              shadowOpacity: 0.05,
-              shadowRadius: 30,
-              shadowOffset: { width: 0, height: 4 },
-            }),
-            ...(!renders?.length && { flex: 1, justifyContent: 'center' }),
-          }}
-          ListEmptyComponent={() => (
-            <ListEmpty
-              px={10}
-              py={40}
-              icon="box"
-              title="Nenhuma perspectiva foi encontrada"
-              message="Você ainda não possui nenhuma perspectiva adicionada."
-            />
-          )}
-        />
+        {isPending && <Loading bg={'gray.50'} />}
+
+        {!isPending && (
+          <FlatList
+            data={filteredRenders}
+            keyExtractor={item => item.id}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={handleRefresh}
+                style={{
+                  height: refreshing ? 30 : 0,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              />
+            }
+            renderItem={({ item }) => (
+              <ListItem
+                title={item.render.title}
+                subTitle={format(
+                  item.render.files[0].uploads.updatedAt,
+                  "dd-MM-yy' | 'HH:mm",
+                )}
+                icon={<Icon as={Feather} name="box" size={6} color="light.700" />}
+                onPress={() => handleViewMedia(item.id)}
+                status={item.render.status}
+              />
+            )}
+            showsVerticalScrollIndicator={false}
+            _contentContainerStyle={{
+              paddingBottom: 20,
+              ...(!!renders?.length && {
+                shadowColor: '#000000',
+                shadowOpacity: 0.05,
+                shadowRadius: 30,
+                shadowOffset: { width: 0, height: 4 },
+              }),
+              ...(!renders?.length && { flex: 1, justifyContent: 'center' }),
+            }}
+            ListEmptyComponent={() => (
+              <ListEmpty
+                px={10}
+                py={40}
+                icon="box"
+                title="Nenhuma perspectiva foi encontrada"
+                message="Você ainda não possui nenhuma perspectiva adicionada."
+              />
+            )}
+          />
+        )}
       </VStack>
     </SafeAreaView>
   )
