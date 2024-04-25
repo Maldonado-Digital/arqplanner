@@ -25,7 +25,6 @@ import {
   IconButton,
   Image,
   KeyboardAvoidingView,
-  Pressable,
   Spinner,
   Text,
   TextArea,
@@ -34,7 +33,7 @@ import {
   useToast,
 } from 'native-base'
 import { useState } from 'react'
-import { Platform, RefreshControl, useWindowDimensions } from 'react-native'
+import { Platform, Pressable, RefreshControl, useWindowDimensions } from 'react-native'
 
 import ImageView from 'react-native-image-viewing'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -324,7 +323,7 @@ export function Medias() {
               onLongPress={() => handleImagePress(index, true)}
               delayLongPress={300}
             >
-              {({ isPressed }) => (
+              {({ pressed }) => (
                 <Image
                   source={{
                     uri: item.uri,
@@ -335,10 +334,10 @@ export function Medias() {
                   alt=""
                   style={{
                     aspectRatio: 1,
-                    opacity: isPressed ? 0.8 : 1,
+                    opacity: pressed ? 0.8 : 1,
                     transform: [
                       {
-                        scale: isPressed ? 1.03 : 1,
+                        scale: pressed ? 1.03 : 1,
                       },
                     ],
                   }}

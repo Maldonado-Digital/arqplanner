@@ -1,5 +1,6 @@
-import { Heading, Pressable, VStack } from 'native-base'
+import { Heading, VStack } from 'native-base'
 import type { ReactNode } from 'react'
+import { Pressable } from 'react-native'
 
 type MenuCard = {
   title: string
@@ -10,10 +11,10 @@ type MenuCard = {
 export function MenuCard({ title, icon, onPress }: MenuCard) {
   return (
     <Pressable onPress={onPress}>
-      {({ isPressed }) => (
+      {({ pressed }) => (
         <VStack
           p={6}
-          bg={isPressed ? 'gray.50' : 'white'}
+          bg={pressed ? 'gray.50' : 'white'}
           w={41}
           h={41}
           rounded={'3xl'}

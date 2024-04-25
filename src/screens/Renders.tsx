@@ -19,6 +19,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { getWorks } from 'src/api/queries/getWorks'
 
 export function Renders() {
+  const navigation = useNavigation<AppNavigatorRoutesProps>()
   const [selectedStatus, setSelectedStatus] = useState('all')
 
   const {
@@ -33,18 +34,22 @@ export function Renders() {
   })
   const { refreshing, handleRefresh } = useRefresh(refetch)
 
-  const renders = works?.docs[0].renders
+  const renders = works?.docs[0].renders.sort((a, b) => {
+    return (
+      new Date(b.render.files[0].uploads.updatedAt).getTime() -
+      new Date(a.render.files[0].uploads.updatedAt).getTime()
+    )
+  })
+
   const filteredRenders = renders?.filter(
     render => render.render.status === selectedStatus || selectedStatus === 'all',
   )
-
-  const navigation = useNavigation<AppNavigatorRoutesProps>()
 
   function handleViewMedia(renderId: string) {
     navigation.navigate('medias', { mediaId: renderId, mediaType: 'render' })
   }
 
-  if (!isPending && isError) return <SessionExpired />
+  if (isError) return <SessionExpired />
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#ffffff' }} edges={['top']}>
