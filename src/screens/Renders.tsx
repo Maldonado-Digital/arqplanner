@@ -7,19 +7,18 @@ import { SessionExpired } from '@components/SessionExpired'
 import { Feather } from '@expo/vector-icons'
 import { useAuth } from '@hooks/useAuth'
 import { useRefresh } from '@hooks/useRefresh'
-import { useNavigation, useRoute } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { useQuery } from '@tanstack/react-query'
 import { approvalStatus } from '@utils/constants'
 import { format } from 'date-fns'
-import { Center, FlatList, Icon, Text, VStack } from 'native-base'
+import { FlatList, Icon, Text, VStack } from 'native-base'
 import { useState } from 'react'
 import { RefreshControl } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { getWorks } from 'src/api/queries/getWorks'
 
 export function Renders() {
-  const { signOut } = useAuth()
   const [selectedStatus, setSelectedStatus] = useState('all')
 
   const {

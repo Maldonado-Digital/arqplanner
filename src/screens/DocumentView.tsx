@@ -15,7 +15,6 @@ import { digViewingDocumentData } from '@utils/helpers'
 import { shareAsync } from 'expo-sharing'
 import {
   Actionsheet,
-  Center,
   HStack,
   Heading,
   Icon,
@@ -60,6 +59,13 @@ export function DocumentView() {
     retry: false,
   })
 
+  const { mutateAsync: resolveProjectFn, isPending: isMutating } = useMutation({
+    mutationFn: resolveProject,
+    onSuccess(_, { workId, projectId, status: newStatus, comments }) {
+      updateWorksCache({ workId, projectId, status: newStatus, comments })
+    },
+  })
+
   if (isPending) return <Loading />
 
   if (isError) return <SessionExpired />
@@ -89,13 +95,6 @@ export function DocumentView() {
       queryClient.setQueryData<GetWorksResponse>(['works'], newData)
     }
   }
-
-  const { mutateAsync: resolveProjectFn, isPending: isMutating } = useMutation({
-    mutationFn: resolveProject,
-    onSuccess(_, { workId, projectId, status: newStatus, comments }) {
-      updateWorksCache({ workId, projectId, status: newStatus, comments })
-    },
-  })
 
   function handleOpenActionSheet(option: 'approve' | 'reject') {
     setIsMenuOpen(false)

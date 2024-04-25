@@ -6,8 +6,6 @@ import { Loading } from '@components/Loading'
 import { SessionExpired } from '@components/SessionExpired'
 import { Toast } from '@components/Toast'
 import { Feather } from '@expo/vector-icons'
-import { useAuth } from '@hooks/useAuth'
-import { useRefresh } from '@hooks/useRefresh'
 import { useRoute } from '@react-navigation/native'
 import type { MediasRouteParams } from '@routes/app.routes'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -36,7 +34,7 @@ import {
   useToast,
 } from 'native-base'
 import { useState } from 'react'
-import { Platform, RefreshControl, Vibration, useWindowDimensions } from 'react-native'
+import { Platform, RefreshControl, useWindowDimensions } from 'react-native'
 
 import ImageView from 'react-native-image-viewing'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -53,7 +51,6 @@ export function Medias() {
   const toast = useToast()
   const queryClient = useQueryClient()
 
-  const { signOut } = useAuth()
   const { onOpen, onClose } = useDisclose()
   const { width } = useWindowDimensions()
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions()
@@ -72,12 +69,19 @@ export function Medias() {
     isError,
     isPending,
     refetch,
+    isRefetching,
   } = useQuery({
     queryKey: ['works'],
     queryFn: getWorks,
     retry: false,
   })
-  const { refreshing, handleRefresh } = useRefresh(refetch)
+
+  const { mutateAsync: resolveRenderFn, isPending: isMutating } = useMutation({
+    mutationFn: resolveRender,
+    onSuccess(_, { workId, renderId, status: newStatus, comments }) {
+      updateWorksCache({ workId, renderId, status: newStatus, comments })
+    },
+  })
 
   if (isPending) return <Loading />
 
@@ -116,14 +120,8 @@ export function Medias() {
     }
   }
 
-  const { mutateAsync: resolveRenderFn, isPending: isMutating } = useMutation({
-    mutationFn: resolveRender,
-    onSuccess(_, { workId, renderId, status: newStatus, comments }) {
-      updateWorksCache({ workId, renderId, status: newStatus, comments })
-    },
-  })
-
   function handleOpenActionSheet(option: 'approve' | 'reject') {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
     setIsMenuOpen(false)
     setSelectedOption(option)
     onOpen()
@@ -135,6 +133,7 @@ export function Medias() {
   }
 
   function handleOpenMenu() {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
     setIsMenuOpen(true)
     onOpen()
   }
@@ -150,7 +149,6 @@ export function Medias() {
     if (isLongPress) {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
       handleOpenMenu()
-
       return
     }
 
@@ -184,7 +182,10 @@ export function Medias() {
   }
 
   async function handleDownload() {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+
     try {
+      // if (!currentIndex) throw new AppError('Nenhuma opção selecionada.')
       setIsDownloading(true)
 
       await new Promise(resolve => setTimeout(resolve, 1000))
@@ -193,6 +194,7 @@ export function Medias() {
       )
 
       await saveMediaToLibrary(uri)
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 
       await toast.show({
         duration: 3000,
@@ -209,6 +211,7 @@ export function Medias() {
       setIsDownloading(false)
       handleCloseMenu()
     } catch (err) {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
       setIsDownloading(false)
 
       toast.show({
@@ -226,12 +229,14 @@ export function Medias() {
   }
 
   function handleShare() {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
     shareAsync(`${process.env.EXPO_PUBLIC_API_URL}${files[currentIndex].uploads.url}`)
   }
 
   async function handleSubmit() {
     try {
       if (!selectedOption) throw new AppError('Nenhuma opção selecionada')
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
 
       await resolveRenderFn({
         workId: works?.docs[0].id as string,
@@ -239,6 +244,7 @@ export function Medias() {
         status: selectedOption === 'approve' ? 'approved' : 'archived',
         comments,
       })
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 
       toast.show({
         duration: 3000,
@@ -258,6 +264,7 @@ export function Medias() {
 
       handleCloseActionSheet()
     } catch (err) {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
       toast.show({
         duration: 3000,
         render: ({ id }) => (
@@ -301,10 +308,10 @@ export function Medias() {
           keyExtractor={item => item.key}
           refreshControl={
             <RefreshControl
-              refreshing={refreshing}
-              onRefresh={handleRefresh}
+              refreshing={isRefetching}
+              onRefresh={refetch}
               style={{
-                height: refreshing ? 30 : 0,
+                height: isRefetching ? 30 : 0,
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'center',
