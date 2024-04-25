@@ -31,6 +31,7 @@ export function Agenda() {
   const today = new Date().toISOString()
 
   const [selectedDate, setSelectedDate] = useState(today)
+  const showTodayText = isSameDay(today, selectedDate)
   const formattedDate = format(selectedDate, 'yyyy-MM-dd')
   const selectedDateText = format(selectedDate, "dd' de 'MMMM", {
     locale: ptBR,
@@ -146,9 +147,16 @@ export function Agenda() {
       </VStack>
 
       <VStack flex={1}>
-        <Heading fontFamily={'heading'} color={'light.700'} fontSize={'md'} px={10}>
-          {selectedDateText}
-        </Heading>
+        <HStack px={10} mb={5} alignItems={'center'} space={2} h={6}>
+          <Heading fontFamily={'heading'} color={'light.700'} fontSize={'md'}>
+            {selectedDateText}
+          </Heading>
+          {showTodayText && (
+            <Text fontFamily={'body'} color={'light.500'} fontSize={'md'}>
+              (Hoje)
+            </Text>
+          )}
+        </HStack>
 
         <FlatList
           px={10}
@@ -170,9 +178,10 @@ export function Agenda() {
             )
           }}
           showsVerticalScrollIndicator={false}
-          _contentContainerStyle={{ paddingBottom: 20, mt: 6 }}
+          _contentContainerStyle={{ paddingBottom: 10 }}
           ListEmptyComponent={() => (
             <ListEmpty
+              pt={5}
               icon="calendar"
               title="Nenhum evento na data selecionada"
               message="Você não possui nenhum evento na data selecionada."
