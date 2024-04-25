@@ -88,7 +88,6 @@ export function SignIn() {
     Keyboard.dismiss()
 
     const message = (formData.email?.message || formData.password?.message) as string
-    console.log('Erro', formData)
 
     toast.show({
       duration: 3000,
@@ -105,7 +104,7 @@ export function SignIn() {
         paddingHorizontal: 40,
       }}
     >
-      <Pressable onPress={handleGoBack} w={8} h={8}>
+      <Pressable onPress={handleGoBack} w={8} h={8} justifyContent={'flex-end'}>
         <Icon as={Feather} name="arrow-left" color={'light.700'} size={6} />
       </Pressable>
 

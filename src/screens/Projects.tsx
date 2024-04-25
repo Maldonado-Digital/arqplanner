@@ -4,6 +4,7 @@ import { ListEmpty } from '@components/ListEmpty'
 import { ListItem } from '@components/ListItem'
 import { ListScreenHeader } from '@components/ListScreenHeader'
 import { Loading } from '@components/Loading'
+import { SessionExpired } from '@components/SessionExpired'
 import { Toast } from '@components/Toast'
 import { Feather } from '@expo/vector-icons'
 import { useRefresh } from '@hooks/useRefresh'
@@ -52,8 +53,8 @@ export function Projects() {
   const navigation = useNavigation<AppNavigatorRoutesProps>()
   const {
     data: works,
-    error,
-    isLoading,
+    isError,
+    isPending,
     refetch,
   } = useQuery({
     queryKey: ['works'],
@@ -128,7 +129,7 @@ export function Projects() {
     }
   }
 
-  const { mutateAsync: resolveProjectFn, isPending } = useMutation({
+  const { mutateAsync: resolveProjectFn, isPending: isMutating } = useMutation({
     mutationFn: resolveProject,
     onSuccess(_, { workId, projectId, status: newStatus, comments }) {
       updateWorksCache({ workId, projectId, status: newStatus, comments })
@@ -265,6 +266,8 @@ export function Projects() {
     }
   }
 
+  if (!isPending && isError) return <SessionExpired />
+
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top']}>
       <VStack flex={1} bg={'gray.50'}>
@@ -295,70 +298,68 @@ export function Projects() {
           borderBottomColor={'#00000012'}
         />
 
-        {isLoading && <Loading bg={'gray.50'} />}
+        {isPending && <Loading bg={'gray.50'} />}
 
-        {!isLoading && !error && (
-          <View flex={1}>
-            <SectionList
-              bg={'gray.50'}
-              refreshControl={
-                <RefreshControl
-                  refreshing={refreshing}
-                  onRefresh={handleRefresh}
-                  style={{
-                    height: refreshing ? 30 : 0,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                />
-              }
-              sections={sectionListData}
-              keyExtractor={item => item.id}
-              showsVerticalScrollIndicator={false}
-              stickySectionHeadersEnabled={false}
-              contentContainerStyle={{
-                paddingBottom: 20,
-                ...(!!projects?.length && {
-                  shadowColor: '#000000',
-                  shadowOpacity: 0.05,
-                  shadowRadius: 30,
-                  shadowOffset: { width: 0, height: 4 },
-                }),
-                ...(!projects?.length && { flex: 1, justifyContent: 'center' }),
-              }}
-              renderItem={({ item }) => (
-                <ListItem
-                  title={item.project.title}
-                  subTitle={format(item.project.file.updatedAt, "dd-MM-yy' | 'HH:mm")}
-                  icon={<Icon as={Feather} name="layout" size={6} color="light.700" />}
-                  onPress={() => handleItemPressed(item)}
-                  status={item.project.status}
-                />
-              )}
-              renderSectionHeader={({ section: { title } }) => (
-                <Heading
-                  fontSize={'lg'}
-                  color={'light.700'}
-                  fontFamily={'heading'}
-                  px={10}
-                  mt={8}
-                  mb={4}
-                >
-                  {title}
-                </Heading>
-              )}
-              ListEmptyComponent={() => (
-                <ListEmpty
-                  px={12}
-                  py={40}
-                  icon="layout"
-                  title="Nenhum projeto foi encontrado"
-                  message="Você ainda não possui nenhum projeto adicionado."
-                />
-              )}
-            />
-          </View>
+        {!isPending && (
+          <SectionList
+            bg={'gray.50'}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={handleRefresh}
+                style={{
+                  height: refreshing ? 30 : 0,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              />
+            }
+            sections={sectionListData}
+            keyExtractor={item => item.id}
+            showsVerticalScrollIndicator={false}
+            stickySectionHeadersEnabled={false}
+            contentContainerStyle={{
+              paddingBottom: 20,
+              ...(!!projects?.length && {
+                shadowColor: '#000000',
+                shadowOpacity: 0.05,
+                shadowRadius: 30,
+                shadowOffset: { width: 0, height: 4 },
+              }),
+              ...(!projects?.length && { flex: 1, justifyContent: 'center' }),
+            }}
+            renderItem={({ item }) => (
+              <ListItem
+                title={item.project.title}
+                subTitle={format(item.project.file.updatedAt, "dd-MM-yy' | 'HH:mm")}
+                icon={<Icon as={Feather} name="layout" size={6} color="light.700" />}
+                onPress={() => handleItemPressed(item)}
+                status={item.project.status}
+              />
+            )}
+            renderSectionHeader={({ section: { title } }) => (
+              <Heading
+                fontSize={'lg'}
+                color={'light.700'}
+                fontFamily={'heading'}
+                px={10}
+                mt={8}
+                mb={4}
+              >
+                {title}
+              </Heading>
+            )}
+            ListEmptyComponent={() => (
+              <ListEmpty
+                px={12}
+                py={28}
+                icon="layout"
+                title="Nenhum projeto foi encontrado"
+                message="Você ainda não possui nenhum projeto adicionado."
+              />
+            )}
+          />
         )}
 
         <Actionsheet
@@ -573,7 +574,7 @@ export function Projects() {
                   fontSize={'md'}
                   variant={selectedOption === 'reject' ? 'subtle' : 'solid'}
                   onPress={handleSubmit}
-                  isLoading={isPending}
+                  isLoading={isMutating}
                 />
               </VStack>
             </Actionsheet.Content>

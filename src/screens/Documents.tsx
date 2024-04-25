@@ -4,6 +4,7 @@ import { ListItem } from '@components/ListItem'
 import { ListScreenHeader } from '@components/ListScreenHeader'
 import { Loading } from '@components/Loading'
 import { Feather } from '@expo/vector-icons'
+import { useRefresh } from '@hooks/useRefresh'
 import { useNavigation } from '@react-navigation/native'
 import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { useQuery } from '@tanstack/react-query'
@@ -15,22 +16,31 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { type Document, getWorks } from 'src/api/queries/getWorks'
 
 export function Documents() {
-  const [selectedCategory, setSelectedCategory] = useState('all')
-
+  const navigation = useNavigation<AppNavigatorRoutesProps>()
   const {
     data: works,
     error,
     isLoading,
+    refetch,
   } = useQuery({
     queryKey: ['works'],
     queryFn: getWorks,
+    retry: false,
+  })
+  const { refreshing, handleRefresh } = useRefresh(refetch)
+
+  const [selectedCategory, setSelectedCategory] = useState('all')
+
+  const documents = works?.docs[0].documents.sort((a, b) => {
+    return (
+      new Date(b.document.file.updatedAt).getTime() -
+      new Date(a.document.file.updatedAt).getTime()
+    )
   })
 
-  const documents = works?.docs[0].documents
   const filteredDocuments = documents?.filter(
     document => document.document.type === selectedCategory || selectedCategory === 'all',
   )
-  const navigation = useNavigation<AppNavigatorRoutesProps>()
 
   function handleViewDocument(document: Document) {
     navigation.navigate('document_view', {
@@ -74,31 +84,35 @@ export function Documents() {
           mb={6}
         />
 
-        <FlatList
-          data={filteredDocuments}
-          keyExtractor={item => item.id}
-          renderItem={({ item }) => (
-            <ListItem
-              title={item.document.title}
-              subTitle={format(item.document.file.updatedAt, "dd-MM-yy' | 'HH:mm")}
-              icon={<Icon as={Feather} name="folder" size={6} color="light.700" />}
-              onPress={() => handleViewDocument(item)}
-            />
-          )}
-          showsVerticalScrollIndicator={false}
-          _contentContainerStyle={{
-            paddingBottom: 20,
-            ...(!documents?.length && { flex: 1, justifyContent: 'center' }),
-          }}
-          ListEmptyComponent={() => (
-            <ListEmpty
-              px={10}
-              icon="folder"
-              title="Nenhum documento foi encontrado"
-              message="Você ainda não possui nenhum documento adicionado."
-            />
-          )}
-        />
+        {isLoading && <Loading bg={'gray.50'} />}
+
+        {!isLoading && !error && (
+          <FlatList
+            data={filteredDocuments}
+            keyExtractor={item => item.id}
+            renderItem={({ item }) => (
+              <ListItem
+                title={item.document.title}
+                subTitle={format(item.document.file.updatedAt, "dd-MM-yy' | 'HH:mm")}
+                icon={<Icon as={Feather} name="folder" size={6} color="light.700" />}
+                onPress={() => handleViewDocument(item)}
+              />
+            )}
+            showsVerticalScrollIndicator={false}
+            _contentContainerStyle={{
+              paddingBottom: 20,
+              ...(!documents?.length && { flex: 1, justifyContent: 'center' }),
+            }}
+            ListEmptyComponent={() => (
+              <ListEmpty
+                px={10}
+                icon="folder"
+                title="Nenhum documento foi encontrado"
+                message="Você ainda não possui nenhum documento adicionado."
+              />
+            )}
+          />
+        )}
       </VStack>
     </SafeAreaView>
   )

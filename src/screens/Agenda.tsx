@@ -2,6 +2,7 @@ import { Calendar } from '@components/Calendar'
 import { EventItem } from '@components/EventItem'
 import { ListEmpty } from '@components/ListEmpty'
 import { Loading } from '@components/Loading'
+import { SessionExpired } from '@components/SessionExpired'
 import { Feather } from '@expo/vector-icons'
 import { useAuth } from '@hooks/useAuth'
 import { useRefresh } from '@hooks/useRefresh'
@@ -26,7 +27,6 @@ import type { MarkedDates } from 'react-native-calendars/src/types'
 import { getWorks } from 'src/api/queries/getWorks'
 
 export function Agenda() {
-  const { signOut } = useAuth()
   const navigation = useNavigation<AppNavigatorRoutesProps>()
   const today = new Date().toISOString()
 
@@ -38,15 +38,12 @@ export function Agenda() {
 
   const {
     data: works,
-    error,
-    isLoading,
+    isError,
+    isPending,
   } = useQuery({
     queryKey: ['works'],
     queryFn: getWorks,
-  })
-
-  const displayedEvents = works?.docs[0].events?.filter(day => {
-    return isSameDay(selectedDate, day.event.date)
+    retry: false,
   })
 
   const markedDates: MarkedDates = {
@@ -91,6 +88,10 @@ export function Agenda() {
     }
   })
 
+  const displayedEvents = works?.docs[0].events?.filter(day => {
+    return isSameDay(selectedDate, day.event.date)
+  })
+
   function handleSelectedDateChange(date: string) {
     const dateWithTime = new Date(`${date}T12:00:00`).toISOString()
     setSelectedDate(dateWithTime)
@@ -104,22 +105,9 @@ export function Agenda() {
     navigation.navigate('event', { id, markerColor })
   }
 
-  if (isLoading) return <Loading />
+  if (isPending) return <Loading />
 
-  if (error) {
-    return (
-      <Center flex={1}>
-        <Text fontFamily={'heading'} fontSize={'xl'} mb={4} color={'light.700'}>
-          Erro ao buscar as informações.
-        </Text>
-        <Pressable onPress={signOut}>
-          <Text fontFamily={'heading'} fontSize={'md'} color={'light.500'}>
-            Fazer login novamente
-          </Text>
-        </Pressable>
-      </Center>
-    )
-  }
+  if (isError) return <SessionExpired />
 
   return (
     <VStack flex={1} bg={'gray.50'}>
@@ -166,22 +154,21 @@ export function Agenda() {
           px={10}
           data={displayedEvents}
           keyExtractor={item => item.id}
-          renderItem={({ item, index }) => (
-            <EventItem
-              title={item.event.title}
-              markerColor={
-                calendarEventColors[index] ||
-                calendarEventColors[index - calendarEventColors.length]
-              }
-              onPress={() =>
-                navigateToEvent(
-                  item.id,
-                  calendarEventColors[index] ||
-                    calendarEventColors[index - calendarEventColors.length],
-                )
-              }
-            />
-          )}
+          renderItem={({ item, index }) => {
+            const markerColor =
+              markedDates[selectedDate.split('T')[0]].dots?.find(
+                dot => dot.key === item.id,
+              )?.color ||
+              calendarEventColors[index] ||
+              calendarEventColors[index - calendarEventColors.length]
+            return (
+              <EventItem
+                title={item.event.title}
+                markerColor={markerColor}
+                onPress={() => navigateToEvent(item.id, markerColor)}
+              />
+            )
+          }}
           showsVerticalScrollIndicator={false}
           _contentContainerStyle={{ paddingBottom: 20, mt: 6 }}
           ListEmptyComponent={() => (

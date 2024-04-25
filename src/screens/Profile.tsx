@@ -118,24 +118,14 @@ export function Profile() {
           borderBottomColor={'gray.200'}
           borderBottomWidth={1}
         >
-          <Heading
-            fontFamily={'heading'}
-            fontSize={'md'}
-            color={'light.700'}
-            mb={4}
-          >
+          <Heading fontFamily={'heading'} fontSize={'md'} color={'light.700'} mb={4}>
             Contatos
           </Heading>
 
           {!!user.phone_number && (
             <HStack alignItems={'center'} mb={5}>
               <Icon as={Feather} name="phone" size={5} color={'light.700'} />
-              <Text
-                fontFamily={'body'}
-                fontSize={'sm'}
-                color={'light.500'}
-                pl={3}
-              >
+              <Text fontFamily={'body'} fontSize={'sm'} color={'light.500'} pl={3}>
                 {phoneMask(user.phone_number)}
               </Text>
             </HStack>
@@ -143,12 +133,7 @@ export function Profile() {
 
           <HStack alignItems={'center'} mb={5}>
             <Icon as={Feather} name="mail" size={5} color={'light.700'} />
-            <Text
-              fontFamily={'body'}
-              fontSize={'sm'}
-              color={'light.500'}
-              pl={3}
-            >
+            <Text fontFamily={'body'} fontSize={'sm'} color={'light.500'} pl={3}>
               {user.email}
             </Text>
           </HStack>
@@ -156,12 +141,7 @@ export function Profile() {
           {!!user.social_media && (
             <HStack alignItems={'center'}>
               <Icon as={Feather} name="at-sign" size={5} color={'light.700'} />
-              <Text
-                fontFamily={'body'}
-                fontSize={'sm'}
-                color={'light.500'}
-                pl={3}
-              >
+              <Text fontFamily={'body'} fontSize={'sm'} color={'light.500'} pl={3}>
                 {user.social_media}
               </Text>
             </HStack>

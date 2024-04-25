@@ -51,17 +51,17 @@ export function DocumentView() {
 
   const {
     data: works,
-    error,
-    isLoading,
+    isError,
+    isPending,
   } = useQuery({
     queryKey: ['works'],
     queryFn: getWorks,
     retry: false,
   })
 
-  if (isLoading) return <Loading />
+  if (isPending) return <Loading />
 
-  if (error || !works?.docs[0]) {
+  if (isError || !works?.docs[0]) {
     return (
       <Center flex={1}>
         <Text fontFamily={'heading'} fontSize={'xl'} mb={4} color={'light.700'}>
@@ -103,7 +103,7 @@ export function DocumentView() {
     }
   }
 
-  const { mutateAsync: resolveProjectFn, isPending } = useMutation({
+  const { mutateAsync: resolveProjectFn, isPending: isMutating } = useMutation({
     mutationFn: resolveProject,
     onSuccess(_, { workId, projectId, status: newStatus, comments }) {
       updateWorksCache({ workId, projectId, status: newStatus, comments })
@@ -482,7 +482,7 @@ export function DocumentView() {
                       fontSize={'md'}
                       variant={selectedOption === 'reject' ? 'subtle' : 'solid'}
                       onPress={handleSubmit}
-                      isLoading={isPending}
+                      isLoading={isMutating}
                     />
                   </VStack>
                 </Actionsheet.Content>

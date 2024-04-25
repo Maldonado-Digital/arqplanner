@@ -1,5 +1,6 @@
 import { Loading } from '@components/Loading'
 import { MenuCard } from '@components/MenuCard'
+import { SessionExpired } from '@components/SessionExpired'
 import { Feather } from '@expo/vector-icons'
 import { useAuth } from '@hooks/useAuth'
 import { useRefresh } from '@hooks/useRefresh'
@@ -21,7 +22,7 @@ import {
 } from 'native-base'
 import { RefreshControl } from 'react-native'
 import { ProgressCircle } from 'react-native-svg-charts'
-import { getWorks } from 'src/api/queries/getWorks'
+import { type GetWorksResponse, getWorks } from 'src/api/queries/getWorks'
 
 export function Home() {
   const { user, signOut } = useAuth()
@@ -31,8 +32,8 @@ export function Home() {
 
   const {
     data: works,
-    error,
-    isLoading,
+    isError,
+    isPending,
     refetch,
   } = useQuery({
     queryKey: ['works'],
@@ -40,6 +41,7 @@ export function Home() {
     retry: false,
   })
   const { refreshing, handleRefresh } = useRefresh(refetch)
+  // const works: GetWorksResponse | undefined = !works1?.docs ? works1 : undefined
 
   const totalSteps = works?.docs[0]?.steps.length ?? 0
   const stepsCompleted =
@@ -51,22 +53,9 @@ export function Home() {
     navigation.navigate('profile')
   }
 
-  if (isLoading) return <Loading />
+  if (isPending) return <Loading />
 
-  if (error) {
-    return (
-      <Center flex={1}>
-        <Text fontFamily={'heading'} fontSize={'xl'} mb={4} color={'light.700'}>
-          Erro ao buscar as informações.
-        </Text>
-        <Pressable onPress={signOut}>
-          <Text fontFamily={'heading'} fontSize={'md'} color={'light.500'}>
-            Fazer login novamente
-          </Text>
-        </Pressable>
-      </Center>
-    )
-  }
+  if (isError) return <SessionExpired />
 
   return (
     <ScrollView
