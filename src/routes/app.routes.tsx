@@ -47,7 +47,9 @@ const { Navigator, Screen, Group } = createNativeStackNavigator<AppRoutesType>()
 
 export function AppRoutes() {
   return (
-    <Navigator screenOptions={{ headerShown: false }}>
+    <Navigator
+      screenOptions={{ headerShown: false, contentStyle: { backgroundColor: '#fafafa' } }}
+    >
       <Screen name="home" component={Home} />
       <Screen name="document_view" component={DocumentView} />
       <Screen name="documents" component={Documents} />

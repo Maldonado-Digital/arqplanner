@@ -59,6 +59,7 @@ export function Home() {
 
   return (
     <ScrollView
+      bg={'muted.50'}
       contentContainerStyle={{ flexGrow: 1 }}
       showsVerticalScrollIndicator={false}
       refreshControl={
