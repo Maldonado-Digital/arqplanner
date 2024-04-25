@@ -1,23 +1,15 @@
 import { Feather } from '@expo/vector-icons'
+import { format } from 'date-fns'
 import { Box, HStack, Heading, Icon, Text, VStack } from 'native-base'
 import { TouchableOpacity, type TouchableOpacityProps } from 'react-native'
+import type { Event } from 'src/api/queries/getWorks'
 
 type EventItemProps = TouchableOpacityProps & {
-  title?: string
+  eventData: Event
   markerColor: string
-  startTime?: string
-  endTime?: string
-  address?: string
 }
 
-export function EventItem({
-  title = 'Visita Eletricista Márcio',
-  markerColor,
-  startTime = '16:30',
-  endTime = '17:30',
-  address = 'R. Santa Rita Durão, 759',
-  ...rest
-}: EventItemProps) {
+export function EventItem({ eventData, markerColor, ...rest }: EventItemProps) {
   return (
     <TouchableOpacity {...rest}>
       <HStack
@@ -43,16 +35,11 @@ export function EventItem({
             fontFamily={'heading'}
             noOfLines={1}
           >
-            {title}
+            {eventData.event.title}
           </Heading>
 
-          <Text
-            fontSize={'sm'}
-            color={'light.500'}
-            numberOfLines={1}
-            mt={'1px'}
-          >
-            {startTime} - {endTime} {address}
+          <Text fontSize={'sm'} color={'light.500'} numberOfLines={1} mt={'1px'}>
+            {format(eventData.event.date, 'HH:mm')} – {eventData.event.address}
           </Text>
         </VStack>
         <Icon as={Feather} name="chevron-right" color={'light.700'} size={6} />

@@ -38,7 +38,7 @@ type Step = {
   id: string
 }
 
-type Event = {
+export type Event = {
   event: {
     title: string
     description: string

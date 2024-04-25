@@ -163,7 +163,7 @@ export function Agenda() {
               calendarEventColors[index - calendarEventColors.length]
             return (
               <EventItem
-                title={item.event.title}
+                eventData={item}
                 markerColor={markerColor}
                 onPress={() => navigateToEvent(item.id, markerColor)}
               />
