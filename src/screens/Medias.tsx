@@ -243,6 +243,7 @@ export function Medias() {
         status: selectedOption === 'approve' ? 'approved' : 'archived',
         comments,
       })
+
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 
       toast.show({
@@ -371,6 +372,7 @@ export function Medias() {
         />
 
         <ImageView
+          doubleTapToZoomEnabled
           images={images}
           imageIndex={currentIndex}
           visible={isViewing}

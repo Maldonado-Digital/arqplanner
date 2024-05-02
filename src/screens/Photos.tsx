@@ -13,7 +13,7 @@ import { format } from 'date-fns'
 import { FlatList, Icon, VStack } from 'native-base'
 import { RefreshControl } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { type Render, getWorks } from 'src/api/queries/getWorks'
+import { getWorks } from 'src/api/queries/getWorks'
 
 export function Photos() {
   const navigation = useNavigation<AppNavigatorRoutesProps>()

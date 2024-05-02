@@ -18,6 +18,7 @@ import { format } from 'date-fns'
 import { shareAsync } from 'expo-sharing'
 import {
   Actionsheet,
+  Center,
   FlatList,
   HStack,
   Heading,
@@ -352,7 +353,7 @@ export function Projects() {
             ListEmptyComponent={() => (
               <ListEmpty
                 px={12}
-                py={28}
+                py={200}
                 icon="layout"
                 title="Nenhum projeto foi encontrado"
                 message="Você ainda não possui nenhum projeto adicionado."

@@ -72,6 +72,7 @@ export function Home() {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'center',
+            backgroundColor: '#fafafa',
           }}
         />
       }

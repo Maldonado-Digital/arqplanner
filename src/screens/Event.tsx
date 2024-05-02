@@ -45,6 +45,7 @@ export function Event() {
     <SafeAreaView style={{ flex: 1 }} edges={['top']}>
       <VStack flex={1} bg={'gray.50'}>
         <ListScreenHeader
+          backgroundColor={'muted.50'}
           title={'Visita técnica'}
           onClickMenu={() => navigation.navigate('profile')}
         />

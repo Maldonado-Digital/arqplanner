@@ -53,7 +53,13 @@ export function ListScreenHeader({
         <Icon as={Feather} name="arrow-left" color={'light.700'} size={6} />
       </Pressable>
       <VStack alignItems={'center'} alignSelf={'center'}>
-        <Heading color={'light.700'} fontSize={'xl'} fontFamily={'heading'}>
+        <Heading
+          color={'light.700'}
+          fontSize={'xl'}
+          fontFamily={'heading'}
+          numberOfLines={1}
+          px={4}
+        >
           {title}
         </Heading>
 
