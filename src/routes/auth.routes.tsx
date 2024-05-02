@@ -22,7 +22,7 @@ const { Navigator, Screen } = createNativeStackNavigator<AuthRoutesType>()
 
 export function AuthRoutes() {
   return (
-    <Navigator screenOptions={{ headerShown: false }}>
+    <Navigator screenOptions={{ headerShown: false, orientation: 'portrait_up' }}>
       <Screen name="onboarding_1" component={Onboarding1} />
       <Screen name="onboarding_2" component={Onboarding2} />
       <Screen name="onboarding_3" component={Onboarding3} />

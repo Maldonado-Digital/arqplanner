@@ -7,7 +7,8 @@ import { SliderDots } from '@components/SliderDots'
 import { Feather } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import type { AuthNavigatorRoutesProps } from '@routes/auth.routes'
-import { Heading, IconButton, Image, Text, VStack } from 'native-base'
+import { Box, Heading, IconButton, Image, Text, VStack, View } from 'native-base'
+import { ms, mvs, s, vs } from 'react-native-size-matters'
 
 export function Onboarding1() {
   const navigation = useNavigation<AuthNavigatorRoutesProps>()
@@ -17,59 +18,76 @@ export function Onboarding1() {
   }
 
   return (
-    <VStack flex={1} alignItems={'center'} bg={'gray.200'}>
-      <Image
-        source={Mock1}
-        defaultSource={Mock1}
-        alt="ArqPlanner App mock"
-        resizeMode="cover"
-        position="absolute"
-        right={-280}
-      />
-
-      <WhiteCircleSvg style={{ position: 'absolute', top: 466 }} />
-
-      <VStack w={'full'} h={'1/2'} mt={'auto'} alignItems={'center'} px={10}>
-        <LogoBox mt={-44} />
-
-        <Heading
-          fontFamily={'heading'}
-          fontSize={'4xl'}
-          textAlign={'center'}
-          mt={10}
-          color={'light.700'}
-        >
-          Seu projeto na palma da sua mão.
-        </Heading>
-
-        <Text
-          fontFamily={'body'}
-          fontSize={'md'}
-          color={'light.500'}
-          textAlign={'center'}
-          mt={6}
-        >
-          Tenha controle total do seu projeto onde quer que esteja.
-        </Text>
-
-        <SliderDots activeIndex={0} mt={9} />
-        <IconButton
-          w={24}
-          h={16}
-          mt={50}
-          variant={'solid'}
-          rounded={'full'}
-          bg={'light.500'}
-          onPress={handleNextStep}
-          _pressed={{ bg: 'light.400' }}
-          _icon={{
-            size: 5,
-            as: Feather,
-            name: 'arrow-right',
-          }}
+    <View flex={1} bg={'gray.900'} paddingY={[0, '1/5']}>
+      <VStack
+        flex={1}
+        alignItems={'center'}
+        justifyContent={['flex-start']}
+        position={'relative'}
+        marginLeft={[0, 'auto']}
+        marginRight={[0, 'auto']}
+        maxWidth={480}
+        w={'full'}
+        overflow={'hidden'}
+      >
+        <Image
+          source={Mock1}
+          defaultSource={Mock1}
+          alt="ArqPlanner App mock"
+          resizeMode="cover"
+          position="absolute"
+          w={'full'}
+          h={mvs(580)}
         />
+
+        <WhiteCircleSvg
+          width={ms(1024)}
+          height={vs(390)}
+          style={{ position: 'absolute', top: '50%' }}
+        />
+
+        <VStack w={'full'} h={'1/2'} mt={'auto'} alignItems={'center'} px={[ms(36), 10]}>
+          <LogoBox w={[s(70), 22]} h={[s(70), 22]} mt={-44} />
+
+          <Heading
+            fontFamily={'heading'}
+            fontSize={[s(24), '4xl']}
+            textAlign={'center'}
+            mt={mvs(28)}
+            color={'light.700'}
+          >
+            Seu projeto na palma da sua mão.
+          </Heading>
+
+          <Text
+            fontFamily={'body'}
+            fontSize={'md'}
+            color={'light.500'}
+            textAlign={'center'}
+            mt={mvs(12)}
+          >
+            Tenha controle total do seu projeto onde quer que esteja.
+          </Text>
+
+          <SliderDots activeIndex={0} flexGrow={1} />
+          <IconButton
+            w={[ms(88), 24]}
+            h={[mvs(54), 16]}
+            mb={vs(40)}
+            variant={'solid'}
+            rounded={'full'}
+            bg={'light.500'}
+            onPress={handleNextStep}
+            _pressed={{ bg: 'light.400' }}
+            _icon={{
+              size: 5,
+              as: Feather,
+              name: 'arrow-right',
+            }}
+          />
+        </VStack>
       </VStack>
-    </VStack>
+    </View>
   )
 }
 
@@ -85,77 +103,95 @@ export function Onboarding2() {
   }
 
   return (
-    <VStack flex={1} alignItems={'center'} bg={'gray.200'}>
-      <Image
-        source={Mock2}
-        defaultSource={Mock2}
-        alt="ArqPlanner App mock"
-        resizeMode="cover"
-        position="absolute"
-        top={12}
+    <View flex={1} bg={'gray.900'} paddingY={[0, '1/5']}>
+      <VStack
+        flex={1}
+        alignItems={'center'}
+        justifyContent={['flex-start']}
+        position={'relative'}
+        marginLeft={[0, 'auto']}
+        marginRight={[0, 'auto']}
+        bg={'gray.200'}
+        maxWidth={480}
         w={'full'}
-      />
+        overflow={'hidden'}
+      >
+        <Image
+          source={Mock2}
+          defaultSource={Mock2}
+          alt="ArqPlanner App mock"
+          resizeMode="cover"
+          position="absolute"
+          top={mvs(30)}
+          w={'full'}
+          h={mvs(500)}
+        />
 
-      <IconButton
-        alignSelf={'flex-start'}
-        onPress={handleGoBack}
-        mt={12}
-        pt={4}
-        pl={10}
-        _icon={{
-          as: Feather,
-          name: 'arrow-left',
-          color: 'light.700',
-          size: 6,
-        }}
-        _pressed={{
-          bg: 'transparent',
-        }}
-      />
-
-      <WhiteCircleSvg style={{ position: 'absolute', top: 466 }} />
-
-      <VStack w={'full'} h={'1/2'} mt={'auto'} alignItems={'center'} px={10}>
-        <LogoBox mt={-44} />
-
-        <Heading
-          fontFamily={'heading'}
-          fontSize={'4xl'}
-          textAlign={'center'}
-          mt={10}
-          color={'light.700'}
-        >
-          Gerencie e aprove projetos e imagens.
-        </Heading>
-
-        <Text
-          fontFamily={'body'}
-          fontSize={'md'}
-          color={'light.500'}
-          textAlign={'center'}
-          mt={6}
-        >
-          Organize documentos, aprove projetos e imagens de forma descomplicada.
-        </Text>
-
-        <SliderDots activeIndex={1} mt={9} />
         <IconButton
-          w={24}
-          h={16}
-          mt={50}
-          variant={'solid'}
-          rounded={'full'}
-          bg={'light.500'}
-          onPress={handleNextStep}
-          _pressed={{ bg: 'light.400' }}
+          alignSelf={'flex-start'}
+          onPress={handleGoBack}
+          mt={[vs(20), 4]}
+          pt={[vs(24), 4]}
+          pl={[vs(24), 10]}
           _icon={{
-            size: 5,
             as: Feather,
-            name: 'arrow-right',
+            name: 'arrow-left',
+            color: 'light.700',
+            size: 6,
+          }}
+          _pressed={{
+            bg: 'transparent',
           }}
         />
+
+        <WhiteCircleSvg
+          width={ms(1024)}
+          height={vs(390)}
+          style={{ position: 'absolute', top: '50%' }}
+        />
+
+        <VStack w={'full'} h={'1/2'} mt={'auto'} alignItems={'center'} px={ms(32)}>
+          <LogoBox w={[s(70), 22]} h={[s(70), 22]} mt={-44} />
+
+          <Heading
+            fontFamily={'heading'}
+            fontSize={[s(24), '4xl']}
+            textAlign={'center'}
+            mt={mvs(28)}
+            color={'light.700'}
+          >
+            Gerencie e aprove projetos e imagens.
+          </Heading>
+
+          <Text
+            fontFamily={'body'}
+            fontSize={'md'}
+            color={'light.500'}
+            textAlign={'center'}
+            mt={mvs(12)}
+          >
+            Organize documentos, aprove projetos e imagens de forma descomplicada.
+          </Text>
+
+          <SliderDots activeIndex={1} flexGrow={1} />
+          <IconButton
+            w={[ms(88), 24]}
+            h={[mvs(54), 16]}
+            mb={vs(40)}
+            variant={'solid'}
+            rounded={'full'}
+            bg={'light.500'}
+            onPress={handleNextStep}
+            _pressed={{ bg: 'light.400' }}
+            _icon={{
+              size: 5,
+              as: Feather,
+              name: 'arrow-right',
+            }}
+          />
+        </VStack>
       </VStack>
-    </VStack>
+    </View>
   )
 }
 
@@ -171,76 +207,94 @@ export function Onboarding3() {
   }
 
   return (
-    <VStack flex={1} alignItems={'center'} bg={'gray.200'}>
-      <Image
-        source={Mock3}
-        defaultSource={Mock3}
-        alt="ArqPlanner App mock"
-        resizeMode="cover"
-        position="absolute"
-        top={16}
+    <View flex={1} bg={'gray.900'} paddingY={[0, '1/5']}>
+      <VStack
+        flex={1}
+        alignItems={'center'}
+        justifyContent={['flex-start']}
+        position={'relative'}
+        marginLeft={[0, 'auto']}
+        marginRight={[0, 'auto']}
+        bg={'gray.200'}
+        maxWidth={480}
         w={'full'}
-      />
+        overflow={'hidden'}
+      >
+        <Image
+          source={Mock3}
+          defaultSource={Mock3}
+          alt="ArqPlanner App mock"
+          resizeMode="cover"
+          position="absolute"
+          top={mvs(30)}
+          w={'full'}
+          h={mvs(500)}
+        />
 
-      <IconButton
-        alignSelf={'flex-start'}
-        onPress={handleGoBack}
-        mt={12}
-        pt={4}
-        pl={10}
-        _icon={{
-          as: Feather,
-          name: 'arrow-left',
-          color: 'light.700',
-          size: 6,
-        }}
-        _pressed={{
-          bg: 'transparent',
-        }}
-      />
-
-      <WhiteCircleSvg style={{ position: 'absolute', top: 466 }} />
-
-      <VStack w={'full'} h={'1/2'} mt={'auto'} alignItems={'center'} px={10}>
-        <LogoBox mt={-44} />
-
-        <Heading
-          fontFamily={'heading'}
-          fontSize={'4xl'}
-          textAlign={'center'}
-          mt={10}
-          color={'light.700'}
-        >
-          Acompanhe o dia-a-dia do seu projeto.
-        </Heading>
-
-        <Text
-          fontFamily={'body'}
-          fontSize={'md'}
-          color={'light.500'}
-          textAlign={'center'}
-          mt={6}
-        >
-          Mantenha-se atualizado com o dia-a-dia do seu projeto, em tempo real.
-        </Text>
-
-        <SliderDots activeIndex={2} mt={9} />
         <IconButton
-          w={24}
-          h={16}
-          mt={50}
-          variant={'solid'}
-          rounded={'full'}
-          bg={'light.500'}
-          onPress={handleNextStep}
-          _pressed={{ bg: 'light.400' }}
+          alignSelf={'flex-start'}
+          onPress={handleGoBack}
+          mt={[vs(20), 4]}
+          pt={[vs(24), 4]}
+          pl={[vs(24), 10]}
           _icon={{
-            size: 5,
             as: Feather,
-            name: 'arrow-right',
+            name: 'arrow-left',
+            color: 'light.700',
+            size: 6,
+          }}
+          _pressed={{
+            bg: 'transparent',
           }}
         />
+
+        <WhiteCircleSvg
+          width={ms(1024)}
+          height={vs(390)}
+          style={{ position: 'absolute', top: '50%' }}
+        />
+
+        <VStack w={'full'} h={'1/2'} mt={'auto'} alignItems={'center'} px={ms(32)}>
+          <LogoBox w={[s(70), 22]} h={[s(70), 22]} mt={-44} />
+
+          <Heading
+            fontFamily={'heading'}
+            fontSize={[s(24), '4xl']}
+            textAlign={'center'}
+            mt={mvs(28)}
+            color={'light.700'}
+          >
+            Acompanhe o dia-a-dia do seu projeto.
+          </Heading>
+
+          <Text
+            fontFamily={'body'}
+            fontSize={'md'}
+            color={'light.500'}
+            textAlign={'center'}
+            mt={mvs(12)}
+          >
+            Mantenha-se atualizado com o dia-a-dia do seu projeto, em tempo real.
+          </Text>
+
+          <SliderDots activeIndex={2} flexGrow={1} />
+          <IconButton
+            w={[ms(88), 24]}
+            h={[mvs(54), 16]}
+            mb={vs(40)}
+            variant={'solid'}
+            rounded={'full'}
+            bg={'light.500'}
+            onPress={handleNextStep}
+            _pressed={{ bg: 'light.400' }}
+            _icon={{
+              size: 5,
+              as: Feather,
+              name: 'arrow-right',
+            }}
+          />
+        </VStack>
       </VStack>
-    </VStack>
+    </View>
   )
 }

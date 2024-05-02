@@ -1,22 +1,23 @@
-import { Heading, VStack } from 'native-base'
+import { Heading, type IStackProps, VStack } from 'native-base'
 import type { ReactNode } from 'react'
 import { Pressable } from 'react-native'
+import { ms, mvs, vs } from 'react-native-size-matters'
 
-type MenuCard = {
+type MenuCard = IStackProps & {
   title: string
   icon: ReactNode
   onPress: () => void
 }
 
-export function MenuCard({ title, icon, onPress }: MenuCard) {
+export function MenuCard({ title, icon, onPress, ...rest }: MenuCard) {
   return (
     <Pressable onPress={onPress}>
       {({ pressed }) => (
         <VStack
-          p={6}
+          p={[mvs(22), 12]}
           bg={pressed ? 'gray.50' : 'white'}
-          w={41}
-          h={41}
+          w={ms(140)}
+          h={ms(140)}
           rounded={'3xl'}
           justifyContent={'space-between'}
           borderColor={'#00000012'}
@@ -27,9 +28,10 @@ export function MenuCard({ title, icon, onPress }: MenuCard) {
             shadowRadius: 15,
             shadowOffset: { width: 0, height: 4 },
           }}
+          {...rest}
         >
           {icon}
-          <Heading fontFamily={'heading'} fontSize={'md'} color={'light.700'}>
+          <Heading fontFamily={'heading'} fontSize={[mvs(14), '4xl']} color={'light.700'}>
             {title}
           </Heading>
         </VStack>
