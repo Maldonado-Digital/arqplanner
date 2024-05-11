@@ -1,13 +1,8 @@
-import ArqWhiteTextLogoSvg from '@assets/arq_white_text_logo.svg'
 import { Box, type IBoxProps } from 'native-base'
-import { ms } from 'react-native-size-matters'
 
-export function LogoBox({ ...rest }: IBoxProps) {
+export function LogoBox({ children, ...rest }: IBoxProps) {
   return (
     <Box
-      h={22}
-      w={22}
-      rounded={'3xl'}
       bg={'light.300'}
       justifyContent={'center'}
       alignItems={'center'}
@@ -19,7 +14,7 @@ export function LogoBox({ ...rest }: IBoxProps) {
       }}
       {...rest}
     >
-      <ArqWhiteTextLogoSvg width={'70%'} style={{ marginRight: 3 }} />
+      {children}
     </Box>
   )
 }

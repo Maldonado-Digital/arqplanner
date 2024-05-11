@@ -11,7 +11,7 @@
         "simulator": true
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "http://192.168.1.101:3000"
+        "EXPO_PUBLIC_API_URL": "http://192.168.15.57:3000"
       },
       "channel": "development-simulator"
     },
@@ -26,14 +26,14 @@
     "preview": {
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://arqplanner-cms-staging.payloadcms.app"
+        "EXPO_PUBLIC_API_URL": "https://arqplanner-cms-prod.payloadcms.app"
       },
       "channel": "preview"
     },
     "production": {
       "autoIncrement": true,
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://arqplanner-cms-staging.payloadcms.app"
+        "EXPO_PUBLIC_API_URL": "https://arqplanner-cms-prod.payloadcms.app"
       },
       "channel": "production"
     }

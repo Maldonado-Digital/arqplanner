@@ -1,3 +1,4 @@
+import ArqWhiteTextLogoSvg from '@assets/arq_white_text_logo.svg'
 import Mock1 from '@assets/mock-1.png'
 import Mock2 from '@assets/mock-2.png'
 import Mock3 from '@assets/mock-3.png'
@@ -18,76 +19,98 @@ export function Onboarding1() {
   }
 
   return (
-    <View flex={1} bg={'gray.900'} paddingY={[0, '1/5']}>
-      <VStack
-        flex={1}
-        alignItems={'center'}
-        justifyContent={['flex-start']}
-        position={'relative'}
-        marginLeft={[0, 'auto']}
-        marginRight={[0, 'auto']}
-        maxWidth={480}
+    // <View flex={1} bg={'gray.900'} paddingY={[0, '1/5']}>
+    <VStack
+      flex={1}
+      alignItems={'center'}
+      justifyContent={['flex-start']}
+      position={'relative'}
+      // marginLeft={[0, 'auto']}
+      // marginRight={[0, 'auto']}
+      // maxWidth={480}
+      w={'full'}
+      overflow={'hidden'}
+    >
+      <Image
+        source={Mock1}
+        defaultSource={Mock1}
+        alt="ArqPlanner App mock"
+        resizeMode="cover"
+        position="absolute"
         w={'full'}
-        overflow={'hidden'}
-      >
-        <Image
-          source={Mock1}
-          defaultSource={Mock1}
-          alt="ArqPlanner App mock"
-          resizeMode="cover"
-          position="absolute"
-          w={'full'}
-          h={mvs(580)}
+        h={mvs(580)}
+      />
+
+      <WhiteCircleSvg
+        width={ms(1024)}
+        height={s(440)}
+        style={{ position: 'absolute', top: '50%' }}
+      />
+
+      <VStack w={'full'} h={'1/2'} mt={'auto'} alignItems={'center'} px={[ms(36), 10]}>
+        {/* <LogoBox w={mvs(70)} h={mvs(70)} mt={-44} rounded={['3xl', 32]}> */}
+        <LogoBox
+          size={{
+            base: 70,
+            sm: 76,
+            md: 82,
+            lg: 124,
+          }}
+          mt={{
+            base: -35,
+            sm: -38,
+            md: -41,
+            lg: -62,
+          }}
+          rounded={{
+            base: 20,
+            sm: 22,
+            md: 24,
+            lg: 36,
+          }}
+        >
+          <ArqWhiteTextLogoSvg width={'70%'} style={{ marginRight: 3 }} />
+        </LogoBox>
+
+        <Heading
+          fontFamily={'heading'}
+          fontSize={[s(24), '4xl']}
+          textAlign={'center'}
+          mt={mvs(28)}
+          color={'light.700'}
+        >
+          Seu projeto na palma da sua mão.
+        </Heading>
+
+        <Text
+          fontFamily={'body'}
+          fontSize={'md'}
+          color={'light.500'}
+          textAlign={'center'}
+          mt={mvs(12)}
+        >
+          Tenha controle total do seu projeto onde quer que esteja.
+        </Text>
+
+        <SliderDots activeIndex={0} flexGrow={1} />
+        <IconButton
+          w={[ms(88), 24]}
+          h={[mvs(54), 16]}
+          mb={vs(40)}
+          variant={'solid'}
+          rounded={'full'}
+          bg={'light.500'}
+          onPress={handleNextStep}
+          _pressed={{ bg: 'light.400' }}
+          _icon={{
+            size: 5,
+            as: Feather,
+            name: 'arrow-right',
+          }}
         />
-
-        <WhiteCircleSvg
-          width={ms(1024)}
-          height={vs(390)}
-          style={{ position: 'absolute', top: '50%' }}
-        />
-
-        <VStack w={'full'} h={'1/2'} mt={'auto'} alignItems={'center'} px={[ms(36), 10]}>
-          <LogoBox w={[s(70), 22]} h={[s(70), 22]} mt={-44} />
-
-          <Heading
-            fontFamily={'heading'}
-            fontSize={[s(24), '4xl']}
-            textAlign={'center'}
-            mt={mvs(28)}
-            color={'light.700'}
-          >
-            Seu projeto na palma da sua mão.
-          </Heading>
-
-          <Text
-            fontFamily={'body'}
-            fontSize={'md'}
-            color={'light.500'}
-            textAlign={'center'}
-            mt={mvs(12)}
-          >
-            Tenha controle total do seu projeto onde quer que esteja.
-          </Text>
-
-          <SliderDots activeIndex={0} flexGrow={1} />
-          <IconButton
-            w={[ms(88), 24]}
-            h={[mvs(54), 16]}
-            mb={vs(40)}
-            variant={'solid'}
-            rounded={'full'}
-            bg={'light.500'}
-            onPress={handleNextStep}
-            _pressed={{ bg: 'light.400' }}
-            _icon={{
-              size: 5,
-              as: Feather,
-              name: 'arrow-right',
-            }}
-          />
-        </VStack>
       </VStack>
-    </View>
+    </VStack>
+    // </View>
   )
 }
 

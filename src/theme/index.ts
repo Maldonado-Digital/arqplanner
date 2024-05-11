@@ -56,6 +56,13 @@ export const THEME = extendTheme({
     41: 164,
     1934: 1934,
   },
+  breakpoints: {
+    base: 0,
+    sm: 390,
+    md: 430,
+    lg: 744,
+    xl: 1024,
+  },
   components: {
     Toast: {
       defaultProps: {
