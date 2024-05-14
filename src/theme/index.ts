@@ -62,7 +62,7 @@ export const THEME = extendTheme({
   breakpoints: {
     base: 0,
     sm: 390,
-    md: 430,
+    md: 420,
     lg: 744,
     xl: 1024,
   },

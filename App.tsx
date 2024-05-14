@@ -44,7 +44,9 @@ export default function App() {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    onFetchUpdateAsync()
+    if (process.env.NODE_ENV === 'production') {
+      onFetchUpdateAsync()
+    }
   }, [])
 
   return (

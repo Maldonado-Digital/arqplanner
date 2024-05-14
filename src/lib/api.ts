@@ -3,8 +3,8 @@ import axios from 'axios'
 
 const api = axios.create({
   withCredentials: true,
-  // baseURL: process.env.EXPO_PUBLIC_API_URL,
-  baseURL: 'https://admin.arqplanner.com',
+  baseURL: process.env.EXPO_PUBLIC_API_URL,
+  // baseURL: 'https://admin.arqplanner.com',
 })
 
 api.interceptors.response.use(
