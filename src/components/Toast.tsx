@@ -12,12 +12,12 @@ interface ToastProps extends IAlertProps {
 export function Toast({ id, status, message, onClose, ...rest }: ToastProps) {
   return (
     <Alert
-      mx={10}
+      mx={{ base: 7, sm: 8, md: 10, lg: 24 }}
       alignItems="center"
       flexDirection="row"
       status={status}
       bg="white"
-      p={4}
+      p={{ base: 4, sm: 4, md: 4, lg: 8 }}
       rounded={'xl'}
       borderColor={'#00000012'}
       borderWidth={1}
@@ -35,16 +35,26 @@ export function Toast({ id, status, message, onClose, ...rest }: ToastProps) {
             as={<Feather name={status === 'success' ? 'check' : 'x'} />}
             color={status === 'success' ? 'green.400' : 'red.800'}
             strokeWidth={2}
-            size={4}
-            mr={3}
+            size={{ base: 4, sm: 4, md: 4, lg: 6 }}
+            mr={{ base: 3, sm: 3, md: 3, lg: 5 }}
           />
-          <Heading fontSize="sm" fontFamily="heading" color="light.700" pr={10}>
+          <Heading
+            fontSize={{
+              base: 14,
+              sm: 14,
+              md: 14,
+              lg: 24,
+            }}
+            fontFamily="heading"
+            color="light.700"
+            pr={10}
+          >
             {message}
           </Heading>
         </HStack>
         <IconButton
           variant="unstyled"
-          icon={<CloseIcon size="4" />}
+          icon={<CloseIcon size={{ base: 4, sm: 4, md: 4, lg: 6 }} />}
           _icon={{
             color: 'light.700',
           }}

@@ -170,10 +170,10 @@ export function RecoverPassword() {
             title="Recuperar senha"
             rounded={'full'}
             fontSize={{
-              base: 14,
-              sm: 15,
+              base: 15,
+              sm: 16,
               md: 16,
-              lg: 24,
+              lg: 26,
             }}
             mt={{ base: 4, sm: 6, md: 6, lg: 8 }}
             onPress={handleSubmit(onSubmit, onSubmitError)}
@@ -260,10 +260,10 @@ export function PasswordRecovered() {
         title="Voltar ao login"
         rounded={'full'}
         fontSize={{
-          base: 14,
-          sm: 15,
+          base: 15,
+          sm: 16,
           md: 16,
-          lg: 24,
+          lg: 26,
         }}
         onPress={navigateToSignIn}
       />

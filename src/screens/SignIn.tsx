@@ -247,10 +247,10 @@ export function SignIn() {
           title="Entrar"
           rounded={'full'}
           fontSize={{
-            base: 14,
-            sm: 15,
+            base: 15,
+            sm: 16,
             md: 16,
-            lg: 24,
+            lg: 26,
           }}
           mt={6}
           isLoading={isSubmitting}
