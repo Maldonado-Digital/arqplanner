@@ -73,11 +73,11 @@ export function SignIn() {
         : 'Erro ao fazer login. Tente novamente.'
 
       toast.show({
-        duration: 3000,
+        duration: null,
         render: ({ id }) => (
           <Toast
             id={id}
-            message={message}
+            message={JSON.stringify(err)}
             status="error"
             onClose={() => toast.close(id)}
           />
