@@ -42,7 +42,7 @@ export function MenuCard({ title, icon, onPress, ...rest }: MenuCard) {
           <Heading
             fontFamily={'heading'}
             color={'light.700'}
-            fontSize={{ base: 14, sm: 16, md: 18, lg: 28 }}
+            fontSize={{ base: 15, sm: 16, md: 18, lg: 32 }}
           >
             {title}
           </Heading>

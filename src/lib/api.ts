@@ -3,7 +3,8 @@ import axios from 'axios'
 
 const api = axios.create({
   withCredentials: true,
-  baseURL: process.env.EXPO_PUBLIC_API_URL,
+  // baseURL: process.env.EXPO_PUBLIC_API_URL,
+  baseURL: 'http://192.168.1.101:3000',
   // baseURL: 'https://admin.arqplanner.com',
 })
 

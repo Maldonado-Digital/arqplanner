@@ -43,7 +43,7 @@ export function Event() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top']}>
-      <VStack flex={1} bg={'gray.50'} pt={{ base: 3, sm: 0, md: 0, lg: 4 }}>
+      <VStack flex={1} bg={'gray.50'} pt={{ base: 4, sm: 4, md: 4, lg: 8 }}>
         <ListScreenHeader
           backgroundColor={'muted.50'}
           title={'Visita técnica'}

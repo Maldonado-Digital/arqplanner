@@ -103,7 +103,7 @@ export function Agenda() {
   return (
     <VStack flex={1} bg={'gray.50'}>
       <VStack
-        pt={{ base: 4, sm: 0, md: 0, lg: 16 }}
+        pt={{ base: 4, sm: 4, md: 4, lg: 12 }}
         px={{
           base: 7,
           sm: 8,

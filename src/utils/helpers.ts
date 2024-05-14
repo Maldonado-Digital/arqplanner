@@ -31,7 +31,7 @@ export function getFullName(name: string) {
     return splitted[0]
   }
 
-  return splitted.slice(0, 2).join(' ')
+  return splitted.slice(0, 2).join('\n')
 }
 
 export function phoneMask(value: string) {

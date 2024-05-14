@@ -73,11 +73,11 @@ export function SignIn() {
         : 'Erro ao fazer login. Tente novamente.'
 
       toast.show({
-        duration: null,
+        duration: 3000,
         render: ({ id }) => (
           <Toast
             id={id}
-            message={JSON.stringify(err)}
+            message={message}
             status="error"
             onClose={() => toast.close(id)}
           />
@@ -102,7 +102,7 @@ export function SignIn() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <VStack
-        mt={{ base: 4, sm: 0, md: 0, lg: 16 }}
+        mt={{ base: 4, sm: 4, md: 4, lg: 16 }}
         px={{
           base: 7,
           sm: 8,
@@ -251,7 +251,7 @@ export function SignIn() {
             md: 16,
             lg: 26,
           }}
-          mt={6}
+          mt={{ base: 5, sm: 6, md: 6, lg: 8 }}
           isLoading={isSubmitting}
           variant={'solid'}
           onPress={handleSubmit(onSubmit, onSubmitError)}
