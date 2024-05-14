@@ -14,11 +14,19 @@ export function MenuCard({ title, icon, onPress, ...rest }: MenuCard) {
     <Pressable onPress={onPress}>
       {({ pressed }) => (
         <VStack
-          p={[mvs(22), 12]}
+          p={{
+            base: 6,
+            sm: 6,
+            md: 6,
+            lg: 12,
+          }}
           bg={pressed ? 'gray.50' : 'white'}
-          w={ms(140)}
-          h={ms(140)}
-          rounded={'3xl'}
+          rounded={{
+            base: 28,
+            sm: 28,
+            md: 28,
+            lg: 40,
+          }}
           justifyContent={'space-between'}
           borderColor={'#00000012'}
           borderWidth={1}
@@ -31,7 +39,11 @@ export function MenuCard({ title, icon, onPress, ...rest }: MenuCard) {
           {...rest}
         >
           {icon}
-          <Heading fontFamily={'heading'} fontSize={[mvs(14), '4xl']} color={'light.700'}>
+          <Heading
+            fontFamily={'heading'}
+            color={'light.700'}
+            fontSize={{ base: 14, sm: 16, md: 18, lg: 28 }}
+          >
             {title}
           </Heading>
         </VStack>
