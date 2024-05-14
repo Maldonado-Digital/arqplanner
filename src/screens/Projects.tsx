@@ -12,7 +12,12 @@ import { useNavigation } from '@react-navigation/native'
 import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { AppError } from '@utils/AppError'
-import { PDF_MIME_TYPE, approvalStatus, projectTypes } from '@utils/constants'
+import {
+  PDF_MIME_TYPE,
+  VALID_EXTENSIONS,
+  approvalStatus,
+  projectTypes,
+} from '@utils/constants'
 import { downloadFile } from '@utils/downloadFile'
 import { format } from 'date-fns'
 import { shareAsync } from 'expo-sharing'
@@ -329,15 +334,23 @@ export function Projects() {
               }),
               ...(!projects?.length && { flex: 1, justifyContent: 'center' }),
             }}
-            renderItem={({ item }) => (
-              <ListItem
-                title={item.project.title}
-                subTitle={format(item.project.file.updatedAt, "dd-MM-yy' | 'HH:mm")}
-                icon={<Icon as={Feather} name="layout" size={6} color="light.700" />}
-                onPress={() => handleItemPressed(item)}
-                status={item.project.status}
-              />
-            )}
+            renderItem={({ item }) => {
+              let icon = <Icon as={Feather} name="layout" size={6} color="light.700" />
+              const ext = item.project.file.filename.split('.').pop()
+              const ExtIcon = VALID_EXTENSIONS[ext as keyof typeof VALID_EXTENSIONS]
+
+              if (ExtIcon) icon = <ExtIcon />
+
+              return (
+                <ListItem
+                  title={item.project.title}
+                  subTitle={format(item.project.file.updatedAt, "dd-MM-yy' | 'HH:mm")}
+                  icon={icon}
+                  onPress={() => handleItemPressed(item)}
+                  status={item.project.status}
+                />
+              )
+            }}
             renderSectionHeader={({ section: { title } }) => (
               <Heading
                 fontSize={'lg'}

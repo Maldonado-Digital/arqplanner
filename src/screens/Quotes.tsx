@@ -11,7 +11,7 @@ import { useNavigation, useRoute } from '@react-navigation/native'
 import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { useQuery } from '@tanstack/react-query'
 import { AppError } from '@utils/AppError'
-import { PDF_MIME_TYPE } from '@utils/constants'
+import { PDF_MIME_TYPE, VALID_EXTENSIONS } from '@utils/constants'
 import { downloadFile } from '@utils/downloadFile'
 import { format } from 'date-fns'
 import * as Haptics from 'expo-haptics'
@@ -176,14 +176,22 @@ export function Quotes() {
               }}
             />
           }
-          renderItem={({ item }) => (
-            <ListItem
-              title={item.quote.title}
-              subTitle={format(item.quote.file.updatedAt, "dd-MM-yy' | 'HH:mm")}
-              icon={<Icon as={Feather} name="dollar-sign" size={6} color="light.700" />}
-              onPress={() => handleItemPressed(item)}
-            />
-          )}
+          renderItem={({ item }) => {
+            let icon = <Icon as={Feather} name="dollar-sign" size={6} color="light.700" />
+            const ext = item.quote.file.filename.split('.').pop()
+            const ExtIcon = VALID_EXTENSIONS[ext as keyof typeof VALID_EXTENSIONS]
+
+            if (ExtIcon) icon = <ExtIcon />
+
+            return (
+              <ListItem
+                title={item.quote.title}
+                subTitle={format(item.quote.file.updatedAt, "dd-MM-yy' | 'HH:mm")}
+                icon={icon}
+                onPress={() => handleItemPressed(item)}
+              />
+            )
+          }}
           showsVerticalScrollIndicator={false}
           _contentContainerStyle={{
             paddingBottom: 20,

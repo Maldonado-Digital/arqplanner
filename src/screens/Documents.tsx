@@ -11,7 +11,7 @@ import { useNavigation } from '@react-navigation/native'
 import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { useQuery } from '@tanstack/react-query'
 import { AppError } from '@utils/AppError'
-import { PDF_MIME_TYPE, documentsCategories } from '@utils/constants'
+import { PDF_MIME_TYPE, VALID_EXTENSIONS, documentsCategories } from '@utils/constants'
 import { downloadFile } from '@utils/downloadFile'
 import { format } from 'date-fns'
 import * as Haptics from 'expo-haptics'
@@ -150,7 +150,7 @@ export function Documents() {
     shareAsync(`${process.env.EXPO_PUBLIC_API_URL}${selectedDocument.document.file.url}`)
   }
 
-  // if (isPending) return <Loading />
+  if (isPending) return <Loading />
 
   if (isError) return <SessionExpired />
 
@@ -203,14 +203,22 @@ export function Documents() {
                 }}
               />
             }
-            renderItem={({ item }) => (
-              <ListItem
-                title={item.document.title}
-                subTitle={format(item.document.file.updatedAt, "dd-MM-yy' | 'HH:mm")}
-                icon={<Icon as={Feather} name="folder" size={6} color="light.700" />}
-                onPress={() => handleItemPressed(item)}
-              />
-            )}
+            renderItem={({ item }) => {
+              let icon = <Icon as={Feather} name="folder" size={6} color="light.700" />
+              const ext = item.document.file.filename.split('.').pop()
+              const ExtIcon = VALID_EXTENSIONS[ext as keyof typeof VALID_EXTENSIONS]
+
+              if (ExtIcon) icon = <ExtIcon />
+
+              return (
+                <ListItem
+                  title={item.document.title}
+                  subTitle={format(item.document.file.updatedAt, "dd-MM-yy' | 'HH:mm")}
+                  icon={icon}
+                  onPress={() => handleItemPressed(item)}
+                />
+              )
+            }}
             showsVerticalScrollIndicator={false}
             _contentContainerStyle={{
               paddingBottom: 20,
