@@ -1,8 +1,4 @@
-import {
-  type IButtonProps,
-  Button as NativeBaseButton,
-  Text,
-} from 'native-base'
+import { type IButtonProps, Button as NativeBaseButton, Text } from 'native-base'
 import type { ReactNode } from 'react'
 
 type VariantType = 'solid' | 'outline' | 'subtle'
@@ -66,7 +62,12 @@ export function Button({
   return (
     <NativeBaseButton
       w={'full'}
-      h={16}
+      h={{
+        base: 14,
+        sm: 16,
+        md: 16,
+        lg: 24,
+      }}
       bg={bg}
       borderWidth={borderWidth}
       borderColor={borderColor}

@@ -18,7 +18,6 @@ import {
   Pressable,
   Text,
   VStack,
-  View,
 } from 'native-base'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { ms, mvs, s, vs } from 'react-native-size-matters'
@@ -201,7 +200,7 @@ export function Onboarding2() {
           onPress={handleGoBack}
           alignSelf={'flex-start'}
           mr={'full'}
-          hitSlop={4}
+          hitSlop={20}
           ml={{
             base: 20,
             sm: 24,
@@ -375,7 +374,7 @@ export function Onboarding3() {
           onPress={handleGoBack}
           alignSelf={'flex-start'}
           mr={'full'}
-          hitSlop={4}
+          hitSlop={20}
           ml={{
             base: 20,
             sm: 24,

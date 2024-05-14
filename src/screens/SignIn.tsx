@@ -5,6 +5,7 @@ import { Toast } from '@components/Toast'
 import { Feather } from '@expo/vector-icons'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useAuth } from '@hooks/useAuth'
+import { useResponsive } from '@hooks/useResponsive'
 import { useNavigation } from '@react-navigation/native'
 import type { AuthNavigatorRoutesProps } from '@routes/auth.routes'
 import { AppError } from '@utils/AppError'
@@ -14,20 +15,15 @@ import {
   Heading,
   Icon,
   Pressable,
-  ScrollView,
   Text,
   VStack,
   View,
   useToast,
 } from 'native-base'
 import { Controller, type SubmitErrorHandler, useForm } from 'react-hook-form'
-import {
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableWithoutFeedback,
-} from 'react-native'
+import { Keyboard, TouchableWithoutFeedback } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { ms, mvs, s, vs } from 'react-native-size-matters'
 import { z } from 'zod'
 
 const signInFormSchema = z.object({
@@ -44,6 +40,7 @@ export type SignInFormData = z.infer<typeof signInFormSchema>
 export function SignIn() {
   const toast = useToast()
   const { signIn } = useAuth()
+  const { rW, rH } = useResponsive()
   const navigation = useNavigation<AuthNavigatorRoutesProps>()
   const {
     control,
@@ -103,111 +100,164 @@ export function SignIn() {
   }
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        paddingHorizontal: 40,
-      }}
-    >
-      <Pressable onPress={handleGoBack} w={8} h={8} justifyContent={'flex-end'}>
-        <Icon as={Feather} name="arrow-left" color={'light.700'} size={6} />
-      </Pressable>
-      <TouchableWithoutFeedback
-        onPress={() => Keyboard.dismiss()}
-        style={{ backgroundColor: '#F00' }}
+    <SafeAreaView style={{ flex: 1 }}>
+      <VStack
+        mt={{ base: 4, sm: 0, md: 0, lg: 16 }}
+        px={{
+          base: 7,
+          sm: 8,
+          md: 10,
+          lg: 24,
+        }}
       >
-        <View>
-          <LogoBox alignSelf={'center'} />
-
-          <Center>
+        <Pressable
+          h={{ base: 6, sm: 6, md: 6, lg: 10 }}
+          onPress={handleGoBack}
+          justifyContent={'flex-start'}
+          mr={'full'}
+          hitSlop={20}
+          bg={'blue.200'}
+        >
+          <Icon
+            as={Feather}
+            name="arrow-left"
+            color={'light.700'}
+            size={{ base: 6, sm: 6, md: 6, lg: 10 }}
+            alignSelf={'flex-start'}
+          />
+        </Pressable>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <View>
             <Heading
-              mt={8}
-              mb={4}
+              mt={{ base: 8, sm: 8, md: 8, lg: 16 }}
+              mb={{ base: 4, sm: 4, md: 4, lg: 10 }}
               alignSelf={'flex-start'}
               color={'light.700'}
-              fontSize={'4xl'}
               fontFamily={'heading'}
+              fontSize={{
+                base: 24,
+                sm: 30,
+                md: 32,
+                lg: 48,
+              }}
             >
               Login
             </Heading>
             <Text
               alignSelf={'flex-start'}
-              fontSize={'md'}
-              fontFamily={'body'}
               color={'light.500'}
-              mb={6}
+              mb={{ base: 4, sm: 6, md: 6, lg: 12 }}
               fontWeight={'bold'}
+              fontSize={{
+                base: 14,
+                sm: 16,
+                md: 18,
+                lg: 28,
+              }}
             >
               Seja bem-vindo ao ArqPlanner
             </Text>
-          </Center>
 
-          <Controller
-            name="email"
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <Input
-                placeholder="Insira seu email"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                mb={4}
-                InputLeftElement={
-                  <Icon as={<Feather name="mail" />} size={4} ml={4} color="light.400" />
-                }
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                isInvalid={!!errors.email}
-              />
-            )}
-          />
+            <Controller
+              name="email"
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  placeholder="Insira seu email"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  mb={{ base: 4, sm: 4, md: 4, lg: 6 }}
+                  InputLeftElement={
+                    <Icon
+                      as={<Feather name="mail" />}
+                      size={{ base: 4, sm: 4, md: 4, lg: 6 }}
+                      ml={{ base: 4, sm: 4, md: 4, lg: 6 }}
+                      color="light.400"
+                    />
+                  }
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  isInvalid={!!errors.email}
+                />
+              )}
+            />
 
-          <Controller
-            name="password"
-            control={control}
-            rules={{
-              minLength: 4,
-              required: true,
+            <Controller
+              name="password"
+              control={control}
+              rules={{
+                minLength: 4,
+                required: true,
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  placeholder="Insira sua senha"
+                  secureTextEntry
+                  mb={{ base: 4, sm: 4, md: 4, lg: 6 }}
+                  InputLeftElement={
+                    <Icon
+                      as={<Feather name="lock" />}
+                      size={{ base: 4, sm: 4, md: 4, lg: 6 }}
+                      ml={{ base: 4, sm: 4, md: 4, lg: 6 }}
+                      color="light.400"
+                    />
+                  }
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  isInvalid={!!errors.password}
+                  onSubmitEditing={handleSubmit(onSubmit, onSubmitError)}
+                />
+              )}
+            />
+          </View>
+        </TouchableWithoutFeedback>
+
+        <HStack justifyContent={'center'}>
+          <Text
+            fontFamily={'body'}
+            fontSize={{
+              base: 15,
+              sm: 15,
+              md: 16,
+              lg: 24,
             }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <Input
-                placeholder="Insira sua senha"
-                secureTextEntry
-                mb={4}
-                InputLeftElement={
-                  <Icon as={<Feather name="lock" />} size={4} ml={4} color="light.400" />
-                }
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                isInvalid={!!errors.password}
-                onSubmitEditing={handleSubmit(onSubmit, onSubmitError)}
-              />
-            )}
-          />
-        </View>
-      </TouchableWithoutFeedback>
-
-      <HStack justifyContent={'center'}>
-        <Text fontFamily={'body'} fontSize={'md'} color={'light.400'}>
-          Esqueceu sua senha?{' '}
-        </Text>
-        <Pressable onPress={navigateToRecoverPassword}>
-          <Text fontFamily={'body'} fontSize={'md'} color={'light.700'}>
-            Recuperar agora.
+            color={'light.400'}
+          >
+            Esqueceu sua senha?{' '}
           </Text>
-        </Pressable>
-      </HStack>
-      <Button
-        title="Entrar"
-        rounded={'full'}
-        fontSize={'lg'}
-        mt={6}
-        isLoading={isSubmitting}
-        variant={'solid'}
-        onPress={handleSubmit(onSubmit, onSubmitError)}
-      />
+          <Pressable onPress={navigateToRecoverPassword}>
+            <Text
+              fontFamily={'body'}
+              fontSize={{
+                base: 15,
+                sm: 15,
+                md: 16,
+                lg: 24,
+              }}
+              color={'light.700'}
+            >
+              Recuperar agora.
+            </Text>
+          </Pressable>
+        </HStack>
+        <Button
+          title="Entrar"
+          rounded={'full'}
+          fontSize={{
+            base: 14,
+            sm: 15,
+            md: 16,
+            lg: 24,
+          }}
+          mt={6}
+          isLoading={isSubmitting}
+          variant={'solid'}
+          onPress={handleSubmit(onSubmit, onSubmitError)}
+        />
+      </VStack>
     </SafeAreaView>
   )
 }

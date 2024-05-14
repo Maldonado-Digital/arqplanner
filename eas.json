@@ -11,7 +11,7 @@
         "simulator": true
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "http://192.168.15.57:3000"
+        "EXPO_PUBLIC_API_URL": "http://192.168.1.101:3000"
       },
       "channel": "development-simulator"
     },
@@ -19,7 +19,7 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_API_URL": "http://192.168.1.102:3000"
+        "EXPO_PUBLIC_API_URL": "http://192.168.1.101:3000"
       },
       "channel": "development"
     },

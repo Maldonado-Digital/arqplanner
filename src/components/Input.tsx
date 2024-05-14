@@ -4,15 +4,14 @@ export function Input({ isInvalid, ...rest }: IInputProps) {
   return (
     <NativeBaseInput
       bg={'gray.50'}
-      h={14}
+      h={{ base: 14, sm: 14, md: 14, lg: 22 }}
       pr={4}
       borderWidth={1}
-      rounded={'xl'}
+      rounded={{ base: 'xl', sm: 'xl', md: 'xl', lg: '2xl' }}
       borderColor={isInvalid ? 'red.700' : '#00000012'}
-      fontSize="sm"
+      fontSize={{ base: 14, sm: 14, md: 15, lg: 24 }}
       color={'light.700'}
       fontFamily={'body'}
-      mb={6}
       placeholderTextColor="light.400"
       _focus={{
         bg: 'gray.50',
