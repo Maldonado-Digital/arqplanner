@@ -43,12 +43,23 @@ export function ListScreenHeader({
   return (
     <HStack
       bg={'white'}
-      pb={6}
+      pt={{
+        base: 4,
+        sm: 4,
+        md: 4,
+        lg: 8,
+      }}
+      pb={{
+        base: 4,
+        sm: 4,
+        md: 4,
+        lg: 12,
+      }}
       px={{
         base: 7,
         sm: 8,
         md: 10,
-        lg: 24,
+        lg: 16,
       }}
       alignItems={'center'}
       justifyContent={'space-between'}
@@ -68,7 +79,7 @@ export function ListScreenHeader({
           alignSelf={'flex-start'}
         />
       </Pressable>
-      <VStack alignItems={'center'} alignSelf={'center'}>
+      <VStack alignItems={'center'} alignSelf={'center'} maxW={'3/4'}>
         <Heading
           color={'light.700'}
           fontSize={{
@@ -79,7 +90,6 @@ export function ListScreenHeader({
           }}
           fontFamily={'heading'}
           numberOfLines={1}
-          px={4}
         >
           {title}
         </Heading>
@@ -103,13 +113,17 @@ export function ListScreenHeader({
         )}
       </VStack>
 
-      <Pressable onPress={onClickMenu} isDisabled={isMenuDisabled}>
+      <Pressable
+        w={{ base: 6, sm: 6, md: 6, lg: 10 }}
+        onPress={onClickMenu}
+        isDisabled={isMenuDisabled}
+      >
         <Icon
           as={Feather}
           name="more-vertical"
           color={'light.700'}
           opacity={isMenuDisabled ? 0.2 : 1}
-          size={6}
+          size={{ base: 6, sm: 6, md: 6, lg: 10 }}
         />
       </Pressable>
     </HStack>
