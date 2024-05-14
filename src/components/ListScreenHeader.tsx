@@ -44,18 +44,39 @@ export function ListScreenHeader({
     <HStack
       bg={'white'}
       pb={6}
-      px={10}
+      px={{
+        base: 7,
+        sm: 8,
+        md: 10,
+        lg: 24,
+      }}
       alignItems={'center'}
       justifyContent={'space-between'}
       {...rest}
     >
-      <Pressable onPress={handleGoBack}>
-        <Icon as={Feather} name="arrow-left" color={'light.700'} size={6} />
+      <Pressable
+        h={{ base: 6, sm: 6, md: 6, lg: 10 }}
+        onPress={handleGoBack}
+        justifyContent={'flex-start'}
+        hitSlop={20}
+      >
+        <Icon
+          as={Feather}
+          name="arrow-left"
+          color={'light.700'}
+          size={{ base: 6, sm: 6, md: 6, lg: 10 }}
+          alignSelf={'flex-start'}
+        />
       </Pressable>
       <VStack alignItems={'center'} alignSelf={'center'}>
         <Heading
           color={'light.700'}
-          fontSize={'xl'}
+          fontSize={{
+            base: 18,
+            sm: 18,
+            md: 20,
+            lg: 36,
+          }}
           fontFamily={'heading'}
           numberOfLines={1}
           px={4}

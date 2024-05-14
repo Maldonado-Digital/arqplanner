@@ -26,14 +26,14 @@
     "preview": {
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://arqplanner-cms-prod.payloadcms.app"
+        "EXPO_PUBLIC_API_URL": "https://admin.arqplanner.com"
       },
       "channel": "preview"
     },
     "production": {
       "autoIncrement": true,
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://arqplanner-cms-prod.payloadcms.app"
+        "EXPO_PUBLIC_API_URL": "https://admin.arqplanner.com"
       },
       "channel": "production"
     }

@@ -27,9 +27,8 @@ import { ProgressCircle } from 'react-native-svg-charts'
 import { type GetWorksResponse, getWorks } from 'src/api/queries/getWorks'
 
 export function Home() {
-  const { user, signOut } = useAuth()
+  const { user } = useAuth()
   const navigation = useNavigation<AppNavigatorRoutesProps>()
-  const { width } = useWindowDimensions()
   const initials = getInitials(user.name)
 
   const {
@@ -49,7 +48,7 @@ export function Home() {
   const stepsCompleted =
     works?.docs[0]?.steps.filter(step => step.step.is_completed).length ?? 0
   const progress = totalSteps ? stepsCompleted / totalSteps : totalSteps
-  const percentage = `${progress * 100}%`
+  const percentage = `${(progress * 100).toFixed(0)}%`
 
   function handleShowProfile() {
     navigation.navigate('profile')
@@ -58,12 +57,6 @@ export function Home() {
   if (isPending) return <Loading />
 
   if (isError) return <SessionExpired />
-
-  const numColumns = 2
-  const gap = vs(20)
-
-  const availableSpace = width - (numColumns + 1) * gap
-  const itemSize = availableSpace / numColumns
 
   return (
     <ScrollView
