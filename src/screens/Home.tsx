@@ -85,7 +85,16 @@ export function Home() {
         />
       }
     >
-      <VStack flex={1} bg={'gray.50'} pt={vs(48)} pb={mvs(48)}>
+      <VStack
+        flex={1}
+        bg={'gray.50'}
+        py={{
+          base: 10,
+          sm: 16,
+          md: 16,
+          lg: 20,
+        }}
+      >
         <HStack
           alignItems={'center'}
           justifyContent={'space-between'}
@@ -268,7 +277,7 @@ export function Home() {
             base: 10,
             sm: 12,
             md: 12,
-            lg: 20,
+            lg: 24,
           }}
           justifyContent={'space-between'}
         >

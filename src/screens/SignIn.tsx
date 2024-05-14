@@ -116,7 +116,6 @@ export function SignIn() {
           justifyContent={'flex-start'}
           mr={'full'}
           hitSlop={20}
-          bg={'blue.200'}
         >
           <Icon
             as={Feather}

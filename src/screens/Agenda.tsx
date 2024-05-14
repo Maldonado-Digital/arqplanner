@@ -4,26 +4,16 @@ import { ListEmpty } from '@components/ListEmpty'
 import { Loading } from '@components/Loading'
 import { SessionExpired } from '@components/SessionExpired'
 import { Feather } from '@expo/vector-icons'
-import { useAuth } from '@hooks/useAuth'
-import { useRefresh } from '@hooks/useRefresh'
 import { useNavigation } from '@react-navigation/native'
 import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { useQuery } from '@tanstack/react-query'
 import { calendarEventColors } from '@utils/constants'
 import { format, isSameDay } from 'date-fns'
 import { ptBR } from 'date-fns/locale/pt-BR'
-import {
-  Center,
-  FlatList,
-  HStack,
-  Heading,
-  Icon,
-  Pressable,
-  Text,
-  VStack,
-} from 'native-base'
+import { FlatList, HStack, Heading, Icon, Pressable, Text, VStack } from 'native-base'
 import { useState } from 'react'
 import type { MarkedDates } from 'react-native-calendars/src/types'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import { getWorks } from 'src/api/queries/getWorks'
 
 export function Agenda() {
@@ -108,20 +98,45 @@ export function Agenda() {
 
   if (isPending) return <Loading />
 
-  if (isError) return <SessionExpired />
+  if (!isPending && isError) return <SessionExpired />
 
   return (
     <VStack flex={1} bg={'gray.50'}>
       <VStack
-        pt={16}
-        px={10}
-        pb={6}
-        mb={8}
+        pt={{ base: 4, sm: 0, md: 0, lg: 16 }}
+        px={{
+          base: 7,
+          sm: 8,
+          md: 10,
+          lg: 16,
+        }}
+        pb={{
+          base: 4,
+          sm: 0,
+          md: 0,
+          lg: 6,
+        }}
+        mb={{
+          base: 6,
+          sm: 8,
+          md: 8,
+          lg: 16,
+        }}
         bg={'white'}
         borderWidth={1}
         borderColor={'#00000012'}
-        borderBottomRightRadius={'3xl'}
-        borderBottomLeftRadius={'3xl'}
+        borderBottomRightRadius={{
+          base: 28,
+          sm: 28,
+          md: 28,
+          lg: 36,
+        }}
+        borderBottomLeftRadius={{
+          base: 28,
+          sm: 28,
+          md: 28,
+          lg: 36,
+        }}
         style={{
           shadowColor: '#000000',
           shadowOpacity: 0.05,
@@ -129,37 +144,95 @@ export function Agenda() {
           shadowOffset: { width: 0, height: 4 },
         }}
       >
-        <Pressable alignSelf={'flex-start'} onPress={handleGoBack} mb={6}>
-          <Icon as={Feather} name="arrow-left" color={'light.700'} size={6} />
-        </Pressable>
-        <HStack w={'full'} mb={6} alignItems={'center'}>
-          <Heading fontFamily={'heading'} fontSize={'4xl'}>
+        <SafeAreaView>
+          <Pressable
+            h={{ base: 6, sm: 6, md: 6, lg: 10 }}
+            onPress={handleGoBack}
+            justifyContent={'flex-start'}
+            mr={'full'}
+            hitSlop={20}
+          >
+            <Icon
+              as={Feather}
+              name="arrow-left"
+              color={'light.700'}
+              size={{ base: 6, sm: 6, md: 6, lg: 10 }}
+              alignSelf={'flex-start'}
+            />
+          </Pressable>
+          <Heading
+            fontFamily={'heading'}
+            fontSize={{
+              base: 24,
+              sm: 30,
+              md: 32,
+              lg: 48,
+            }}
+            w={'full'}
+            mt={{ base: 5, sm: 6, md: 6, lg: 12 }}
+            mb={{ base: 5, sm: 6, md: 6, lg: 10 }}
+            alignItems={'center'}
+          >
             Agenda
           </Heading>
-        </HStack>
 
-        <Calendar
-          selected={formattedDate}
-          onSelect={handleSelectedDateChange}
-          initialDate={formattedDate}
-          markedDates={markedDates}
-        />
+          <Calendar
+            selected={formattedDate}
+            onSelect={handleSelectedDateChange}
+            initialDate={formattedDate}
+            markedDates={markedDates}
+          />
+        </SafeAreaView>
       </VStack>
 
       <VStack flex={1}>
-        <HStack px={10} mb={5} alignItems={'center'} space={2} h={6}>
-          <Heading fontFamily={'heading'} color={'light.700'} fontSize={'md'}>
+        <HStack
+          px={{
+            base: 7,
+            sm: 8,
+            md: 10,
+            lg: 24,
+          }}
+          mb={5}
+          alignItems={'center'}
+          space={2}
+          h={{ base: 6, sm: 6, md: 6, lg: 10 }}
+        >
+          <Heading
+            fontFamily={'heading'}
+            color={'light.700'}
+            fontSize={{
+              base: 15,
+              sm: 15,
+              md: 16,
+              lg: 28,
+            }}
+          >
             {selectedDateText}
           </Heading>
           {showTodayText && (
-            <Text fontFamily={'body'} color={'light.500'} fontSize={'md'}>
+            <Text
+              fontFamily={'body'}
+              color={'light.500'}
+              fontSize={{
+                base: 15,
+                sm: 15,
+                md: 16,
+                lg: 28,
+              }}
+            >
               (Hoje)
             </Text>
           )}
         </HStack>
 
         <FlatList
-          px={10}
+          px={{
+            base: 7,
+            sm: 8,
+            md: 10,
+            lg: 24,
+          }}
           data={displayedEvents}
           keyExtractor={item => item.id}
           renderItem={({ item, index }) => {
@@ -181,7 +254,13 @@ export function Agenda() {
           _contentContainerStyle={{ paddingBottom: 10 }}
           ListEmptyComponent={() => (
             <ListEmpty
-              pt={5}
+              pt={{
+                base: 3,
+                sm: 4,
+                md: 5,
+                lg: 24,
+              }}
+              maxW={'90%'}
               icon="calendar"
               title="Nenhum evento na data selecionada"
               message="Você não possui nenhum evento na data selecionada."

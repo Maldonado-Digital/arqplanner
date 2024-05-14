@@ -58,6 +58,22 @@ type CalendarProps = ReactNativeCalendarProps & {
 export function Calendar({ onSelect, initialDate, markedDates }: CalendarProps) {
   const { colors, fonts, fontSizes } = useTheme()
 
+  const themeBase = {
+    textMonthFontFamily: fonts.heading,
+    textMonthFontSize: fontSizes.xl,
+    arrowStyle: { padding: 0 },
+    textDayHeaderFontFamily: fonts.heading,
+    textDayHeaderFontSize: fontSizes.md,
+    textSectionTitleColor: colors.light[700],
+    textDayFontFamily: fonts.heading,
+    textDayFontSize: fontSizes.md,
+    dayTextColor: colors.light[500],
+    todayBackgroundColor: colors.light[200],
+    todayTextColor: colors.light[700],
+    selectedDayBackgroundColor: colors.light[500],
+    selectedDayTextColor: colors.white,
+  }
+
   function handleMonthChange(method: () => void) {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
     method()
@@ -66,21 +82,7 @@ export function Calendar({ onSelect, initialDate, markedDates }: CalendarProps) 
   return (
     <ReactNativeCalendar
       style={{ paddingLeft: 0, paddingRight: 0 }}
-      theme={{
-        textMonthFontFamily: fonts.heading,
-        textMonthFontSize: fontSizes.xl,
-        arrowStyle: { padding: 0 },
-        textDayHeaderFontFamily: fonts.heading,
-        textDayHeaderFontSize: fontSizes.md,
-        textSectionTitleColor: colors.light[700],
-        textDayFontFamily: fonts.heading,
-        textDayFontSize: fontSizes.md,
-        dayTextColor: colors.light[500],
-        todayBackgroundColor: colors.light[200],
-        todayTextColor: colors.light[700],
-        selectedDayBackgroundColor: colors.light[500],
-        selectedDayTextColor: colors.white,
-      }}
+      theme={themeBase}
       enableSwipeMonths
       renderArrow={direction => <CalendarArrow direction={direction} />}
       onDayPress={day => onSelect(day.dateString)}
