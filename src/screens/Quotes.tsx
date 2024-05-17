@@ -153,8 +153,6 @@ export function Quotes() {
     shareAsync(`${process.env.EXPO_PUBLIC_API_URL}${selectedQuote.quote.file.url}`)
   }
 
-  if (isPending) return <Loading />
-
   if (isError) return <SessionExpired />
 
   return (
@@ -168,89 +166,110 @@ export function Quotes() {
           mb={6}
         />
 
-        <FlatList
-          data={quotes}
-          keyExtractor={item => item.id}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={handleRefresh}
-              style={{
-                height: refreshing ? 30 : 0,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            />
-          }
-          renderItem={({ item }) => {
-            let icon = (
-              <Icon
-                as={Feather}
-                name="dollar-sign"
-                size={{ base: 6, sm: 8, md: 8, lg: 16 }}
-                color="light.700"
-              />
-            )
-            const ext = item.quote.file.filename.split('.').pop()
-            const ExtIcon =
-              FILE_EXTENSION_ICON_MAP[ext as keyof typeof FILE_EXTENSION_ICON_MAP]
+        {isPending && <Loading bg={'gray.50'} />}
 
-            if (ExtIcon) icon = <ExtIcon width={iconSize} height={iconSize} />
-
-            return (
-              <ListItem
-                title={item.quote.title}
-                subTitle={format(item.quote.file.updatedAt, "dd-MM-yy' | 'HH:mm")}
-                icon={icon}
-                onPress={() => handleItemPressed(item)}
+        {!isPending && (
+          <FlatList
+            data={quotes}
+            keyExtractor={item => item.id}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={handleRefresh}
+                style={{
+                  height: refreshing ? 30 : 0,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
               />
-            )
-          }}
-          showsVerticalScrollIndicator={false}
-          _contentContainerStyle={{
-            paddingBottom: 20,
-            ...(!!quotes?.length && {
-              shadowColor: '#000000',
-              shadowOpacity: 0.05,
-              shadowRadius: 30,
-              shadowOffset: { width: 0, height: 4 },
-            }),
-            ...(!quotes?.length && { flex: 1, justifyContent: 'center' }),
-          }}
-          ListEmptyComponent={() => (
-            <ListEmpty
-              px={12}
-              py={{ base: '1/2', sm: '3/5', md: '3/5', lg: '2/5' }}
-              icon="dollar-sign"
-              title="Nenhum orçamento encontrado"
-              message="Você ainda não possui nenhum orçamento adicionado."
-            />
-          )}
-        />
+            }
+            renderItem={({ item }) => {
+              let icon = (
+                <Icon
+                  as={Feather}
+                  name="dollar-sign"
+                  size={{ base: 6, sm: 8, md: 8, lg: 16 }}
+                  color="light.700"
+                />
+              )
+              const ext = item.quote.file.filename.split('.').pop()
+              const ExtIcon =
+                FILE_EXTENSION_ICON_MAP[ext as keyof typeof FILE_EXTENSION_ICON_MAP]
+
+              if (ExtIcon) icon = <ExtIcon width={iconSize} height={iconSize} />
+
+              return (
+                <ListItem
+                  title={item.quote.title}
+                  subTitle={format(item.quote.file.updatedAt, "dd-MM-yy' | 'HH:mm")}
+                  icon={icon}
+                  onPress={() => handleItemPressed(item)}
+                />
+              )
+            }}
+            showsVerticalScrollIndicator={false}
+            _contentContainerStyle={{
+              paddingBottom: 20,
+              ...(!!quotes?.length && {
+                shadowColor: '#000000',
+                shadowOpacity: 0.05,
+                shadowRadius: 30,
+                shadowOffset: { width: 0, height: 4 },
+              }),
+              ...(!quotes?.length && { flex: 1, justifyContent: 'center' }),
+            }}
+            ListEmptyComponent={() => (
+              <ListEmpty
+                px={12}
+                py={{ base: '1/2', sm: '3/5', md: '3/5', lg: '2/5' }}
+                icon="dollar-sign"
+                title="Nenhum orçamento encontrado"
+                message="Você ainda não possui nenhum orçamento adicionado."
+              />
+            )}
+          />
+        )}
 
         <Actionsheet
           isOpen={isMenuOpen}
           onClose={handleCloseMenu}
           hideDragIndicator={false}
         >
-          <Actionsheet.Content borderTopRadius="3xl" bg={'white'}>
-            <VStack w={'full'} pt={6}>
+          <Actionsheet.Content
+            borderTopRadius={{ base: 28, sm: 32, md: 36, lg: 56 }}
+            bg={'white'}
+          >
+            <VStack w={'full'} pt={{ base: 4, sm: 4, md: 4, lg: 8 }}>
               <HStack
                 alignItems={'center'}
                 justifyContent={'space-between'}
-                px={10}
-                pb={6}
+                px={{
+                  base: 5,
+                  sm: 6,
+                  md: 8,
+                  lg: 12,
+                }}
+                pb={{ base: 5, sm: 6, md: 6, lg: 12 }}
                 borderBottomColor={'muted.200'}
                 borderBottomWidth={1}
               >
-                <Heading fontSize={'2xl'} color="light.700" fontFamily={'heading'}>
+                <Heading
+                  fontSize={{
+                    base: 22,
+                    sm: 24,
+                    md: 24,
+                    lg: 40,
+                  }}
+                  color="light.700"
+                  fontFamily={'heading'}
+                >
                   Configurações
                 </Heading>
 
                 <IconButton
-                  w={11}
-                  h={11}
+                  w={{ base: 10, sm: 10, md: 11, lg: 20 }}
+                  h={{ base: 10, sm: 10, md: 11, lg: 20 }}
                   variant={'outline'}
                   rounded={'full'}
                   bg={'white'}
@@ -258,7 +277,7 @@ export function Quotes() {
                   onPress={handleCloseMenu}
                   _pressed={{ bg: 'muted.300' }}
                   _icon={{
-                    size: 5,
+                    size: { base: 5, sm: 5, md: 6, lg: 10 },
                     as: Feather,
                     name: 'x',
                     color: 'light.700',
@@ -275,14 +294,34 @@ export function Quotes() {
                 <HStack
                   bg={'white'}
                   alignItems={'center'}
-                  px={10}
-                  py={6}
+                  px={{
+                    base: 5,
+                    sm: 6,
+                    md: 8,
+                    lg: 12,
+                  }}
+                  py={{ base: 5, sm: 6, md: 6, lg: 10 }}
                   borderBottomWidth={1}
                   borderBottomColor={'muted.200'}
                 >
-                  <Icon as={Feather} size={5} name="share-2" color={'light.700'} mr={5} />
+                  <Icon
+                    as={Feather}
+                    name="share-2"
+                    color={'light.700'}
+                    size={{ base: 4, sm: 5, md: 5, lg: 8 }}
+                    mr={{ base: 4, sm: 5, md: 5, lg: 8 }}
+                  />
 
-                  <Text fontSize={'md'} fontFamily={'heading'} color={'light.700'}>
+                  <Text
+                    fontSize={{
+                      base: 15,
+                      sm: 15,
+                      md: 16,
+                      lg: 26,
+                    }}
+                    fontFamily={'heading'}
+                    color={'light.700'}
+                  >
                     Compartilhar
                   </Text>
                 </HStack>
@@ -294,20 +333,45 @@ export function Quotes() {
                   opacity: pressed || isDownloading ? 0.3 : 1,
                 })}
               >
-                <HStack w={'full'} alignItems={'center'} px={10} py={6}>
-                  {isDownloading && <Spinner w={5} color={'light.700'} mr={5} />}
+                <HStack
+                  bg={'white'}
+                  alignItems={'center'}
+                  px={{
+                    base: 5,
+                    sm: 6,
+                    md: 8,
+                    lg: 12,
+                  }}
+                  py={{ base: 5, sm: 6, md: 6, lg: 10 }}
+                >
+                  {isDownloading && (
+                    <Spinner
+                      color={'light.700'}
+                      w={{ base: 4, sm: 5, md: 5, lg: 8 }}
+                      mr={{ base: 4, sm: 5, md: 5, lg: 8 }}
+                    />
+                  )}
 
                   {!isDownloading && (
                     <Icon
                       as={Feather}
-                      size={5}
                       name="arrow-down-circle"
                       color={'light.700'}
-                      mr={5}
+                      size={{ base: 4, sm: 5, md: 5, lg: 8 }}
+                      mr={{ base: 4, sm: 5, md: 5, lg: 8 }}
                     />
                   )}
 
-                  <Text fontSize={'md'} fontFamily={'heading'} color={'light.700'}>
+                  <Text
+                    fontSize={{
+                      base: 15,
+                      sm: 15,
+                      md: 16,
+                      lg: 26,
+                    }}
+                    fontFamily={'heading'}
+                    color={'light.700'}
+                  >
                     Salvar arquivo
                   </Text>
                 </HStack>

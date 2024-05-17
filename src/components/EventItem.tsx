@@ -14,7 +14,7 @@ export function EventItem({ eventData, markerColor, ...rest }: EventItemProps) {
     <TouchableOpacity {...rest}>
       <HStack
         bg={'white'}
-        p={4}
+        p={{ base: 4, sm: 4, md: 4, lg: 8 }}
         mb={3}
         alignItems={'center'}
         rounded={'lg'}
@@ -27,22 +27,47 @@ export function EventItem({ eventData, markerColor, ...rest }: EventItemProps) {
           shadowOffset: { width: 0, height: 4 },
         }}
       >
-        <Box w={'3px'} h={12} bg={markerColor} rounded={'full'} />
+        <Box
+          w={{ base: '3px', sm: '3px', md: '3px', lg: '4px' }}
+          h={'full'}
+          bg={markerColor}
+          rounded={'full'}
+        />
         <VStack flex={1} px={4}>
           <Heading
             color={'light.700'}
-            fontSize={'md'}
             fontFamily={'heading'}
             noOfLines={1}
+            fontSize={{
+              base: 13,
+              sm: 14,
+              md: 14,
+              lg: 24,
+            }}
           >
             {eventData.event.title}
           </Heading>
 
-          <Text fontSize={'sm'} color={'light.500'} numberOfLines={1} mt={'1px'}>
+          <Text
+            fontSize={{
+              base: 15,
+              sm: 15,
+              md: 16,
+              lg: 26,
+            }}
+            color={'light.500'}
+            numberOfLines={1}
+            mt={'1px'}
+          >
             {format(eventData.event.date, 'HH:mm')} – {eventData.event.address}
           </Text>
         </VStack>
-        <Icon as={Feather} name="chevron-right" color={'light.700'} size={6} />
+        <Icon
+          as={Feather}
+          name="chevron-right"
+          size={{ base: 6, sm: 8, md: 8, lg: 12 }}
+          color={'light.700'}
+        />
       </HStack>
     </TouchableOpacity>
   )

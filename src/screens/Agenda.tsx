@@ -185,14 +185,16 @@ export function Agenda() {
         </SafeAreaView>
       </VStack>
 
-      <VStack flex={1}>
+      <VStack
+        flex={1}
+        px={{
+          base: 7,
+          sm: 8,
+          md: 10,
+          lg: 20,
+        }}
+      >
         <HStack
-          px={{
-            base: 7,
-            sm: 8,
-            md: 10,
-            lg: 24,
-          }}
           mb={5}
           alignItems={'center'}
           space={2}
@@ -227,12 +229,6 @@ export function Agenda() {
         </HStack>
 
         <FlatList
-          px={{
-            base: 7,
-            sm: 8,
-            md: 10,
-            lg: 24,
-          }}
           data={displayedEvents}
           keyExtractor={item => item.id}
           renderItem={({ item, index }) => {
