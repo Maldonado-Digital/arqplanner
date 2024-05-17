@@ -1,11 +1,11 @@
 import { Platform } from 'react-native'
 import type { ProjectType } from 'src/api/queries/getWorks'
 
-import CADFileIcon from '@assets/cad-file.svg'
-import DOCFileIcon from '@assets/doc-file.svg'
-import PDFFileIcon from '@assets/pdf-file.svg'
-import PPTFileIcon from '@assets/ppt-file.svg'
-import XLSFileIcon from '@assets/xls-file.svg'
+import { CADFileIconSvg } from '@components/svgs/CADFileIconSvg'
+import { DOCFileIconSvg } from '@components/svgs/DOCFileIconSvg'
+import { PDFFileIconSvg } from '@components/svgs/PDFFileIconSvg'
+import { PPTFileIconSvg } from '@components/svgs/PPTFIleIconSvg'
+import { XLSFileIconSvg } from '@components/svgs/XLSFileIconSvg'
 
 export const statusBarHeight = Platform.OS === 'android' ? 4 : 12
 
@@ -81,16 +81,14 @@ export const approvalStatus = [
   },
 ]
 
-export const VALID_EXTENSIONS = {
-  pdf: PDFFileIcon,
-  dwg: CADFileIcon,
-  doc: DOCFileIcon,
-  docx: DOCFileIcon,
-  xls: XLSFileIcon,
-  xlsx: XLSFileIcon,
-  pptx: PPTFileIcon,
+export const FILE_EXTENSION_ICON_MAP = {
+  pdf: PDFFileIconSvg,
+  dwg: CADFileIconSvg,
+  doc: DOCFileIconSvg,
+  docx: DOCFileIconSvg,
+  xls: XLSFileIconSvg,
+  xlsx: XLSFileIconSvg,
+  pptx: PPTFileIconSvg,
 }
 export const PDF_MIME_TYPE = 'application/pdf'
 export const NOT_ALLOWED_API_ERROR_MESSAGE = 'You are not allowed to perform this action.'
-
-export { CADFileIcon, DOCFileIcon, PDFFileIcon, PPTFileIcon, XLSFileIcon }

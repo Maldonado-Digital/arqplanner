@@ -384,23 +384,40 @@ export function Medias() {
           onClose={handleCloseMenu}
           hideDragIndicator={false}
         >
-          <Actionsheet.Content borderTopRadius="3xl" bg={'white'}>
-            <VStack w={'full'} pt={6}>
+          <Actionsheet.Content
+            borderTopRadius={{ base: 28, sm: 32, md: 36, lg: 56 }}
+            bg={'white'}
+          >
+            <VStack w={'full'} pt={{ base: 4, sm: 4, md: 4, lg: 8 }}>
               <HStack
                 alignItems={'center'}
                 justifyContent={'space-between'}
-                px={10}
-                pb={6}
+                px={{
+                  base: 5,
+                  sm: 6,
+                  md: 8,
+                  lg: 12,
+                }}
+                pb={{ base: 5, sm: 6, md: 6, lg: 12 }}
                 borderBottomColor={'muted.200'}
                 borderBottomWidth={1}
               >
-                <Heading fontSize={'2xl'} color="light.700" fontFamily={'heading'}>
+                <Heading
+                  fontSize={{
+                    base: 22,
+                    sm: 24,
+                    md: 24,
+                    lg: 40,
+                  }}
+                  color="light.700"
+                  fontFamily={'heading'}
+                >
                   Configurações
                 </Heading>
 
                 <IconButton
-                  w={11}
-                  h={11}
+                  w={{ base: 10, sm: 10, md: 11, lg: 20 }}
+                  h={{ base: 10, sm: 10, md: 11, lg: 20 }}
                   variant={'outline'}
                   rounded={'full'}
                   bg={'white'}
@@ -408,7 +425,7 @@ export function Medias() {
                   onPress={handleCloseMenu}
                   _pressed={{ bg: 'muted.300' }}
                   _icon={{
-                    size: 5,
+                    size: { base: 5, sm: 5, md: 6, lg: 10 },
                     as: Feather,
                     name: 'x',
                     color: 'light.700',
@@ -425,14 +442,34 @@ export function Medias() {
                 <HStack
                   bg={'white'}
                   alignItems={'center'}
-                  px={10}
-                  py={6}
+                  px={{
+                    base: 5,
+                    sm: 6,
+                    md: 8,
+                    lg: 12,
+                  }}
+                  py={{ base: 5, sm: 6, md: 6, lg: 10 }}
                   borderBottomWidth={1}
                   borderBottomColor={'muted.200'}
                 >
-                  <Icon as={Feather} size={5} name="share-2" color={'light.700'} mr={5} />
+                  <Icon
+                    as={Feather}
+                    name="share-2"
+                    color={'light.700'}
+                    size={{ base: 4, sm: 5, md: 5, lg: 8 }}
+                    mr={{ base: 4, sm: 5, md: 5, lg: 8 }}
+                  />
 
-                  <Text fontSize={'md'} fontFamily={'heading'} color={'light.700'}>
+                  <Text
+                    fontSize={{
+                      base: 15,
+                      sm: 15,
+                      md: 16,
+                      lg: 26,
+                    }}
+                    fontFamily={'heading'}
+                    color={'light.700'}
+                  >
                     Compartilhar
                   </Text>
                 </HStack>
@@ -449,20 +486,34 @@ export function Medias() {
                     <HStack
                       bg={'white'}
                       alignItems={'center'}
-                      px={10}
-                      py={6}
+                      px={{
+                        base: 5,
+                        sm: 6,
+                        md: 8,
+                        lg: 12,
+                      }}
+                      py={{ base: 5, sm: 6, md: 6, lg: 10 }}
                       borderBottomWidth={1}
                       borderBottomColor={'muted.200'}
                     >
                       <Icon
                         as={Feather}
-                        size={5}
                         name="check"
                         color={'light.700'}
-                        mr={5}
+                        size={{ base: 4, sm: 5, md: 5, lg: 8 }}
+                        mr={{ base: 4, sm: 5, md: 5, lg: 8 }}
                       />
 
-                      <Text fontSize={'md'} fontFamily={'heading'} color={'light.700'}>
+                      <Text
+                        fontSize={{
+                          base: 15,
+                          sm: 15,
+                          md: 16,
+                          lg: 26,
+                        }}
+                        fontFamily={'heading'}
+                        color={'light.700'}
+                      >
                         Aprovar
                       </Text>
                     </HStack>
@@ -477,14 +528,34 @@ export function Medias() {
                     <HStack
                       bg={'white'}
                       alignItems={'center'}
-                      px={10}
-                      py={6}
+                      px={{
+                        base: 5,
+                        sm: 6,
+                        md: 8,
+                        lg: 12,
+                      }}
+                      py={{ base: 5, sm: 6, md: 6, lg: 10 }}
                       borderBottomWidth={1}
                       borderBottomColor={'muted.200'}
                     >
-                      <Icon as={Feather} size={5} name="x" color={'light.700'} mr={5} />
+                      <Icon
+                        as={Feather}
+                        name="x"
+                        color={'light.700'}
+                        size={{ base: 4, sm: 5, md: 5, lg: 8 }}
+                        mr={{ base: 4, sm: 5, md: 5, lg: 8 }}
+                      />
 
-                      <Text fontSize={'md'} fontFamily={'heading'} color={'light.700'}>
+                      <Text
+                        fontSize={{
+                          base: 15,
+                          sm: 15,
+                          md: 16,
+                          lg: 26,
+                        }}
+                        fontFamily={'heading'}
+                        color={'light.700'}
+                      >
                         Reprovar
                       </Text>
                     </HStack>
@@ -498,20 +569,45 @@ export function Medias() {
                   opacity: pressed || isDownloading ? 0.3 : 1,
                 })}
               >
-                <HStack bg={'white'} alignItems={'center'} px={10} py={6}>
-                  {isDownloading && <Spinner w={5} color={'light.700'} mr={5} />}
+                <HStack
+                  bg={'white'}
+                  alignItems={'center'}
+                  px={{
+                    base: 5,
+                    sm: 6,
+                    md: 8,
+                    lg: 12,
+                  }}
+                  py={{ base: 5, sm: 6, md: 6, lg: 10 }}
+                >
+                  {isDownloading && (
+                    <Spinner
+                      color={'light.700'}
+                      w={{ base: 4, sm: 5, md: 5, lg: 8 }}
+                      mr={{ base: 4, sm: 5, md: 5, lg: 8 }}
+                    />
+                  )}
 
                   {!isDownloading && (
                     <Icon
                       as={Feather}
-                      size={5}
                       name="arrow-down-circle"
                       color={'light.700'}
-                      mr={5}
+                      size={{ base: 4, sm: 5, md: 5, lg: 8 }}
+                      mr={{ base: 4, sm: 5, md: 5, lg: 8 }}
                     />
                   )}
 
-                  <Text fontSize={'md'} fontFamily={'heading'} color={'light.700'}>
+                  <Text
+                    fontSize={{
+                      base: 15,
+                      sm: 15,
+                      md: 16,
+                      lg: 26,
+                    }}
+                    fontFamily={'heading'}
+                    color={'light.700'}
+                  >
                     Salvar arquivo
                   </Text>
                 </HStack>
@@ -540,18 +636,40 @@ export function Medias() {
                 p={0}
                 w={'full'}
               >
-                <Actionsheet.Content borderTopRadius="3xl" bg={'white'}>
-                  <VStack w={'full'} px={10} pt={6}>
+                <Actionsheet.Content
+                  borderTopRadius={{ base: 28, sm: 32, md: 36, lg: 56 }}
+                  bg={'white'}
+                >
+                  <VStack
+                    w={'full'}
+                    px={{
+                      base: 5,
+                      sm: 6,
+                      md: 8,
+                      lg: 12,
+                    }}
+                    pb={{ base: 5, sm: 6, md: 6, lg: 12 }}
+                    pt={{ base: 4, sm: 4, md: 4, lg: 8 }}
+                  >
                     <HStack alignItems={'center'} justifyContent={'space-between'} mb={4}>
-                      <Heading fontSize={'2xl'} color="light.700" fontFamily={'heading'}>
+                      <Heading
+                        fontSize={{
+                          base: 22,
+                          sm: 24,
+                          md: 24,
+                          lg: 40,
+                        }}
+                        color="light.700"
+                        fontFamily={'heading'}
+                      >
                         {selectedOption === 'reject'
                           ? 'Confirmar reprovação'
                           : 'Confirmar aprovação'}
                       </Heading>
 
                       <IconButton
-                        w={11}
-                        h={11}
+                        w={{ base: 10, sm: 10, md: 11, lg: 20 }}
+                        h={{ base: 10, sm: 10, md: 11, lg: 20 }}
                         variant={'outline'}
                         rounded={'full'}
                         bg={'white'}
@@ -559,7 +677,7 @@ export function Medias() {
                         onPress={handleCloseActionSheet}
                         _pressed={{ bg: 'muted.300' }}
                         _icon={{
-                          size: 5,
+                          size: { base: 5, sm: 5, md: 6, lg: 10 },
                           as: Feather,
                           name: 'x',
                           color: 'light.700',
@@ -567,7 +685,19 @@ export function Medias() {
                       />
                     </HStack>
 
-                    <Text fontFamily={'body'} fontSize={'md'} color={'light.500'} mb={6}>
+                    <Text
+                      fontFamily={'body'}
+                      fontSize={{
+                        base: 15,
+                        sm: 15,
+                        md: 16,
+                        lg: 26,
+                      }}
+                      color={'light.500'}
+                      mb={{ base: 5, sm: 6, md: 6, lg: 12 }}
+                      my={{ base: 1, sm: 2, md: 2, lg: 4 }}
+                      maxWidth={{ base: 'full', sm: 'full', md: 'full', lg: '80%' }}
+                    >
                       {selectedOption === 'reject'
                         ? 'Clique no botão abaixo para reprovar. Caso deseje, insira um comentário adicional.'
                         : 'Clique no botão abaixo para confirmar. Caso deseje, insira um comentário adicional.'}
@@ -575,20 +705,25 @@ export function Medias() {
 
                     <TextArea
                       numberOfLines={16}
-                      h={32}
-                      px={4}
-                      py={5}
-                      mb={6}
+                      h={{ base: 28, sm: 32, md: 32, lg: 56 }}
+                      px={{ base: 4, sm: 4, md: 4, lg: 8 }}
+                      py={{ base: 5, sm: 5, md: 5, lg: 10 }}
+                      mb={{ base: 5, sm: 6, md: 6, lg: 12 }}
                       bg={'gray.50'}
-                      rounded={'xl'}
+                      rounded={{ base: 'xl', sm: 'xl', md: 'xl', lg: '3xl' }}
                       autoFocus={false}
                       placeholder="Comentários (opcional)"
                       borderColor={'muted.200'}
                       autoCompleteType={false}
                       focusOutlineColor="light.700"
                       _focus={{ bg: 'gray.50' }}
-                      fontSize={'sm'}
                       onChangeText={setComments}
+                      fontSize={{
+                        base: 13,
+                        sm: 14,
+                        md: 14,
+                        lg: 24,
+                      }}
                     />
 
                     <Button
@@ -599,7 +734,7 @@ export function Medias() {
                       }
                       rounded={'full'}
                       fontFamily={'heading'}
-                      fontSize={'md'}
+                      fontSize={{ base: 15, sm: 15, md: 16, lg: 26 }}
                       variant={selectedOption === 'reject' ? 'subtle' : 'solid'}
                       onPress={handleSubmit}
                       isLoading={isMutating}

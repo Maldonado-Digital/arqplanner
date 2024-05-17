@@ -11,7 +11,7 @@ import { useNavigation, useRoute } from '@react-navigation/native'
 import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { useQuery } from '@tanstack/react-query'
 import { AppError } from '@utils/AppError'
-import { PDF_MIME_TYPE, VALID_EXTENSIONS } from '@utils/constants'
+import { FILE_EXTENSION_ICON_MAP, PDF_MIME_TYPE } from '@utils/constants'
 import { downloadFile } from '@utils/downloadFile'
 import { format } from 'date-fns'
 import * as Haptics from 'expo-haptics'
@@ -27,6 +27,7 @@ import {
   Text,
   VStack,
   View,
+  useBreakpointValue,
   useDisclose,
   useToast,
 } from 'native-base'
@@ -38,6 +39,12 @@ import { type Quote, getWorks } from 'src/api/queries/getWorks'
 export function Quotes() {
   const toast = useToast()
   const { onOpen, onClose } = useDisclose()
+  const iconSize = useBreakpointValue({
+    base: 36,
+    sm: 36,
+    md: 40,
+    lg: 60,
+  })
   const navigation = useNavigation<AppNavigatorRoutesProps>()
 
   const {
@@ -177,11 +184,19 @@ export function Quotes() {
             />
           }
           renderItem={({ item }) => {
-            let icon = <Icon as={Feather} name="dollar-sign" size={6} color="light.700" />
+            let icon = (
+              <Icon
+                as={Feather}
+                name="dollar-sign"
+                size={{ base: 6, sm: 8, md: 8, lg: 16 }}
+                color="light.700"
+              />
+            )
             const ext = item.quote.file.filename.split('.').pop()
-            const ExtIcon = VALID_EXTENSIONS[ext as keyof typeof VALID_EXTENSIONS]
+            const ExtIcon =
+              FILE_EXTENSION_ICON_MAP[ext as keyof typeof FILE_EXTENSION_ICON_MAP]
 
-            if (ExtIcon) icon = <ExtIcon />
+            if (ExtIcon) icon = <ExtIcon width={iconSize} height={iconSize} />
 
             return (
               <ListItem
@@ -205,7 +220,8 @@ export function Quotes() {
           }}
           ListEmptyComponent={() => (
             <ListEmpty
-              px={10}
+              px={12}
+              py={{ base: '1/2', sm: '3/5', md: '3/5', lg: '2/5' }}
               icon="dollar-sign"
               title="Nenhum orçamento encontrado"
               message="Você ainda não possui nenhum orçamento adicionado."

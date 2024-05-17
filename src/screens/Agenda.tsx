@@ -258,9 +258,8 @@ export function Agenda() {
                 base: 3,
                 sm: 4,
                 md: 5,
-                lg: 24,
+                lg: 16,
               }}
-              maxW={'90%'}
               icon="calendar"
               title="Nenhum evento na data selecionada"
               message="Você não possui nenhum evento na data selecionada."

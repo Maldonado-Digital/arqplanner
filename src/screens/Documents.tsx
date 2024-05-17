@@ -11,7 +11,11 @@ import { useNavigation } from '@react-navigation/native'
 import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { useQuery } from '@tanstack/react-query'
 import { AppError } from '@utils/AppError'
-import { PDF_MIME_TYPE, VALID_EXTENSIONS, documentsCategories } from '@utils/constants'
+import {
+  FILE_EXTENSION_ICON_MAP,
+  PDF_MIME_TYPE,
+  documentsCategories,
+} from '@utils/constants'
 import { downloadFile } from '@utils/downloadFile'
 import { format } from 'date-fns'
 import * as Haptics from 'expo-haptics'
@@ -26,6 +30,7 @@ import {
   Spinner,
   Text,
   VStack,
+  useBreakpointValue,
   useDisclose,
   useToast,
 } from 'native-base'
@@ -37,6 +42,12 @@ import { type Document, getWorks } from 'src/api/queries/getWorks'
 export function Documents() {
   const toast = useToast()
   const { onOpen, onClose } = useDisclose()
+  const iconSize = useBreakpointValue({
+    base: 36,
+    sm: 36,
+    md: 40,
+    lg: 60,
+  })
   const navigation = useNavigation<AppNavigatorRoutesProps>()
 
   const {
@@ -110,6 +121,7 @@ export function Documents() {
       await downloadFile(
         `${process.env.EXPO_PUBLIC_API_URL}${selectedDocument.document.file.url}`,
       )
+
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 
       await toast.show({
@@ -176,13 +188,20 @@ export function Documents() {
             />
           )}
           showsHorizontalScrollIndicator={false}
-          _contentContainerStyle={{ px: 6 }}
-          maxH={10}
-          minH={10}
+          _contentContainerStyle={{
+            px: {
+              base: 4,
+              sm: 4,
+              md: 6,
+              lg: 8,
+            },
+          }}
+          maxH={{ base: 8, sm: 10, md: 10, lg: 16 }}
+          minH={{ base: 8, sm: 10, md: 10, lg: 16 }}
           bg={'white'}
           borderBottomWidth={1}
           borderBottomColor={'#00000012'}
-          mb={6}
+          mb={{ base: 5, sm: 6, md: 6, lg: 12 }}
         />
 
         {isPending && <Loading bg={'gray.50'} />}
@@ -204,11 +223,19 @@ export function Documents() {
               />
             }
             renderItem={({ item }) => {
-              let icon = <Icon as={Feather} name="folder" size={6} color="light.700" />
+              let icon = (
+                <Icon
+                  as={Feather}
+                  name="folder"
+                  size={{ base: 6, sm: 8, md: 8, lg: 16 }}
+                  color="light.700"
+                />
+              )
               const ext = item.document.file.filename.split('.').pop()
-              const ExtIcon = VALID_EXTENSIONS[ext as keyof typeof VALID_EXTENSIONS]
+              const ExtIcon =
+                FILE_EXTENSION_ICON_MAP[ext as keyof typeof FILE_EXTENSION_ICON_MAP]
 
-              if (ExtIcon) icon = <ExtIcon />
+              if (ExtIcon) icon = <ExtIcon width={iconSize} height={iconSize} />
 
               return (
                 <ListItem
@@ -232,8 +259,8 @@ export function Documents() {
             }}
             ListEmptyComponent={() => (
               <ListEmpty
-                px={10}
-                py={40}
+                px={12}
+                py={{ base: '1/2', sm: '3/5', md: '3/5', lg: '2/5' }}
                 icon="folder"
                 title="Nenhum documento foi encontrado"
                 message="Você ainda não possui nenhum documento adicionado."

@@ -13,17 +13,17 @@ import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { AppError } from '@utils/AppError'
 import {
+  FILE_EXTENSION_ICON_MAP,
   PDF_MIME_TYPE,
-  VALID_EXTENSIONS,
   approvalStatus,
   projectTypes,
 } from '@utils/constants'
 import { downloadFile } from '@utils/downloadFile'
 import { format } from 'date-fns'
+import * as Haptics from 'expo-haptics'
 import { shareAsync } from 'expo-sharing'
 import {
   Actionsheet,
-  Center,
   FlatList,
   HStack,
   Heading,
@@ -35,6 +35,7 @@ import {
   Text,
   TextArea,
   VStack,
+  useBreakpointValue,
   useDisclose,
   useToast,
 } from 'native-base'
@@ -55,6 +56,12 @@ export function Projects() {
   const toast = useToast()
   const queryClient = useQueryClient()
   const { onOpen, onClose } = useDisclose()
+  const iconSize = useBreakpointValue({
+    base: 36,
+    sm: 36,
+    md: 40,
+    lg: 60,
+  })
   const navigation = useNavigation<AppNavigatorRoutesProps>()
   const {
     data: works,
@@ -142,6 +149,7 @@ export function Projects() {
   })
 
   function handleOpenActionSheet(option: 'approve' | 'reject') {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
     setIsMenuOpen(false)
     setSelectedOption(option)
     onOpen()
@@ -153,6 +161,7 @@ export function Projects() {
   }
 
   function handleOpenMenu() {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
     setIsMenuOpen(true)
     onOpen()
   }
@@ -166,6 +175,7 @@ export function Projects() {
   async function handleDownload() {
     try {
       if (!selectedProject) throw new AppError('Nenhuma opção selecionada.')
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
 
       setIsDownloading(true)
 
@@ -173,6 +183,7 @@ export function Projects() {
       await downloadFile(
         `${process.env.EXPO_PUBLIC_API_URL}${selectedProject.project.file.url}`,
       )
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 
       await toast.show({
         duration: 3000,
@@ -189,6 +200,7 @@ export function Projects() {
       setIsDownloading(false)
       handleCloseMenu()
     } catch (err) {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
       setIsDownloading(false)
 
       toast.show({
@@ -207,6 +219,7 @@ export function Projects() {
 
   function handleShare() {
     if (!selectedProject) throw new AppError('Nenhuma opção selecionada.')
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
     shareAsync(`${process.env.EXPO_PUBLIC_API_URL}${selectedProject.project.file.url}`)
   }
 
@@ -231,6 +244,7 @@ export function Projects() {
   async function handleSubmit() {
     try {
       if (!selectedOption) throw new AppError('Nenhuma opção selecionada')
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
 
       await resolveProjectFn({
         workId: works?.docs[0].id as string,
@@ -238,6 +252,8 @@ export function Projects() {
         status: selectedOption === 'approve' ? 'approved' : 'archived',
         comments,
       })
+
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 
       toast.show({
         duration: 3000,
@@ -257,6 +273,8 @@ export function Projects() {
 
       handleCloseActionSheet()
     } catch (err) {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
+
       toast.show({
         duration: 3000,
         render: ({ id }) => (
@@ -295,9 +313,16 @@ export function Projects() {
             />
           )}
           showsHorizontalScrollIndicator={false}
-          _contentContainerStyle={{ px: 6 }}
-          maxH={10}
-          minH={10}
+          _contentContainerStyle={{
+            px: {
+              base: 4,
+              sm: 4,
+              md: 6,
+              lg: 8,
+            },
+          }}
+          maxH={{ base: 8, sm: 10, md: 10, lg: 16 }}
+          minH={{ base: 8, sm: 10, md: 10, lg: 16 }}
           bg={'white'}
           borderBottomWidth={1}
           borderBottomColor={'#00000012'}
@@ -335,11 +360,19 @@ export function Projects() {
               ...(!projects?.length && { flex: 1, justifyContent: 'center' }),
             }}
             renderItem={({ item }) => {
-              let icon = <Icon as={Feather} name="layout" size={6} color="light.700" />
+              let icon = (
+                <Icon
+                  as={Feather}
+                  name="layout"
+                  size={{ base: 6, sm: 8, md: 8, lg: 16 }}
+                  color="light.700"
+                />
+              )
               const ext = item.project.file.filename.split('.').pop()
-              const ExtIcon = VALID_EXTENSIONS[ext as keyof typeof VALID_EXTENSIONS]
+              const ExtIcon =
+                FILE_EXTENSION_ICON_MAP[ext as keyof typeof FILE_EXTENSION_ICON_MAP]
 
-              if (ExtIcon) icon = <ExtIcon />
+              if (ExtIcon) icon = <ExtIcon width={iconSize} height={iconSize} />
 
               return (
                 <ListItem
@@ -353,12 +386,12 @@ export function Projects() {
             }}
             renderSectionHeader={({ section: { title } }) => (
               <Heading
-                fontSize={'lg'}
+                fontSize={{ base: 'lg', sm: 'lg', md: 'lg', lg: '3xl' }}
                 color={'light.700'}
                 fontFamily={'heading'}
-                px={10}
-                mt={8}
-                mb={4}
+                px={{ base: 7, sm: 8, md: 10, lg: 16 }}
+                mt={{ base: 6, sm: 6, md: 6, lg: 10 }}
+                mb={{ base: 3, sm: 4, md: 4, lg: 6 }}
               >
                 {title}
               </Heading>
@@ -366,7 +399,7 @@ export function Projects() {
             ListEmptyComponent={() => (
               <ListEmpty
                 px={12}
-                py={200}
+                py={{ base: '1/2', sm: '3/5', md: '3/5', lg: '2/5' }}
                 icon="layout"
                 title="Nenhum projeto foi encontrado"
                 message="Você ainda não possui nenhum projeto adicionado."
@@ -380,23 +413,40 @@ export function Projects() {
           onClose={handleCloseMenu}
           hideDragIndicator={false}
         >
-          <Actionsheet.Content borderTopRadius="3xl" bg={'white'}>
-            <VStack w={'full'} pt={6}>
+          <Actionsheet.Content
+            borderTopRadius={{ base: 28, sm: 32, md: 36, lg: 56 }}
+            bg={'white'}
+          >
+            <VStack w={'full'} pt={{ base: 4, sm: 4, md: 4, lg: 8 }}>
               <HStack
                 alignItems={'center'}
                 justifyContent={'space-between'}
-                px={10}
-                pb={6}
+                px={{
+                  base: 5,
+                  sm: 6,
+                  md: 8,
+                  lg: 12,
+                }}
+                pb={{ base: 5, sm: 6, md: 6, lg: 12 }}
                 borderBottomColor={'muted.200'}
                 borderBottomWidth={1}
               >
-                <Heading fontSize={'2xl'} color="light.700" fontFamily={'heading'}>
+                <Heading
+                  fontSize={{
+                    base: 22,
+                    sm: 24,
+                    md: 24,
+                    lg: 40,
+                  }}
+                  color="light.700"
+                  fontFamily={'heading'}
+                >
                   Configurações
                 </Heading>
 
                 <IconButton
-                  w={11}
-                  h={11}
+                  w={{ base: 10, sm: 10, md: 11, lg: 20 }}
+                  h={{ base: 10, sm: 10, md: 11, lg: 20 }}
                   variant={'outline'}
                   rounded={'full'}
                   bg={'white'}
@@ -404,7 +454,7 @@ export function Projects() {
                   onPress={handleCloseMenu}
                   _pressed={{ bg: 'muted.300' }}
                   _icon={{
-                    size: 5,
+                    size: { base: 5, sm: 5, md: 6, lg: 10 },
                     as: Feather,
                     name: 'x',
                     color: 'light.700',
@@ -421,14 +471,34 @@ export function Projects() {
                 <HStack
                   bg={'white'}
                   alignItems={'center'}
-                  px={10}
-                  py={6}
+                  px={{
+                    base: 5,
+                    sm: 6,
+                    md: 8,
+                    lg: 12,
+                  }}
+                  py={{ base: 5, sm: 6, md: 6, lg: 10 }}
                   borderBottomWidth={1}
                   borderBottomColor={'muted.200'}
                 >
-                  <Icon as={Feather} size={5} name="share-2" color={'light.700'} mr={5} />
+                  <Icon
+                    as={Feather}
+                    name="share-2"
+                    color={'light.700'}
+                    size={{ base: 4, sm: 5, md: 5, lg: 8 }}
+                    mr={{ base: 4, sm: 5, md: 5, lg: 8 }}
+                  />
 
-                  <Text fontSize={'md'} fontFamily={'heading'} color={'light.700'}>
+                  <Text
+                    fontSize={{
+                      base: 15,
+                      sm: 15,
+                      md: 16,
+                      lg: 26,
+                    }}
+                    fontFamily={'heading'}
+                    color={'light.700'}
+                  >
                     Compartilhar
                   </Text>
                 </HStack>
@@ -445,20 +515,34 @@ export function Projects() {
                     <HStack
                       bg={'white'}
                       alignItems={'center'}
-                      px={10}
-                      py={6}
+                      px={{
+                        base: 5,
+                        sm: 6,
+                        md: 8,
+                        lg: 12,
+                      }}
+                      py={{ base: 5, sm: 6, md: 6, lg: 10 }}
                       borderBottomWidth={1}
                       borderBottomColor={'muted.200'}
                     >
                       <Icon
                         as={Feather}
-                        size={5}
                         name="check"
                         color={'light.700'}
-                        mr={5}
+                        size={{ base: 4, sm: 5, md: 5, lg: 8 }}
+                        mr={{ base: 4, sm: 5, md: 5, lg: 8 }}
                       />
 
-                      <Text fontSize={'md'} fontFamily={'heading'} color={'light.700'}>
+                      <Text
+                        fontSize={{
+                          base: 15,
+                          sm: 15,
+                          md: 16,
+                          lg: 26,
+                        }}
+                        fontFamily={'heading'}
+                        color={'light.700'}
+                      >
                         Aprovar
                       </Text>
                     </HStack>
@@ -473,14 +557,34 @@ export function Projects() {
                     <HStack
                       bg={'white'}
                       alignItems={'center'}
-                      px={10}
-                      py={6}
+                      px={{
+                        base: 5,
+                        sm: 6,
+                        md: 8,
+                        lg: 12,
+                      }}
+                      py={{ base: 5, sm: 6, md: 6, lg: 10 }}
                       borderBottomWidth={1}
                       borderBottomColor={'muted.200'}
                     >
-                      <Icon as={Feather} size={5} name="x" color={'light.700'} mr={5} />
+                      <Icon
+                        as={Feather}
+                        name="x"
+                        color={'light.700'}
+                        size={{ base: 4, sm: 5, md: 5, lg: 8 }}
+                        mr={{ base: 4, sm: 5, md: 5, lg: 8 }}
+                      />
 
-                      <Text fontSize={'md'} fontFamily={'heading'} color={'light.700'}>
+                      <Text
+                        fontSize={{
+                          base: 15,
+                          sm: 15,
+                          md: 16,
+                          lg: 26,
+                        }}
+                        fontFamily={'heading'}
+                        color={'light.700'}
+                      >
                         Reprovar
                       </Text>
                     </HStack>
@@ -494,20 +598,45 @@ export function Projects() {
                   opacity: pressed || isDownloading ? 0.3 : 1,
                 })}
               >
-                <HStack w={'full'} alignItems={'center'} px={10} py={6}>
-                  {isDownloading && <Spinner w={5} color={'light.700'} mr={5} />}
+                <HStack
+                  bg={'white'}
+                  alignItems={'center'}
+                  px={{
+                    base: 5,
+                    sm: 6,
+                    md: 8,
+                    lg: 12,
+                  }}
+                  py={{ base: 5, sm: 6, md: 6, lg: 10 }}
+                >
+                  {isDownloading && (
+                    <Spinner
+                      color={'light.700'}
+                      w={{ base: 4, sm: 5, md: 5, lg: 8 }}
+                      mr={{ base: 4, sm: 5, md: 5, lg: 8 }}
+                    />
+                  )}
 
                   {!isDownloading && (
                     <Icon
                       as={Feather}
-                      size={5}
                       name="arrow-down-circle"
                       color={'light.700'}
-                      mr={5}
+                      size={{ base: 4, sm: 5, md: 5, lg: 8 }}
+                      mr={{ base: 4, sm: 5, md: 5, lg: 8 }}
                     />
                   )}
 
-                  <Text fontSize={'md'} fontFamily={'heading'} color={'light.700'}>
+                  <Text
+                    fontSize={{
+                      base: 15,
+                      sm: 15,
+                      md: 16,
+                      lg: 26,
+                    }}
+                    fontFamily={'heading'}
+                    color={'light.700'}
+                  >
                     Salvar arquivo
                   </Text>
                 </HStack>
@@ -526,18 +655,40 @@ export function Projects() {
             p={0}
             w={'full'}
           >
-            <Actionsheet.Content borderTopRadius="3xl" bg={'white'}>
-              <VStack w={'full'} px={10} pt={6}>
+            <Actionsheet.Content
+              borderTopRadius={{ base: 28, sm: 32, md: 36, lg: 56 }}
+              bg={'white'}
+            >
+              <VStack
+                w={'full'}
+                px={{
+                  base: 5,
+                  sm: 6,
+                  md: 8,
+                  lg: 12,
+                }}
+                pb={{ base: 5, sm: 6, md: 6, lg: 12 }}
+                pt={{ base: 4, sm: 4, md: 4, lg: 8 }}
+              >
                 <HStack alignItems={'center'} justifyContent={'space-between'} mb={4}>
-                  <Heading fontSize={'2xl'} color="light.700" fontFamily={'heading'}>
+                  <Heading
+                    fontSize={{
+                      base: 22,
+                      sm: 24,
+                      md: 24,
+                      lg: 40,
+                    }}
+                    color="light.700"
+                    fontFamily={'heading'}
+                  >
                     {selectedOption === 'reject'
                       ? 'Confirmar reprovação'
                       : 'Confirmar aprovação'}
                   </Heading>
 
                   <IconButton
-                    w={11}
-                    h={11}
+                    w={{ base: 10, sm: 10, md: 11, lg: 20 }}
+                    h={{ base: 10, sm: 10, md: 11, lg: 20 }}
                     variant={'outline'}
                     rounded={'full'}
                     bg={'white'}
@@ -545,7 +696,7 @@ export function Projects() {
                     onPress={handleCloseActionSheet}
                     _pressed={{ bg: 'muted.300' }}
                     _icon={{
-                      size: 5,
+                      size: { base: 5, sm: 5, md: 6, lg: 10 },
                       as: Feather,
                       name: 'x',
                       color: 'light.700',
@@ -553,7 +704,19 @@ export function Projects() {
                   />
                 </HStack>
 
-                <Text fontFamily={'body'} fontSize={'md'} color={'light.500'} mb={6}>
+                <Text
+                  fontFamily={'body'}
+                  fontSize={{
+                    base: 15,
+                    sm: 15,
+                    md: 16,
+                    lg: 26,
+                  }}
+                  color={'light.500'}
+                  mb={{ base: 5, sm: 6, md: 6, lg: 12 }}
+                  my={{ base: 1, sm: 2, md: 2, lg: 4 }}
+                  maxWidth={{ base: 'full', sm: 'full', md: 'full', lg: '80%' }}
+                >
                   {selectedOption === 'reject'
                     ? 'Clique no botão abaixo para reprovar. Caso deseje, insira um comentário adicional.'
                     : 'Clique no botão abaixo para confirmar. Caso deseje, insira um comentário adicional.'}
@@ -561,12 +724,12 @@ export function Projects() {
 
                 <TextArea
                   numberOfLines={16}
-                  h={32}
-                  px={4}
-                  py={5}
-                  mb={6}
+                  h={{ base: 28, sm: 32, md: 32, lg: 56 }}
+                  px={{ base: 4, sm: 4, md: 4, lg: 8 }}
+                  py={{ base: 5, sm: 5, md: 5, lg: 10 }}
+                  mb={{ base: 5, sm: 6, md: 6, lg: 12 }}
                   bg={'gray.50'}
-                  rounded={'xl'}
+                  rounded={{ base: 'xl', sm: 'xl', md: 'xl', lg: '3xl' }}
                   autoFocus={false}
                   placeholder="Comentários (opcional)"
                   borderColor={'muted.200'}
@@ -574,6 +737,12 @@ export function Projects() {
                   focusOutlineColor="light.700"
                   _focus={{ bg: 'gray.50' }}
                   onChangeText={setComments}
+                  fontSize={{
+                    base: 13,
+                    sm: 14,
+                    md: 14,
+                    lg: 24,
+                  }}
                 />
 
                 <Button
@@ -584,7 +753,7 @@ export function Projects() {
                   }
                   rounded={'full'}
                   fontFamily={'heading'}
-                  fontSize={'md'}
+                  fontSize={{ base: 15, sm: 15, md: 16, lg: 26 }}
                   variant={selectedOption === 'reject' ? 'subtle' : 'solid'}
                   onPress={handleSubmit}
                   isLoading={isMutating}

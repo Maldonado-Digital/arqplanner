@@ -10,15 +10,21 @@ import { useRefresh } from '@hooks/useRefresh'
 import { useNavigation } from '@react-navigation/native'
 import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { useQuery } from '@tanstack/react-query'
-import { approvalStatus } from '@utils/constants'
+import { FILE_EXTENSION_ICON_MAP, approvalStatus } from '@utils/constants'
 import { format } from 'date-fns'
-import { FlatList, Icon, Text, VStack } from 'native-base'
+import { FlatList, Icon, Text, VStack, useBreakpointValue } from 'native-base'
 import { useState } from 'react'
 import { RefreshControl } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { getWorks } from 'src/api/queries/getWorks'
 
 export function Renders() {
+  const iconSize = useBreakpointValue({
+    base: 36,
+    sm: 36,
+    md: 40,
+    lg: 60,
+  })
   const navigation = useNavigation<AppNavigatorRoutesProps>()
   const [selectedStatus, setSelectedStatus] = useState('all')
 
@@ -73,13 +79,20 @@ export function Renders() {
             />
           )}
           showsHorizontalScrollIndicator={false}
-          _contentContainerStyle={{ px: 6 }}
-          maxH={10}
-          minH={10}
+          _contentContainerStyle={{
+            px: {
+              base: 4,
+              sm: 4,
+              md: 6,
+              lg: 8,
+            },
+          }}
+          maxH={{ base: 8, sm: 10, md: 10, lg: 16 }}
+          minH={{ base: 8, sm: 10, md: 10, lg: 16 }}
           bg={'white'}
           borderBottomWidth={1}
           borderBottomColor={'#00000012'}
-          mb={6}
+          mb={{ base: 5, sm: 6, md: 6, lg: 12 }}
         />
 
         {isPending && <Loading bg={'gray.50'} />}
@@ -100,18 +113,34 @@ export function Renders() {
                 }}
               />
             }
-            renderItem={({ item }) => (
-              <ListItem
-                title={item.render.title}
-                subTitle={format(
-                  item.render.files[0].uploads.updatedAt,
-                  "dd-MM-yy' | 'HH:mm",
-                )}
-                icon={<Icon as={Feather} name="box" size={6} color="light.700" />}
-                onPress={() => handleViewMedia(item.id)}
-                status={item.render.status}
-              />
-            )}
+            renderItem={({ item }) => {
+              let icon = (
+                <Icon
+                  as={Feather}
+                  name="box"
+                  size={{ base: 6, sm: 6, md: 6, lg: 12 }}
+                  color="light.700"
+                />
+              )
+              const ext = item.render.files[0].uploads.filename.split('.').pop()
+              const ExtIcon =
+                FILE_EXTENSION_ICON_MAP[ext as keyof typeof FILE_EXTENSION_ICON_MAP]
+
+              if (ExtIcon) icon = <ExtIcon width={iconSize} height={iconSize} />
+
+              return (
+                <ListItem
+                  title={item.render.title}
+                  subTitle={format(
+                    item.render.files[0].uploads.updatedAt,
+                    "dd-MM-yy' | 'HH:mm",
+                  )}
+                  icon={icon}
+                  onPress={() => handleViewMedia(item.id)}
+                  status={item.render.status}
+                />
+              )
+            }}
             showsVerticalScrollIndicator={false}
             _contentContainerStyle={{
               paddingBottom: 20,
@@ -125,8 +154,8 @@ export function Renders() {
             }}
             ListEmptyComponent={() => (
               <ListEmpty
-                px={10}
-                py={40}
+                px={12}
+                py={{ base: '1/2', sm: '3/5', md: '3/5', lg: '2/5' }}
                 icon="box"
                 title="Nenhuma perspectiva foi encontrada"
                 message="Você ainda não possui nenhuma perspectiva adicionada."

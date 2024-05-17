@@ -12,6 +12,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { AppError } from '@utils/AppError'
 import { downloadFile } from '@utils/downloadFile'
 import { digViewingDocumentData } from '@utils/helpers'
+import * as Haptics from 'expo-haptics'
 import { shareAsync } from 'expo-sharing'
 import {
   Actionsheet,
@@ -39,7 +40,6 @@ export function DocumentView() {
   const toast = useToast()
   const queryClient = useQueryClient()
 
-  const { signOut } = useAuth()
   const { onOpen, onClose } = useDisclose()
 
   const { documentId, documentType } = route.params as DocumentViewRouteParams
@@ -97,6 +97,7 @@ export function DocumentView() {
   }
 
   function handleOpenActionSheet(option: 'approve' | 'reject') {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
     setIsMenuOpen(false)
     setSelectedOption(option)
     onOpen()
@@ -108,6 +109,7 @@ export function DocumentView() {
   }
 
   function handleOpenMenu() {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
     setIsMenuOpen(true)
     onOpen()
   }
@@ -119,10 +121,12 @@ export function DocumentView() {
 
   async function handleDownload() {
     try {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
       setIsDownloading(true)
 
       await new Promise(resolve => setTimeout(resolve, 1000))
       await downloadFile(`${process.env.EXPO_PUBLIC_API_URL}${file.url}`)
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 
       await toast.show({
         duration: 3000,
@@ -139,6 +143,7 @@ export function DocumentView() {
       setIsDownloading(false)
       handleCloseMenu()
     } catch (err) {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
       setIsDownloading(false)
 
       toast.show({
@@ -156,6 +161,7 @@ export function DocumentView() {
   }
 
   function handleShare() {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
     shareAsync(`${process.env.EXPO_PUBLIC_API_URL}${file.url}`)
   }
 
@@ -163,12 +169,16 @@ export function DocumentView() {
     try {
       if (!selectedOption) throw new AppError('Nenhuma opção selecionada')
 
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+
       await resolveProjectFn({
         workId: works?.docs[0].id as string,
         projectId: documentId,
         status: selectedOption === 'approve' ? 'approved' : 'archived',
         comments,
       })
+
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 
       toast.show({
         duration: 3000,
@@ -188,6 +198,8 @@ export function DocumentView() {
 
       handleCloseActionSheet()
     } catch (err) {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
+
       toast.show({
         duration: 3000,
         render: ({ id }) => (
@@ -203,6 +215,7 @@ export function DocumentView() {
   }
 
   function onLoadPDFError() {
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
     toast.show({
       duration: 3000,
       render: ({ id }) => (
@@ -220,7 +233,7 @@ export function DocumentView() {
     <SafeAreaView style={{ flex: 1, backgroundColor: '#ffffff' }} edges={['top']}>
       <VStack flex={1} bg={'gray.50'} position={'relative'}>
         <ListScreenHeader
-          mb={6}
+          mb={{ base: 5, sm: 6, md: 6, lg: 12 }}
           title={title}
           subTitle={subTitle}
           status={status}
@@ -251,23 +264,40 @@ export function DocumentView() {
           onClose={handleCloseMenu}
           hideDragIndicator={false}
         >
-          <Actionsheet.Content borderTopRadius="3xl" bg={'white'}>
-            <VStack w={'full'} pt={6}>
+          <Actionsheet.Content
+            borderTopRadius={{ base: 28, sm: 32, md: 36, lg: 56 }}
+            bg={'white'}
+          >
+            <VStack w={'full'} pt={{ base: 4, sm: 4, md: 4, lg: 8 }}>
               <HStack
                 alignItems={'center'}
                 justifyContent={'space-between'}
-                px={10}
-                pb={6}
+                px={{
+                  base: 5,
+                  sm: 6,
+                  md: 8,
+                  lg: 12,
+                }}
+                pb={{ base: 5, sm: 6, md: 6, lg: 12 }}
                 borderBottomColor={'muted.200'}
                 borderBottomWidth={1}
               >
-                <Heading fontSize={'2xl'} color="light.700" fontFamily={'heading'}>
+                <Heading
+                  fontSize={{
+                    base: 22,
+                    sm: 24,
+                    md: 24,
+                    lg: 40,
+                  }}
+                  color="light.700"
+                  fontFamily={'heading'}
+                >
                   Configurações
                 </Heading>
 
                 <IconButton
-                  w={11}
-                  h={11}
+                  w={{ base: 10, sm: 10, md: 11, lg: 20 }}
+                  h={{ base: 10, sm: 10, md: 11, lg: 20 }}
                   variant={'outline'}
                   rounded={'full'}
                   bg={'white'}
@@ -275,7 +305,7 @@ export function DocumentView() {
                   onPress={handleCloseMenu}
                   _pressed={{ bg: 'muted.300' }}
                   _icon={{
-                    size: 5,
+                    size: { base: 5, sm: 5, md: 6, lg: 10 },
                     as: Feather,
                     name: 'x',
                     color: 'light.700',
@@ -292,14 +322,34 @@ export function DocumentView() {
                 <HStack
                   bg={'white'}
                   alignItems={'center'}
-                  px={10}
-                  py={6}
+                  px={{
+                    base: 5,
+                    sm: 6,
+                    md: 8,
+                    lg: 12,
+                  }}
+                  py={{ base: 5, sm: 6, md: 6, lg: 10 }}
                   borderBottomWidth={1}
                   borderBottomColor={'muted.200'}
                 >
-                  <Icon as={Feather} size={5} name="share-2" color={'light.700'} mr={5} />
+                  <Icon
+                    as={Feather}
+                    name="share-2"
+                    color={'light.700'}
+                    size={{ base: 4, sm: 5, md: 5, lg: 8 }}
+                    mr={{ base: 4, sm: 5, md: 5, lg: 8 }}
+                  />
 
-                  <Text fontSize={'md'} fontFamily={'heading'} color={'light.700'}>
+                  <Text
+                    fontSize={{
+                      base: 15,
+                      sm: 15,
+                      md: 16,
+                      lg: 26,
+                    }}
+                    fontFamily={'heading'}
+                    color={'light.700'}
+                  >
                     Compartilhar
                   </Text>
                 </HStack>
@@ -316,20 +366,34 @@ export function DocumentView() {
                     <HStack
                       bg={'white'}
                       alignItems={'center'}
-                      px={10}
-                      py={6}
+                      px={{
+                        base: 5,
+                        sm: 6,
+                        md: 8,
+                        lg: 12,
+                      }}
+                      py={{ base: 5, sm: 6, md: 6, lg: 10 }}
                       borderBottomWidth={1}
                       borderBottomColor={'muted.200'}
                     >
                       <Icon
                         as={Feather}
-                        size={5}
                         name="check"
                         color={'light.700'}
-                        mr={5}
+                        size={{ base: 4, sm: 5, md: 5, lg: 8 }}
+                        mr={{ base: 4, sm: 5, md: 5, lg: 8 }}
                       />
 
-                      <Text fontSize={'md'} fontFamily={'heading'} color={'light.700'}>
+                      <Text
+                        fontSize={{
+                          base: 15,
+                          sm: 15,
+                          md: 16,
+                          lg: 26,
+                        }}
+                        fontFamily={'heading'}
+                        color={'light.700'}
+                      >
                         Aprovar
                       </Text>
                     </HStack>
@@ -344,14 +408,34 @@ export function DocumentView() {
                     <HStack
                       bg={'white'}
                       alignItems={'center'}
-                      px={10}
-                      py={6}
+                      px={{
+                        base: 5,
+                        sm: 6,
+                        md: 8,
+                        lg: 12,
+                      }}
+                      py={{ base: 5, sm: 6, md: 6, lg: 10 }}
                       borderBottomWidth={1}
                       borderBottomColor={'muted.200'}
                     >
-                      <Icon as={Feather} size={5} name="x" color={'light.700'} mr={5} />
+                      <Icon
+                        as={Feather}
+                        name="x"
+                        color={'light.700'}
+                        size={{ base: 4, sm: 5, md: 5, lg: 8 }}
+                        mr={{ base: 4, sm: 5, md: 5, lg: 8 }}
+                      />
 
-                      <Text fontSize={'md'} fontFamily={'heading'} color={'light.700'}>
+                      <Text
+                        fontSize={{
+                          base: 15,
+                          sm: 15,
+                          md: 16,
+                          lg: 26,
+                        }}
+                        fontFamily={'heading'}
+                        color={'light.700'}
+                      >
                         Reprovar
                       </Text>
                     </HStack>
@@ -365,20 +449,45 @@ export function DocumentView() {
                   opacity: pressed || isDownloading ? 0.3 : 1,
                 })}
               >
-                <HStack bg={'white'} alignItems={'center'} px={10} py={6}>
-                  {isDownloading && <Spinner w={5} color={'light.700'} mr={5} />}
+                <HStack
+                  bg={'white'}
+                  alignItems={'center'}
+                  px={{
+                    base: 5,
+                    sm: 6,
+                    md: 8,
+                    lg: 12,
+                  }}
+                  py={{ base: 5, sm: 6, md: 6, lg: 10 }}
+                >
+                  {isDownloading && (
+                    <Spinner
+                      color={'light.700'}
+                      w={{ base: 4, sm: 5, md: 5, lg: 8 }}
+                      mr={{ base: 4, sm: 5, md: 5, lg: 8 }}
+                    />
+                  )}
 
                   {!isDownloading && (
                     <Icon
                       as={Feather}
-                      size={5}
                       name="arrow-down-circle"
                       color={'light.700'}
-                      mr={5}
+                      size={{ base: 4, sm: 5, md: 5, lg: 8 }}
+                      mr={{ base: 4, sm: 5, md: 5, lg: 8 }}
                     />
                   )}
 
-                  <Text fontSize={'md'} fontFamily={'heading'} color={'light.700'}>
+                  <Text
+                    fontSize={{
+                      base: 15,
+                      sm: 15,
+                      md: 16,
+                      lg: 26,
+                    }}
+                    fontFamily={'heading'}
+                    color={'light.700'}
+                  >
                     Salvar arquivo
                   </Text>
                 </HStack>
@@ -406,18 +515,40 @@ export function DocumentView() {
                 p={0}
                 w={'full'}
               >
-                <Actionsheet.Content borderTopRadius="3xl" bg={'white'}>
-                  <VStack w={'full'} px={10} pt={6}>
+                <Actionsheet.Content
+                  borderTopRadius={{ base: 28, sm: 32, md: 36, lg: 56 }}
+                  bg={'white'}
+                >
+                  <VStack
+                    w={'full'}
+                    px={{
+                      base: 5,
+                      sm: 6,
+                      md: 8,
+                      lg: 12,
+                    }}
+                    pb={{ base: 5, sm: 6, md: 6, lg: 12 }}
+                    pt={{ base: 4, sm: 4, md: 4, lg: 8 }}
+                  >
                     <HStack alignItems={'center'} justifyContent={'space-between'} mb={4}>
-                      <Heading fontSize={'2xl'} color="light.700" fontFamily={'heading'}>
+                      <Heading
+                        fontSize={{
+                          base: 22,
+                          sm: 24,
+                          md: 24,
+                          lg: 40,
+                        }}
+                        color="light.700"
+                        fontFamily={'heading'}
+                      >
                         {selectedOption === 'reject'
                           ? 'Confirmar reprovação'
                           : 'Confirmar aprovação'}
                       </Heading>
 
                       <IconButton
-                        w={11}
-                        h={11}
+                        w={{ base: 10, sm: 10, md: 11, lg: 20 }}
+                        h={{ base: 10, sm: 10, md: 11, lg: 20 }}
                         variant={'outline'}
                         rounded={'full'}
                         bg={'white'}
@@ -425,7 +556,7 @@ export function DocumentView() {
                         onPress={handleCloseActionSheet}
                         _pressed={{ bg: 'muted.300' }}
                         _icon={{
-                          size: 5,
+                          size: { base: 5, sm: 5, md: 6, lg: 10 },
                           as: Feather,
                           name: 'x',
                           color: 'light.700',
@@ -433,7 +564,19 @@ export function DocumentView() {
                       />
                     </HStack>
 
-                    <Text fontFamily={'body'} fontSize={'md'} color={'light.500'} mb={6}>
+                    <Text
+                      fontFamily={'body'}
+                      fontSize={{
+                        base: 15,
+                        sm: 15,
+                        md: 16,
+                        lg: 26,
+                      }}
+                      color={'light.500'}
+                      mb={{ base: 5, sm: 6, md: 6, lg: 12 }}
+                      my={{ base: 1, sm: 2, md: 2, lg: 4 }}
+                      maxWidth={{ base: 'full', sm: 'full', md: 'full', lg: '80%' }}
+                    >
                       {selectedOption === 'reject'
                         ? 'Clique no botão abaixo para reprovar. Caso deseje, insira um comentário adicional.'
                         : 'Clique no botão abaixo para confirmar. Caso deseje, insira um comentário adicional.'}
@@ -441,20 +584,25 @@ export function DocumentView() {
 
                     <TextArea
                       numberOfLines={16}
-                      h={32}
-                      px={4}
-                      py={5}
-                      mb={6}
+                      h={{ base: 28, sm: 32, md: 32, lg: 56 }}
+                      px={{ base: 4, sm: 4, md: 4, lg: 8 }}
+                      py={{ base: 5, sm: 5, md: 5, lg: 10 }}
+                      mb={{ base: 5, sm: 6, md: 6, lg: 12 }}
                       bg={'gray.50'}
-                      rounded={'xl'}
+                      rounded={{ base: 'xl', sm: 'xl', md: 'xl', lg: '3xl' }}
                       autoFocus={false}
                       placeholder="Comentários (opcional)"
                       borderColor={'muted.200'}
                       autoCompleteType={false}
                       focusOutlineColor="light.700"
                       _focus={{ bg: 'gray.50' }}
-                      fontSize={'sm'}
                       onChangeText={setComments}
+                      fontSize={{
+                        base: 13,
+                        sm: 14,
+                        md: 14,
+                        lg: 24,
+                      }}
                     />
 
                     <Button
@@ -465,7 +613,7 @@ export function DocumentView() {
                       }
                       rounded={'full'}
                       fontFamily={'heading'}
-                      fontSize={'md'}
+                      fontSize={{ base: 15, sm: 15, md: 16, lg: 26 }}
                       variant={selectedOption === 'reject' ? 'subtle' : 'solid'}
                       onPress={handleSubmit}
                       isLoading={isMutating}

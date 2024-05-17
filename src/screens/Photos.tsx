@@ -79,7 +79,14 @@ export function Photos() {
                   item.photo.files[0].uploads.updatedAt,
                   "dd-MM-yy' | 'HH:mm",
                 )}
-                icon={<Icon as={Feather} name="image" size={6} color="light.700" />}
+                icon={
+                  <Icon
+                    as={Feather}
+                    name="image"
+                    size={{ base: 6, sm: 6, md: 6, lg: 10 }}
+                    color="light.700"
+                  />
+                }
                 onPress={() => handleViewMedia(item.id)}
               />
             )}
@@ -97,7 +104,7 @@ export function Photos() {
             ListEmptyComponent={() => (
               <ListEmpty
                 px={12}
-                py={40}
+                py={{ base: '1/2', sm: '3/5', md: '3/5', lg: '2/5' }}
                 icon="image"
                 title="Nenhuma foto encontrada nos arquivos"
                 message="Você ainda não possui nenhuma foto cadastrada."

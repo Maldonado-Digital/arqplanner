@@ -53,7 +53,7 @@ export function ListScreenHeader({
         base: 4,
         sm: 4,
         md: 4,
-        lg: 12,
+        lg: 8,
       }}
       px={{
         base: 7,
@@ -95,17 +95,34 @@ export function ListScreenHeader({
         </Heading>
 
         {(!!status || !!subTitle) && (
-          <HStack space={2} pt={1.5}>
+          <HStack
+            space={{ base: 2, sm: 2, md: 2, lg: 3 }}
+            pt={{ base: 1.5, sm: 1.5, md: 1.5, lg: 3 }}
+            alignItems={'center'}
+          >
             {!!status && (
-              <Center py={1} px={2} rounded={'lg'} bg={statusColor[status]}>
-                <Text fontSize={'xs'} fontFamily={'heading'} color={'light.700'}>
+              <Center
+                py={{ base: 1, sm: 1, md: 1, lg: 2 }}
+                px={{ base: 1.5, sm: 1.5, md: 1.5, lg: 3 }}
+                rounded={{ base: 'sm', sm: 'md', md: 'lg', lg: 'md' }}
+                bg={statusColor[status]}
+              >
+                <Text
+                  fontSize={{ base: 'xs', sm: 'xs', md: 'xs', lg: 'lg' }}
+                  fontFamily={'heading'}
+                  color={'light.700'}
+                >
                   {statusText.toLocaleUpperCase()}
                 </Text>
               </Center>
             )}
 
             {!!subTitle && (
-              <Text fontFamily={'body'} color={'light.500'} fontSize={'sm'}>
+              <Text
+                fontFamily={'body'}
+                color={'light.500'}
+                fontSize={{ base: 'sm', sm: 'sm', md: 'sm', lg: 'xl' }}
+              >
                 {subTitle}
               </Text>
             )}
@@ -113,11 +130,7 @@ export function ListScreenHeader({
         )}
       </VStack>
 
-      <Pressable
-        w={{ base: 6, sm: 6, md: 6, lg: 10 }}
-        onPress={onClickMenu}
-        isDisabled={isMenuDisabled}
-      >
+      <Pressable onPress={onClickMenu} isDisabled={isMenuDisabled}>
         <Icon
           as={Feather}
           name="more-vertical"
