@@ -1,4 +1,3 @@
-import { Toast } from '@components/Toast'
 import type { UserDTO } from '@dtos/UserDTO'
 import {
   getExpirationFromStorage,
@@ -110,20 +109,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!loggedUser || !token || !expiration) return setIsLoadingAuthData(false)
     if (Math.floor(Date.now() / 1000) > expiration) return setIsLoadingAuthData(false)
 
-    const { refreshedToken, exp } = await refreshToken({ token })
+    try {
+      const { refreshedToken, exp } = await refreshToken({ token })
 
-    await saveAuthConfigInStorage({
-      userData: loggedUser,
-      token: refreshedToken,
-      exp,
-    })
+      await saveAuthConfigInStorage({
+        userData: loggedUser,
+        token: refreshedToken,
+        exp,
+      })
 
-    setAuthConfig({
-      userData: loggedUser,
-      token,
-    })
+      setAuthConfig({
+        userData: loggedUser,
+        token: refreshedToken,
+      })
 
-    setIsLoadingAuthData(false)
+      setIsLoadingAuthData(false)
+    } catch (error) {
+      setIsLoadingAuthData(false)
+      await signOut()
+    }
   }
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
