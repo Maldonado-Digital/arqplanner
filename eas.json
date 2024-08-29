@@ -19,7 +19,7 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_API_URL": "http://192.168.1.101:3000"
+        "EXPO_PUBLIC_API_URL": "https://admin.arqplanner.com"
       },
       "channel": "development"
     },
