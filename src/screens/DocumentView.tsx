@@ -8,6 +8,7 @@ import { Feather } from '@expo/vector-icons'
 import { useAuth } from '@hooks/useAuth'
 import { useRoute } from '@react-navigation/native'
 import type { DocumentViewRouteParams } from '@routes/app.routes'
+import { getTokenFromStorage } from '@storage/storageToken'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { AppError } from '@utils/AppError'
 import { downloadFile } from '@utils/downloadFile'
@@ -28,7 +29,7 @@ import {
   useDisclose,
   useToast,
 } from 'native-base'
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Platform, Pressable } from 'react-native'
 import PDF from 'react-native-pdf'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -142,6 +143,7 @@ export function DocumentView() {
 
       setIsDownloading(false)
       handleCloseMenu()
+      handleShare()
     } catch (err) {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
       setIsDownloading(false)
@@ -214,7 +216,9 @@ export function DocumentView() {
     }
   }
 
-  function onLoadPDFError() {
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  function onLoadPDFError(error: any) {
+    console.log(error)
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
     toast.show({
       duration: 3000,

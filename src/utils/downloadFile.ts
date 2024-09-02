@@ -6,6 +6,13 @@ export async function downloadFile(fileUri: string) {
       downloadProgress.totalBytesWritten / downloadProgress.totalBytesExpectedToWrite
     console.log('Download Progress: ', progress)
   }
+  const outputDir = `${FileSystem.documentDirectory}/ArqPlanner/${fileUri.split('/').pop()}`
+
+  const directoryInfo = await FileSystem.getInfoAsync(outputDir)
+  if (!directoryInfo.exists) {
+    console.log("ArqPlanner directory doesn't exist, creating…")
+    await FileSystem.makeDirectoryAsync(outputDir, { intermediates: true })
+  }
 
   const downloadResumable = FileSystem.createDownloadResumable(
     fileUri,
@@ -17,5 +24,6 @@ export async function downloadFile(fileUri: string) {
   const response =
     (await downloadResumable.downloadAsync()) as FileSystem.FileSystemDownloadResult
 
+  console.log(response)
   return response
 }

@@ -39,12 +39,23 @@ import { Pressable, RefreshControl } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { type Document, getWorks } from 'src/api/queries/getWorks'
 
+function ImageIcon() {
+  return (
+    <Icon
+      as={Feather}
+      name="image"
+      size={{ base: 6, sm: 6, md: 8, lg: 16 }}
+      color="light.700"
+    />
+  )
+}
+
 export function Documents() {
   const toast = useToast()
   const { onOpen, onClose } = useDisclose()
   const iconSize = useBreakpointValue({
     base: 36,
-    sm: 36,
+    sm: 40,
     md: 40,
     lg: 60,
   })
@@ -118,7 +129,7 @@ export function Documents() {
       setIsDownloading(true)
 
       await new Promise(resolve => setTimeout(resolve, 1000))
-      await downloadFile(
+      const downloadedFile = await downloadFile(
         `${process.env.EXPO_PUBLIC_API_URL}${selectedDocument.document.file.url}`,
       )
 
@@ -227,11 +238,23 @@ export function Documents() {
                 <Icon
                   as={Feather}
                   name="folder"
-                  size={{ base: 6, sm: 8, md: 8, lg: 16 }}
+                  size={{ base: 6, sm: 6, md: 8, lg: 16 }}
                   color="light.700"
                 />
               )
               const ext = item.document.file.filename.split('.').pop()
+              if (ext && ['png', 'jpeg', 'jpg'].includes(ext)) {
+                icon = (
+                  <Icon
+                    as={Feather}
+                    name="image"
+                    size={{ base: 6, sm: 6, md: 8, lg: 16 }}
+                    color="light.700"
+                    mx={1}
+                  />
+                )
+              }
+
               const ExtIcon =
                 FILE_EXTENSION_ICON_MAP[ext as keyof typeof FILE_EXTENSION_ICON_MAP]
 

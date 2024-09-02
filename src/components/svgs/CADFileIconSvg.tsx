@@ -9,7 +9,7 @@ const CADFileIconSvg = (props: SvgProps) => (
         stroke="#323232"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth={1.5}
+        strokeWidth={2}
         d="m24.552 8.555-3.77-3.772c-.501-.5-1.18-.78-1.886-.78H9.333a2.667 2.667 0 0 0-2.667 2.666v18.667a2.667 2.667 0 0 0 2.667 2.667h13.333a2.667 2.667 0 0 0 2.667-2.667V10.437c0-.706-.282-1.383-.781-1.882Z"
       />
       <Path fill="#fff" d="M25.333 10.667H20a1.334 1.334 0 0 1-1.334-1.334V4" />
@@ -17,7 +17,7 @@ const CADFileIconSvg = (props: SvgProps) => (
         stroke="#323232"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth={1.5}
+        strokeWidth={2}
         d="M25.333 10.667H20a1.334 1.334 0 0 1-1.334-1.334V4"
       />
       <Path
