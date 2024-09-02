@@ -226,11 +226,11 @@ export function Home() {
               </Text>
             </VStack>
 
-            <Center position={'relative'}>
+            <Center position={'relative'} overflow={'visible'} w={ms(120)} h={ms(120)}>
               <ProgressCircle
                 style={{
-                  height: ms(115),
-                  width: ms(115),
+                  height: 120,
+                  width: 120,
                 }}
                 progress={progress}
                 progressColor={'#797979'}
@@ -272,7 +272,7 @@ export function Home() {
               base: 7,
               sm: 8,
               md: 10,
-              lg: 16,
+              lg: 20,
             }}
             pt={{
               base: 10,
