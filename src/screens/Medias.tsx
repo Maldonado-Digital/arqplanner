@@ -296,7 +296,7 @@ export function Medias() {
           borderBottomColor={'muted.200'}
           borderBottomWidth={1}
           onClickMenu={handleOpenMenu}
-          isMenuDisabled={!hasApprovalFlow}
+          isMenuDisabled={true}
         />
 
         <FlatList
@@ -475,7 +475,7 @@ export function Medias() {
                 </HStack>
               </Pressable>
 
-              {hasApprovalFlow && (
+              {/* {false && (
                 <>
                   <Pressable
                     onPress={() => handleOpenActionSheet('approve')}
@@ -561,7 +561,7 @@ export function Medias() {
                     </HStack>
                   </Pressable>
                 </>
-              )}
+              )} */}
 
               <Pressable
                 onPress={handleDownload}
