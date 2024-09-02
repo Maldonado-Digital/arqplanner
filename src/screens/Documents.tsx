@@ -19,6 +19,7 @@ import {
 import { downloadFile } from '@utils/downloadFile'
 import { format } from 'date-fns'
 import * as Haptics from 'expo-haptics'
+import * as MediaLibrary from 'expo-media-library'
 import { shareAsync } from 'expo-sharing'
 import {
   Actionsheet,
@@ -36,18 +37,13 @@ import {
 } from 'native-base'
 import { useState } from 'react'
 import { Pressable, RefreshControl } from 'react-native'
+import ImageView from 'react-native-image-viewing'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { type Document, getWorks } from 'src/api/queries/getWorks'
 
-function ImageIcon() {
-  return (
-    <Icon
-      as={Feather}
-      name="image"
-      size={{ base: 6, sm: 6, md: 8, lg: 16 }}
-      color="light.700"
-    />
-  )
+type ImageProps = {
+  key: string
+  uri: string
 }
 
 export function Documents() {
@@ -60,6 +56,7 @@ export function Documents() {
     lg: 60,
   })
   const navigation = useNavigation<AppNavigatorRoutesProps>()
+  const [permissionResponse, requestPermission] = MediaLibrary.usePermissions()
 
   const {
     data: works,
@@ -73,6 +70,7 @@ export function Documents() {
   })
   const { refreshing, handleRefresh } = useRefresh(refetch)
 
+  const [images, setImages] = useState([] as Array<ImageProps>)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState('all')
@@ -110,25 +108,74 @@ export function Documents() {
     })
   }
 
-  function handleItemPressed(document: Document) {
+  function handleViewMedia(document: Document) {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+    setImages([
+      {
+        key: document.id,
+        uri: `${process.env.EXPO_PUBLIC_API_URL}${document.document.file.url}`,
+      },
+    ])
+  }
+
+  function handleItemPressed(document: Document, isLongPress = false) {
     const { mimeType } = document.document.file
+    const ext = document.document.file.filename.split('.').pop()
+
+    if (isLongPress) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+      setSelectedDocumentID(document.id)
+      handleOpenMenu()
+      return
+    }
 
     if (mimeType === PDF_MIME_TYPE) {
       return handleViewDocument(document)
+    }
+
+    if (ext && ['png', 'jpeg', 'jpg'].includes(ext)) {
+      return handleViewMedia(document)
     }
 
     setSelectedDocumentID(document.id)
     handleOpenMenu()
   }
 
+  async function saveMediaToLibrary(mediaUri: string) {
+    if (permissionResponse?.status !== 'granted') {
+      const response = await requestPermission()
+
+      if (!response.granted) {
+        toast.show({
+          duration: 3000,
+          render: ({ id }) => (
+            <Toast
+              id={id}
+              message="Você precisa conceder acesso à suas fotos para poder fazer o download."
+              status="error"
+              onClose={() => toast.close(id)}
+            />
+          ),
+        })
+      }
+    }
+
+    const asset = await MediaLibrary.createAssetAsync(mediaUri)
+    const album = await MediaLibrary.getAlbumAsync('ArqPlanner')
+
+    await MediaLibrary.createAlbumAsync('ArqPlanner', asset, false)
+    await MediaLibrary.addAssetsToAlbumAsync([asset], album, false)
+  }
+
   async function handleDownload() {
     try {
       if (!selectedDocument) throw new AppError('Nenhuma opção selecionada.')
+      const ext = selectedDocument.document.file.filename.split('.').pop()
 
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
       setIsDownloading(true)
 
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      await new Promise(resolve => setTimeout(resolve, 500))
       const downloadedFile = await downloadFile(
         `${process.env.EXPO_PUBLIC_API_URL}${selectedDocument.document.file.url}`,
       )
@@ -149,7 +196,14 @@ export function Documents() {
 
       setIsDownloading(false)
       handleCloseMenu()
+
+      if (ext && ['png', 'jpeg', 'jpg'].includes(ext)) {
+        await saveMediaToLibrary(downloadedFile.uri)
+      } else {
+        handleShare(downloadedFile.uri)
+      }
     } catch (err) {
+      console.log(err)
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
       setIsDownloading(false)
 
@@ -167,10 +221,12 @@ export function Documents() {
     }
   }
 
-  function handleShare() {
+  function handleShare(uri?: string) {
     if (!selectedDocument) throw new AppError('Nenhuma opção selecionada.')
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
-    shareAsync(`${process.env.EXPO_PUBLIC_API_URL}${selectedDocument.document.file.url}`)
+    shareAsync(
+      uri || `${process.env.EXPO_PUBLIC_API_URL}${selectedDocument.document.file.url}`,
+    )
   }
 
   if (isPending) return <Loading />
@@ -240,6 +296,7 @@ export function Documents() {
                   name="folder"
                   size={{ base: 6, sm: 6, md: 8, lg: 16 }}
                   color="light.700"
+                  mx={1}
                 />
               )
               const ext = item.document.file.filename.split('.').pop()
@@ -266,6 +323,7 @@ export function Documents() {
                   subTitle={format(item.document.file.updatedAt, "dd-MM-yy' | 'HH:mm")}
                   icon={icon}
                   onPress={() => handleItemPressed(item)}
+                  onLongPress={() => handleItemPressed(item, true)}
                 />
               )
             }}
@@ -291,6 +349,14 @@ export function Documents() {
             )}
           />
         )}
+
+        <ImageView
+          doubleTapToZoomEnabled
+          images={images}
+          imageIndex={0}
+          visible={!!images.length}
+          onRequestClose={() => setImages([])}
+        />
 
         <Actionsheet
           isOpen={isMenuOpen}
@@ -330,7 +396,7 @@ export function Documents() {
               </HStack>
 
               <Pressable
-                onPress={handleShare}
+                onPress={() => handleShare()}
                 style={({ pressed }) => ({
                   opacity: pressed ? 0.3 : 1,
                 })}

@@ -21,6 +21,7 @@ import {
 import { downloadFile } from '@utils/downloadFile'
 import { format } from 'date-fns'
 import * as Haptics from 'expo-haptics'
+import * as MediaLibrary from 'expo-media-library'
 import { shareAsync } from 'expo-sharing'
 import {
   Actionsheet,
@@ -41,6 +42,7 @@ import {
 } from 'native-base'
 import { useState } from 'react'
 import { Platform, Pressable, RefreshControl } from 'react-native'
+import ImageView from 'react-native-image-viewing'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { type ResolveProjectDTO, resolveProject } from 'src/api/mutations/resolveProject'
 import {
@@ -51,6 +53,10 @@ import {
 } from 'src/api/queries/getWorks'
 
 type GroupedProjects = Record<ProjectType, Project[]>
+type ImageProps = {
+  key: string
+  uri: string
+}
 
 export function Projects() {
   const toast = useToast()
@@ -63,6 +69,8 @@ export function Projects() {
     lg: 60,
   })
   const navigation = useNavigation<AppNavigatorRoutesProps>()
+  const [permissionResponse, requestPermission] = MediaLibrary.usePermissions()
+
   const {
     data: works,
     isError,
@@ -75,6 +83,7 @@ export function Projects() {
   })
   const { refreshing, handleRefresh } = useRefresh(refetch)
 
+  const [images, setImages] = useState([] as Array<ImageProps>)
   const [comments, setComments] = useState('')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
@@ -175,14 +184,16 @@ export function Projects() {
   async function handleDownload() {
     try {
       if (!selectedProject) throw new AppError('Nenhuma opção selecionada.')
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+      const ext = selectedProject.project.file.filename.split('.').pop()
 
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
       setIsDownloading(true)
 
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      await downloadFile(
+      await new Promise(resolve => setTimeout(resolve, 500))
+      const downloadedFile = await downloadFile(
         `${process.env.EXPO_PUBLIC_API_URL}${selectedProject.project.file.url}`,
       )
+
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 
       await toast.show({
@@ -199,6 +210,12 @@ export function Projects() {
 
       setIsDownloading(false)
       handleCloseMenu()
+
+      if (ext && ['png', 'jpeg', 'jpg'].includes(ext)) {
+        await saveMediaToLibrary(downloadedFile.uri)
+      } else {
+        handleShare(downloadedFile.uri)
+      }
     } catch (err) {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
       setIsDownloading(false)
@@ -217,10 +234,22 @@ export function Projects() {
     }
   }
 
-  function handleShare() {
+  function handleViewMedia(project: Project) {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+    setImages([
+      {
+        key: project.id,
+        uri: `${process.env.EXPO_PUBLIC_API_URL}${project.project.file.url}`,
+      },
+    ])
+  }
+
+  function handleShare(uri?: string) {
     if (!selectedProject) throw new AppError('Nenhuma opção selecionada.')
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
-    shareAsync(`${process.env.EXPO_PUBLIC_API_URL}${selectedProject.project.file.url}`)
+    shareAsync(
+      uri || `${process.env.EXPO_PUBLIC_API_URL}${selectedProject.project.file.url}`,
+    )
   }
 
   function handleViewDocument(project: Project) {
@@ -230,15 +259,53 @@ export function Projects() {
     })
   }
 
-  function handleItemPressed(project: Project) {
-    setSelectedProjectID(project.id)
+  function handleItemPressed(project: Project, isLongPress = false) {
     const { mimeType } = project.project.file
+    const ext = project.project.file.filename.split('.').pop()
+
+    if (isLongPress) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+      setSelectedProjectID(project.id)
+      handleOpenMenu()
+      return
+    }
 
     if (mimeType === PDF_MIME_TYPE) {
       return handleViewDocument(project)
     }
 
+    if (ext && ['png', 'jpeg', 'jpg'].includes(ext)) {
+      return handleViewMedia(project)
+    }
+
+    setSelectedProjectID(project.id)
     handleOpenMenu()
+  }
+
+  async function saveMediaToLibrary(mediaUri: string) {
+    if (permissionResponse?.status !== 'granted') {
+      const response = await requestPermission()
+
+      if (!response.granted) {
+        toast.show({
+          duration: 3000,
+          render: ({ id }) => (
+            <Toast
+              id={id}
+              message="Você precisa conceder acesso à suas fotos para poder fazer o download."
+              status="error"
+              onClose={() => toast.close(id)}
+            />
+          ),
+        })
+      }
+    }
+
+    const asset = await MediaLibrary.createAssetAsync(mediaUri)
+    const album = await MediaLibrary.getAlbumAsync('ArqPlanner')
+
+    await MediaLibrary.createAlbumAsync('ArqPlanner', asset, false)
+    await MediaLibrary.addAssetsToAlbumAsync([asset], album, false)
   }
 
   async function handleSubmit() {
@@ -366,9 +433,21 @@ export function Projects() {
                   name="layout"
                   size={{ base: 6, sm: 8, md: 8, lg: 16 }}
                   color="light.700"
+                  mx={1}
                 />
               )
               const ext = item.project.file.filename.split('.').pop()
+              if (ext && ['png', 'jpeg', 'jpg'].includes(ext)) {
+                icon = (
+                  <Icon
+                    as={Feather}
+                    name="image"
+                    size={{ base: 6, sm: 6, md: 8, lg: 16 }}
+                    color="light.700"
+                    mx={1}
+                  />
+                )
+              }
               const ExtIcon =
                 FILE_EXTENSION_ICON_MAP[ext as keyof typeof FILE_EXTENSION_ICON_MAP]
 
@@ -380,6 +459,7 @@ export function Projects() {
                   subTitle={format(item.project.file.updatedAt, "dd-MM-yy' | 'HH:mm")}
                   icon={icon}
                   onPress={() => handleItemPressed(item)}
+                  onLongPress={() => handleItemPressed(item, true)}
                   status={item.project.status}
                 />
               )
@@ -407,6 +487,14 @@ export function Projects() {
             )}
           />
         )}
+
+        <ImageView
+          doubleTapToZoomEnabled
+          images={images}
+          imageIndex={0}
+          visible={!!images.length}
+          onRequestClose={() => setImages([])}
+        />
 
         <Actionsheet
           isOpen={isMenuOpen}
@@ -463,7 +551,7 @@ export function Projects() {
               </HStack>
 
               <Pressable
-                onPress={handleShare}
+                onPress={() => handleShare()}
                 style={({ pressed }) => ({
                   opacity: pressed ? 0.3 : 1,
                 })}
