@@ -29,7 +29,7 @@ import {
   useDisclose,
   useToast,
 } from 'native-base'
-import { useEffect, useMemo, useState } from 'react'
+import { useState } from 'react'
 import { Platform, Pressable } from 'react-native'
 import PDF from 'react-native-pdf'
 import { SafeAreaView } from 'react-native-safe-area-context'
