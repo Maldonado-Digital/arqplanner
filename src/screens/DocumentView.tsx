@@ -246,6 +246,7 @@ export function DocumentView() {
           onClickMenu={handleOpenMenu}
         />
         <PDF
+          trustAllCerts={false}
           onError={onLoadPDFError}
           source={{
             uri: `${process.env.EXPO_PUBLIC_API_URL}${file.url}`,
