@@ -41,7 +41,7 @@ export function ListItem({ title, subTitle, icon, status, ...rest }: ListItemPro
         {icon}
 
         <VStack flex={1} ml={{ base: 4, sm: 4, md: 4, lg: 6 }} pr={4}>
-          <Heading
+          <Text
             color={'light.700'}
             fontSize={{
               base: 15,
@@ -53,7 +53,7 @@ export function ListItem({ title, subTitle, icon, status, ...rest }: ListItemPro
             noOfLines={1}
           >
             {title}
-          </Heading>
+          </Text>
 
           <Text
             fontSize={{

@@ -6,7 +6,7 @@ import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { useQuery } from '@tanstack/react-query'
 import { phoneMask } from '@utils/helpers'
 import { format } from 'date-fns'
-import { Box, Center, HStack, Heading, Icon, Text, VStack } from 'native-base'
+import { Box, Center, HStack, Icon, Text, VStack } from 'native-base'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { getWorks } from 'src/api/queries/getWorks'
 
@@ -91,7 +91,7 @@ export function Event() {
               bg={markerColor}
               rounded={'full'}
             />
-            <Heading
+            <Text
               pl={{ base: 6, sm: 6, md: 6, lg: 8 }}
               fontFamily={'heading'}
               fontSize={{
@@ -104,7 +104,7 @@ export function Event() {
               noOfLines={2}
             >
               {title}
-            </Heading>
+            </Text>
           </HStack>
 
           <VStack
@@ -117,7 +117,7 @@ export function Event() {
             borderBottomColor={'gray.200'}
             borderBottomWidth={1}
           >
-            <Heading
+            <Text
               fontFamily={'heading'}
               fontSize={{
                 base: 15,
@@ -134,7 +134,7 @@ export function Event() {
               }}
             >
               Horário e local
-            </Heading>
+            </Text>
 
             <HStack alignItems={'center'}>
               <Icon
@@ -175,7 +175,7 @@ export function Event() {
             borderBottomColor={'gray.200'}
             borderBottomWidth={1}
           >
-            <Heading
+            <Text
               fontFamily={'heading'}
               fontSize={{
                 base: 15,
@@ -192,7 +192,7 @@ export function Event() {
               }}
             >
               Profissional
-            </Heading>
+            </Text>
 
             <HStack alignItems={'center'}>
               <Center
@@ -258,7 +258,7 @@ export function Event() {
             borderBottomColor={'gray.200'}
             borderBottomWidth={1}
           >
-            <Heading
+            <Text
               fontFamily={'heading'}
               fontSize={{
                 base: 15,
@@ -275,7 +275,7 @@ export function Event() {
               }}
             >
               Contatos
-            </Heading>
+            </Text>
 
             {!!phoneNumber && (
               <HStack
@@ -352,7 +352,7 @@ export function Event() {
             pb={{ base: 1, sm: 2, md: 2, lg: 2 }}
             pt={{ base: 4, sm: 4, md: 4, lg: 8 }}
           >
-            <Heading
+            <Text
               fontFamily={'heading'}
               fontSize={{
                 base: 15,
@@ -364,7 +364,7 @@ export function Event() {
               mb={3}
             >
               Resumo
-            </Heading>
+            </Text>
 
             <Text
               fontFamily={'body'}

@@ -5,16 +5,7 @@ import { useAuth } from '@hooks/useAuth'
 import { useNavigation } from '@react-navigation/native'
 import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { getFullName, getInitials, phoneMask } from '@utils/helpers'
-import {
-  Center,
-  HStack,
-  Heading,
-  Icon,
-  IconButton,
-  Text,
-  VStack,
-  useToast,
-} from 'native-base'
+import { Center, HStack, Icon, IconButton, Text, VStack, useToast } from 'native-base'
 import { TouchableOpacity } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
@@ -25,10 +16,6 @@ export function Profile() {
 
   const initials = getInitials(user.name)
   const fullName = getFullName(user.name)
-
-  // function navigateToRecoverPassword() {
-  //   navigation.navigate('recover_password')
-  // }
 
   async function handleSignOut() {
     try {
@@ -133,7 +120,7 @@ export function Profile() {
                 {initials}
               </Text>
             </Center>
-            <Heading
+            <Text
               pl={{ base: 6, sm: 6, md: 6, lg: 8 }}
               fontFamily={'heading'}
               fontSize={{
@@ -146,7 +133,7 @@ export function Profile() {
               noOfLines={2}
             >
               {fullName}
-            </Heading>
+            </Text>
           </HStack>
 
           <VStack
@@ -167,7 +154,7 @@ export function Profile() {
             borderBottomColor={'gray.200'}
             borderBottomWidth={1}
           >
-            <Heading
+            <Text
               fontFamily={'heading'}
               fontSize={{
                 base: 15,
@@ -184,7 +171,7 @@ export function Profile() {
               }}
             >
               Contatos
-            </Heading>
+            </Text>
 
             {!!user.phone_number && (
               <HStack

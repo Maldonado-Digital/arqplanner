@@ -10,7 +10,7 @@ import { useQuery } from '@tanstack/react-query'
 import { calendarEventColors } from '@utils/constants'
 import { format, isSameDay } from 'date-fns'
 import { ptBR } from 'date-fns/locale/pt-BR'
-import { FlatList, HStack, Heading, Icon, Pressable, Text, VStack } from 'native-base'
+import { FlatList, HStack, Icon, Pressable, Text, VStack } from 'native-base'
 import { useState } from 'react'
 import type { MarkedDates } from 'react-native-calendars/src/types'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -160,7 +160,7 @@ export function Agenda() {
               alignSelf={'flex-start'}
             />
           </Pressable>
-          <Heading
+          <Text
             fontFamily={'heading'}
             fontSize={{
               base: 24,
@@ -174,7 +174,7 @@ export function Agenda() {
             alignItems={'center'}
           >
             Agenda
-          </Heading>
+          </Text>
 
           <Calendar
             selected={formattedDate}
@@ -200,7 +200,7 @@ export function Agenda() {
           space={2}
           h={{ base: 6, sm: 6, md: 6, lg: 10 }}
         >
-          <Heading
+          <Text
             fontFamily={'heading'}
             color={'light.700'}
             fontSize={{
@@ -211,7 +211,7 @@ export function Agenda() {
             }}
           >
             {selectedDateText}
-          </Heading>
+          </Text>
           {showTodayText && (
             <Text
               fontFamily={'body'}

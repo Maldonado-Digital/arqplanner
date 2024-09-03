@@ -80,7 +80,7 @@ export function ListScreenHeader({
         />
       </Pressable>
       <VStack alignItems={'center'} alignSelf={'center'} maxW={'3/4'}>
-        <Heading
+        <Text
           color={'light.700'}
           fontSize={{
             base: 18,
@@ -92,7 +92,7 @@ export function ListScreenHeader({
           numberOfLines={1}
         >
           {title}
-        </Heading>
+        </Text>
 
         {(!!status || !!subTitle) && (
           <HStack

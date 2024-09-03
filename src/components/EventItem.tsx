@@ -1,6 +1,6 @@
 import { Feather } from '@expo/vector-icons'
 import { format } from 'date-fns'
-import { Box, HStack, Heading, Icon, Text, VStack } from 'native-base'
+import { Box, HStack, Icon, Text, VStack } from 'native-base'
 import { TouchableOpacity, type TouchableOpacityProps } from 'react-native'
 import type { Event } from 'src/api/queries/getWorks'
 
@@ -34,7 +34,7 @@ export function EventItem({ eventData, markerColor, ...rest }: EventItemProps) {
           rounded={'full'}
         />
         <VStack flex={1} px={4}>
-          <Heading
+          <Text
             color={'light.700'}
             fontFamily={'heading'}
             noOfLines={1}
@@ -46,7 +46,7 @@ export function EventItem({ eventData, markerColor, ...rest }: EventItemProps) {
             }}
           >
             {eventData.event.title}
-          </Heading>
+          </Text>
 
           <Text
             fontSize={{

@@ -9,23 +9,12 @@ import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { useQuery } from '@tanstack/react-query'
 import { statusBarHeight } from '@utils/constants'
 import { getInitials } from '@utils/helpers'
-import {
-  Center,
-  HStack,
-  Heading,
-  Icon,
-  Pressable,
-  ScrollView,
-  Text,
-  VStack,
-  View,
-  useToast,
-} from 'native-base'
-import { RefreshControl, useWindowDimensions } from 'react-native'
+import { Center, HStack, Icon, Pressable, ScrollView, Text, VStack } from 'native-base'
+import { RefreshControl } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { ms, mvs, s, vs } from 'react-native-size-matters'
+import { ms } from 'react-native-size-matters'
 import { ProgressCircle } from 'react-native-svg-charts'
-import { type GetWorksResponse, getWorks } from 'src/api/queries/getWorks'
+import { getWorks } from 'src/api/queries/getWorks'
 
 export function Home() {
   const { user } = useAuth()
@@ -107,7 +96,7 @@ export function Home() {
               lg: 16,
             }}
           >
-            <Heading
+            <Text
               color={'light.700'}
               fontFamily={'heading'}
               fontSize={{
@@ -118,7 +107,7 @@ export function Home() {
               }}
             >
               Bem-vindo!
-            </Heading>
+            </Text>
 
             <Pressable onPress={handleShowProfile}>
               <HStack alignItems={'center'}>
@@ -199,7 +188,7 @@ export function Home() {
             }}
           >
             <VStack flexShrink={1} maxW={'1/2'}>
-              <Heading
+              <Text
                 mb={4}
                 fontFamily={'heading'}
                 color={'light.700'}
@@ -211,7 +200,7 @@ export function Home() {
                 }}
               >
                 Veja o status do projeto
-              </Heading>
+              </Text>
               <Text
                 fontFamily={'body'}
                 color={'light.500'}
@@ -238,7 +227,7 @@ export function Home() {
               />
 
               <Center position={'absolute'}>
-                <Heading
+                <Text
                   fontFamily={'body'}
                   color={'light.400'}
                   mb={1}
@@ -250,8 +239,8 @@ export function Home() {
                   }}
                 >
                   Geral:
-                </Heading>
-                <Heading
+                </Text>
+                <Text
                   fontFamily={'heading'}
                   color={'light.700'}
                   fontSize={{
@@ -262,7 +251,7 @@ export function Home() {
                   }}
                 >
                   {percentage}
-                </Heading>
+                </Text>
               </Center>
             </Center>
           </HStack>

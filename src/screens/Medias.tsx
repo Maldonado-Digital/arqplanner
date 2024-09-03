@@ -17,10 +17,8 @@ import * as MediaLibrary from 'expo-media-library'
 import { shareAsync } from 'expo-sharing'
 import {
   Actionsheet,
-  Center,
   FlatList,
   HStack,
-  Heading,
   Icon,
   IconButton,
   Image,
@@ -402,7 +400,7 @@ export function Medias() {
                 borderBottomColor={'muted.200'}
                 borderBottomWidth={1}
               >
-                <Heading
+                <Text
                   fontSize={{
                     base: 22,
                     sm: 24,
@@ -413,7 +411,7 @@ export function Medias() {
                   fontFamily={'heading'}
                 >
                   Configurações
-                </Heading>
+                </Text>
 
                 <IconButton
                   w={{ base: 10, sm: 10, md: 11, lg: 20 }}
@@ -652,7 +650,7 @@ export function Medias() {
                     pt={{ base: 4, sm: 4, md: 4, lg: 8 }}
                   >
                     <HStack alignItems={'center'} justifyContent={'space-between'} mb={4}>
-                      <Heading
+                      <Text
                         fontSize={{
                           base: 22,
                           sm: 24,
@@ -665,7 +663,7 @@ export function Medias() {
                         {selectedOption === 'reject'
                           ? 'Confirmar reprovação'
                           : 'Confirmar aprovação'}
-                      </Heading>
+                      </Text>
 
                       <IconButton
                         w={{ base: 10, sm: 10, md: 11, lg: 20 }}

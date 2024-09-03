@@ -26,7 +26,7 @@ export function ListEmpty({ icon, title, message, ...rest }: ListEmptyProps) {
         />
       </Center>
 
-      <Heading
+      <Text
         mt={{ base: 4, sm: 4, md: 4, lg: 8 }}
         mb={{ base: 4, sm: 5, md: 6, lg: 6 }}
         fontFamily={'heading'}
@@ -40,7 +40,7 @@ export function ListEmpty({ icon, title, message, ...rest }: ListEmptyProps) {
         }}
       >
         {title}
-      </Heading>
+      </Text>
 
       <Text
         fontFamily={'body'}

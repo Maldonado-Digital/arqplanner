@@ -7,7 +7,6 @@ import { useNavigation } from '@react-navigation/native'
 import type { AuthNavigatorRoutesProps } from '@routes/auth.routes'
 import {
   Center,
-  Heading,
   Icon,
   KeyboardAvoidingView,
   Pressable,
@@ -103,7 +102,7 @@ export function RecoverPassword() {
 
           <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <View>
-              <Heading
+              <Text
                 mt={{ base: 20, sm: 20, md: 20, lg: 20 }}
                 mb={{ base: 6, sm: 6, md: 6, lg: 6 }}
                 alignSelf={'flex-start'}
@@ -117,7 +116,7 @@ export function RecoverPassword() {
                 }}
               >
                 Recupere sua senha
-              </Heading>
+              </Text>
 
               <Text
                 alignSelf={'flex-start'}
@@ -226,7 +225,7 @@ export function PasswordRecovered() {
           />
         </Center>
 
-        <Heading
+        <Text
           mt={{ base: 4, sm: 4, md: 4, lg: 8 }}
           mb={{ base: 6, sm: 6, md: 6, lg: 6 }}
           color={'light.700'}
@@ -239,7 +238,7 @@ export function PasswordRecovered() {
           }}
         >
           Obrigado!
-        </Heading>
+        </Text>
 
         <Text
           fontFamily={'body'}

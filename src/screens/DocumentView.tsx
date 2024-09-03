@@ -5,10 +5,8 @@ import { Loading } from '@components/Loading'
 import { SessionExpired } from '@components/SessionExpired'
 import { Toast } from '@components/Toast'
 import { Feather } from '@expo/vector-icons'
-import { useAuth } from '@hooks/useAuth'
 import { useRoute } from '@react-navigation/native'
 import type { DocumentViewRouteParams } from '@routes/app.routes'
-import { getTokenFromStorage } from '@storage/storageToken'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { AppError } from '@utils/AppError'
 import { downloadFile } from '@utils/downloadFile'
@@ -18,7 +16,6 @@ import { shareAsync } from 'expo-sharing'
 import {
   Actionsheet,
   HStack,
-  Heading,
   Icon,
   IconButton,
   KeyboardAvoidingView,
@@ -287,7 +284,7 @@ export function DocumentView() {
                 borderBottomColor={'muted.200'}
                 borderBottomWidth={1}
               >
-                <Heading
+                <Text
                   fontSize={{
                     base: 22,
                     sm: 24,
@@ -298,7 +295,7 @@ export function DocumentView() {
                   fontFamily={'heading'}
                 >
                   Configurações
-                </Heading>
+                </Text>
 
                 <IconButton
                   w={{ base: 10, sm: 10, md: 11, lg: 20 }}
@@ -536,7 +533,7 @@ export function DocumentView() {
                     pt={{ base: 4, sm: 4, md: 4, lg: 8 }}
                   >
                     <HStack alignItems={'center'} justifyContent={'space-between'} mb={4}>
-                      <Heading
+                      <Text
                         fontSize={{
                           base: 22,
                           sm: 24,
@@ -549,7 +546,7 @@ export function DocumentView() {
                         {selectedOption === 'reject'
                           ? 'Confirmar reprovação'
                           : 'Confirmar aprovação'}
-                      </Heading>
+                      </Text>
 
                       <IconButton
                         w={{ base: 10, sm: 10, md: 11, lg: 20 }}

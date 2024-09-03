@@ -1,4 +1,4 @@
-import { HStack, Heading, type IStackProps } from 'native-base'
+import { HStack, type IStackProps, Text } from 'native-base'
 
 type ScreenHeaderType = IStackProps & {
   title: string
@@ -7,7 +7,7 @@ type ScreenHeaderType = IStackProps & {
 export function ProfileHeader({ title, ...rest }: ScreenHeaderType) {
   return (
     <HStack bg={'white'} alignItems={'center'} justifyContent={'center'} {...rest}>
-      <Heading
+      <Text
         color={'light.700'}
         fontSize={{
           base: 20,
@@ -18,7 +18,7 @@ export function ProfileHeader({ title, ...rest }: ScreenHeaderType) {
         fontFamily={'heading'}
       >
         {title}
-      </Heading>
+      </Text>
     </HStack>
   )
 }

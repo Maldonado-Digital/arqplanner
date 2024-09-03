@@ -1,6 +1,5 @@
 import { Button } from '@components/Button'
 import { Input } from '@components/Input'
-import { LogoBox } from '@components/LogoBox'
 import { Toast } from '@components/Toast'
 import { Feather } from '@expo/vector-icons'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -9,21 +8,11 @@ import { useResponsive } from '@hooks/useResponsive'
 import { useNavigation } from '@react-navigation/native'
 import type { AuthNavigatorRoutesProps } from '@routes/auth.routes'
 import { AppError } from '@utils/AppError'
-import {
-  Center,
-  HStack,
-  Heading,
-  Icon,
-  Pressable,
-  Text,
-  VStack,
-  View,
-  useToast,
-} from 'native-base'
+import { HStack, Icon, Pressable, Text, VStack, View, useToast } from 'native-base'
 import { Controller, type SubmitErrorHandler, useForm } from 'react-hook-form'
 import { Keyboard, TouchableWithoutFeedback } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { ms, mvs, s, vs } from 'react-native-size-matters'
+import {} from 'react-native-size-matters'
 import { z } from 'zod'
 
 const signInFormSchema = z.object({
@@ -127,7 +116,7 @@ export function SignIn() {
         </Pressable>
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <View>
-            <Heading
+            <Text
               mt={{ base: 8, sm: 8, md: 8, lg: 16 }}
               mb={{ base: 4, sm: 4, md: 4, lg: 10 }}
               alignSelf={'flex-start'}
@@ -141,7 +130,7 @@ export function SignIn() {
               }}
             >
               Login
-            </Heading>
+            </Text>
             <Text
               alignSelf={'flex-start'}
               color={'light.500'}

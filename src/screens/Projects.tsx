@@ -27,7 +27,6 @@ import {
   Actionsheet,
   FlatList,
   HStack,
-  Heading,
   Icon,
   IconButton,
   KeyboardAvoidingView,
@@ -465,7 +464,7 @@ export function Projects() {
               )
             }}
             renderSectionHeader={({ section: { title } }) => (
-              <Heading
+              <Text
                 fontSize={{ base: 'lg', sm: 'lg', md: 'lg', lg: '3xl' }}
                 color={'light.700'}
                 fontFamily={'heading'}
@@ -474,7 +473,7 @@ export function Projects() {
                 mb={{ base: 3, sm: 4, md: 4, lg: 6 }}
               >
                 {title}
-              </Heading>
+              </Text>
             )}
             ListEmptyComponent={() => (
               <ListEmpty
@@ -519,7 +518,7 @@ export function Projects() {
                 borderBottomColor={'muted.200'}
                 borderBottomWidth={1}
               >
-                <Heading
+                <Text
                   fontSize={{
                     base: 22,
                     sm: 24,
@@ -530,7 +529,7 @@ export function Projects() {
                   fontFamily={'heading'}
                 >
                   Configurações
-                </Heading>
+                </Text>
 
                 <IconButton
                   w={{ base: 10, sm: 10, md: 11, lg: 20 }}
@@ -759,7 +758,7 @@ export function Projects() {
                 pt={{ base: 4, sm: 4, md: 4, lg: 8 }}
               >
                 <HStack alignItems={'center'} justifyContent={'space-between'} mb={4}>
-                  <Heading
+                  <Text
                     fontSize={{
                       base: 22,
                       sm: 24,
@@ -772,7 +771,7 @@ export function Projects() {
                     {selectedOption === 'reject'
                       ? 'Confirmar reprovação'
                       : 'Confirmar aprovação'}
-                  </Heading>
+                  </Text>
 
                   <IconButton
                     w={{ base: 10, sm: 10, md: 11, lg: 20 }}

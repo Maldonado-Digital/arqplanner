@@ -25,7 +25,6 @@ import {
   Actionsheet,
   FlatList,
   HStack,
-  Heading,
   Icon,
   IconButton,
   Spinner,
@@ -373,9 +372,9 @@ export function Documents() {
                 borderBottomColor={'muted.200'}
                 borderBottomWidth={1}
               >
-                <Heading fontSize={'2xl'} color="light.700" fontFamily={'heading'}>
+                <Text fontSize={'2xl'} color="light.700" fontFamily={'heading'}>
                   Configurações
-                </Heading>
+                </Text>
 
                 <IconButton
                   w={11}

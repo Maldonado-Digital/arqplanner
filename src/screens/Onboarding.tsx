@@ -9,18 +9,9 @@ import { Feather } from '@expo/vector-icons'
 import { useResponsive } from '@hooks/useResponsive'
 import { useNavigation } from '@react-navigation/native'
 import type { AuthNavigatorRoutesProps } from '@routes/auth.routes'
-import {
-  Box,
-  Heading,
-  Icon,
-  IconButton,
-  Image,
-  Pressable,
-  Text,
-  VStack,
-} from 'native-base'
+import { Icon, IconButton, Image, Pressable, Text, VStack } from 'native-base'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { ms, mvs, s, vs } from 'react-native-size-matters'
+import { ms, mvs, s } from 'react-native-size-matters'
 
 export function Onboarding1() {
   const { rW, rH } = useResponsive()
@@ -92,7 +83,7 @@ export function Onboarding1() {
             lg: 20,
           }}
         >
-          <Heading
+          <Text
             maxW={{ lg: '70%' }}
             fontFamily={'heading'}
             fontSize={{
@@ -105,7 +96,7 @@ export function Onboarding1() {
             color={'light.700'}
           >
             Seu projeto na palma da sua mão.
-          </Heading>
+          </Text>
 
           <Text
             maxW={{ lg: '60%' }}
@@ -266,7 +257,7 @@ export function Onboarding2() {
             lg: 20,
           }}
         >
-          <Heading
+          <Text
             maxW={{ lg: '80%' }}
             fontFamily={'heading'}
             fontSize={{
@@ -279,7 +270,7 @@ export function Onboarding2() {
             color={'light.700'}
           >
             Gerencie e aprove projetos e imagens.
-          </Heading>
+          </Text>
 
           <Text
             maxW={{ lg: '60%' }}
@@ -440,7 +431,7 @@ export function Onboarding3() {
             lg: 20,
           }}
         >
-          <Heading
+          <Text
             maxW={{ lg: '80%' }}
             fontFamily={'heading'}
             fontSize={{
@@ -453,7 +444,7 @@ export function Onboarding3() {
             color={'light.700'}
           >
             Acompanhe o dia-a-dia do seu projeto.
-          </Heading>
+          </Text>
 
           <Text
             maxW={{ lg: '60%' }}

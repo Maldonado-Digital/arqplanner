@@ -1,4 +1,3 @@
-import { Category } from '@components/Category'
 import { ListEmpty } from '@components/ListEmpty'
 import { ListItem } from '@components/ListItem'
 import { ListScreenHeader } from '@components/ListScreenHeader'
@@ -7,7 +6,7 @@ import { SessionExpired } from '@components/SessionExpired'
 import { Toast } from '@components/Toast'
 import { Feather } from '@expo/vector-icons'
 import { useRefresh } from '@hooks/useRefresh'
-import { useNavigation, useRoute } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { useQuery } from '@tanstack/react-query'
 import { AppError } from '@utils/AppError'
@@ -21,7 +20,6 @@ import {
   Actionsheet,
   FlatList,
   HStack,
-  Heading,
   Icon,
   IconButton,
   Spinner,
@@ -338,7 +336,7 @@ export function Quotes() {
                 borderBottomColor={'muted.200'}
                 borderBottomWidth={1}
               >
-                <Heading
+                <Text
                   fontSize={{
                     base: 22,
                     sm: 24,
@@ -349,7 +347,7 @@ export function Quotes() {
                   fontFamily={'heading'}
                 >
                   Configurações
-                </Heading>
+                </Text>
 
                 <IconButton
                   w={{ base: 10, sm: 10, md: 11, lg: 20 }}

@@ -1,7 +1,6 @@
-import { Heading, type IStackProps, VStack } from 'native-base'
+import { type IStackProps, Text, VStack } from 'native-base'
 import type { ReactNode } from 'react'
 import { Pressable } from 'react-native'
-import { ms, mvs, vs } from 'react-native-size-matters'
 
 type MenuCard = IStackProps & {
   title: string
@@ -39,13 +38,13 @@ export function MenuCard({ title, icon, onPress, ...rest }: MenuCard) {
           {...rest}
         >
           {icon}
-          <Heading
+          <Text
             fontFamily={'heading'}
             color={'light.700'}
             fontSize={{ base: 15, sm: 16, md: 18, lg: 32 }}
           >
             {title}
-          </Heading>
+          </Text>
         </VStack>
       )}
     </Pressable>

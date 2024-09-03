@@ -21,6 +21,9 @@
       "env": {
         "EXPO_PUBLIC_API_URL": "https://admin.arqplanner.com"
       },
+      "android": {
+        "buildType": "apk"
+      },
       "channel": "development"
     },
     "preview": {
