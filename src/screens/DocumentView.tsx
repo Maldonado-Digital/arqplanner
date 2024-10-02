@@ -27,7 +27,7 @@ import {
   useToast,
 } from 'native-base'
 import { useState } from 'react'
-import { Platform, Pressable } from 'react-native'
+import { Pressable } from 'react-native'
 import PDF from 'react-native-pdf'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { type ResolveProjectDTO, resolveProject } from 'src/api/mutations/resolveProject'
@@ -123,7 +123,9 @@ export function DocumentView() {
       setIsDownloading(true)
 
       await new Promise(resolve => setTimeout(resolve, 1000))
-      await downloadFile(`${process.env.EXPO_PUBLIC_API_URL}${file.url}`)
+      const downloadedFile = await downloadFile(
+        `${process.env.EXPO_PUBLIC_API_URL}${file.url}`,
+      )
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 
       await toast.show({
@@ -140,7 +142,7 @@ export function DocumentView() {
 
       setIsDownloading(false)
       handleCloseMenu()
-      handleShare()
+      handleShare(downloadedFile.uri)
     } catch (err) {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
       setIsDownloading(false)
@@ -159,9 +161,9 @@ export function DocumentView() {
     }
   }
 
-  function handleShare() {
+  function handleShare(uri?: string) {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
-    shareAsync(`${process.env.EXPO_PUBLIC_API_URL}${file.url}`)
+    shareAsync(uri || `${process.env.EXPO_PUBLIC_API_URL}${file.url}`)
   }
 
   async function handleSubmit() {
@@ -254,7 +256,7 @@ export function DocumentView() {
             flex: 1,
             borderTopColor: '#00000012',
             borderTopWidth: 1,
-            paddingBottom: 16,
+            paddingBottom: hasApprovalFlow ? 100 : 16,
           }}
           onLoadComplete={(nOfPages, filePath) => {
             console.log('Number of pages', nOfPages)
@@ -316,7 +318,7 @@ export function DocumentView() {
               </HStack>
 
               <Pressable
-                onPress={handleShare}
+                onPress={() => handleShare()}
                 style={({ pressed }) => ({
                   opacity: pressed ? 0.3 : 1,
                 })}
@@ -511,12 +513,14 @@ export function DocumentView() {
               isOpen={!!selectedOption}
               onClose={handleCloseActionSheet}
               hideDragIndicator={false}
+              // _backdrop={{}}
+              _android={{
+                _backdrop: {
+                  backgroundColor: '#fff',
+                },
+              }}
             >
-              <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                p={0}
-                w={'full'}
-              >
+              <KeyboardAvoidingView behavior={'padding'} p={0} w={'full'}>
                 <Actionsheet.Content
                   borderTopRadius={{ base: 28, sm: 32, md: 36, lg: 56 }}
                   bg={'white'}

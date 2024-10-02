@@ -9,17 +9,31 @@ import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { useQuery } from '@tanstack/react-query'
 import { statusBarHeight } from '@utils/constants'
 import { getInitials } from '@utils/helpers'
-import { Center, HStack, Icon, Pressable, ScrollView, Text, VStack } from 'native-base'
-import { RefreshControl } from 'react-native'
+import { ProgressChart } from 'react-native-chart-kit'
+
+import {
+  Center,
+  HStack,
+  Icon,
+  Pressable,
+  ScrollView,
+  Text,
+  VStack,
+  useBreakpointValue,
+} from 'native-base'
+import { RefreshControl, useWindowDimensions } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { ms } from 'react-native-size-matters'
-import { ProgressCircle } from 'react-native-svg-charts'
 import { getWorks } from 'src/api/queries/getWorks'
 
 export function Home() {
   const { user } = useAuth()
   const navigation = useNavigation<AppNavigatorRoutesProps>()
   const initials = getInitials(user.name)
+  const { width } = useWindowDimensions()
+  const flexDir = useBreakpointValue({
+    base: '8%',
+    lg: 'row',
+  })
 
   const {
     data: works,
@@ -47,6 +61,15 @@ export function Home() {
   if (isPending) return <Loading />
 
   if (isError) return <SessionExpired />
+
+  const numColumns = 2
+  const gap = 0.06 * width
+  const padding = 0.08 * width
+
+  console.log(width)
+
+  const availableSpace = width - 2 * padding - gap
+  const itemSize = availableSpace / numColumns
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top']}>
@@ -89,12 +112,7 @@ export function Home() {
             alignItems={'center'}
             justifyContent={'space-between'}
             mb={{ base: 7, sm: 7, md: 7, lg: 16 }}
-            px={{
-              base: 7,
-              sm: 8,
-              md: 10,
-              lg: 16,
-            }}
+            px={'8%'}
           >
             <Text
               color={'light.700'}
@@ -164,18 +182,8 @@ export function Home() {
             justifyContent={'space-between'}
             bg={'white'}
             w={'full'}
-            px={{
-              base: 7,
-              sm: 8,
-              md: 10,
-              lg: 16,
-            }}
-            py={{
-              base: 6,
-              sm: 7,
-              md: 8,
-              lg: 12,
-            }}
+            px={'8%'}
+            py={'5%'}
             borderTopWidth={1}
             borderBottomWidth={1}
             borderTopColor={'#00000012'}
@@ -215,15 +223,24 @@ export function Home() {
               </Text>
             </VStack>
 
-            <Center position={'relative'} overflow={'visible'} w={ms(120)} h={ms(120)}>
-              <ProgressCircle
-                style={{
-                  height: 120,
-                  width: 120,
+            <Center position={'relative'} overflow={'visible'}>
+              <ProgressChart
+                data={{ data: [progress], colors: ['#797979'] }}
+                width={width * 0.32}
+                height={width * 0.32}
+                radius={(width * 0.3) / 2}
+                hideLegend
+                chartConfig={{
+                  backgroundColor: '#fff',
+                  backgroundGradientFrom: '#fff',
+                  backgroundGradientTo: '#fff',
+                  decimalPlaces: 0, // optional, defaults to 2dp
+                  color: opacity => (opacity > 0.3 ? '#797979' : '#f5f5f5'),
+                  style: {
+                    borderRadius: 16,
+                  },
                 }}
-                progress={progress}
-                progressColor={'#797979'}
-                strokeWidth={ms(5)}
+                strokeWidth={6}
               />
 
               <Center position={'absolute'}>
@@ -257,12 +274,13 @@ export function Home() {
           </HStack>
 
           <HStack
-            px={{
-              base: 7,
-              sm: 8,
-              md: 10,
-              lg: 20,
-            }}
+            // px={{
+            //   base: 7,
+            //   sm: 8,
+            //   md: 10,
+            //   lg: 20,
+            // }}
+            px={'8%'}
             pt={{
               base: 10,
               sm: 12,
@@ -273,8 +291,8 @@ export function Home() {
           >
             <VStack space={{ base: 6, sm: 6, md: 6, lg: 16 }}>
               <MenuCard
-                w={{ base: 148, sm: 152, md: 164, lg: 414 }}
-                h={{ base: 148, sm: 152, md: 164, lg: 414 }}
+                w={itemSize}
+                h={itemSize}
                 onPress={() => navigation.navigate('agenda')}
                 title="Agenda"
                 icon={
@@ -287,8 +305,8 @@ export function Home() {
                 }
               />
               <MenuCard
-                w={{ base: 148, sm: 152, md: 164, lg: 414 }}
-                h={{ base: 148, sm: 152, md: 164, lg: 414 }}
+                w={itemSize}
+                h={itemSize}
                 onPress={() => navigation.navigate('projects')}
                 title="Projetos"
                 icon={
@@ -301,8 +319,8 @@ export function Home() {
                 }
               />
               <MenuCard
-                w={{ base: 148, sm: 152, md: 164, lg: 414 }}
-                h={{ base: 148, sm: 152, md: 164, lg: 414 }}
+                w={itemSize}
+                h={itemSize}
                 onPress={() => navigation.navigate('renders')}
                 title="3Ds"
                 icon={
@@ -317,8 +335,8 @@ export function Home() {
             </VStack>
             <VStack space={{ base: 6, sm: 6, md: 6, lg: 16 }}>
               <MenuCard
-                w={{ base: 148, sm: 152, md: 164, lg: 414 }}
-                h={{ base: 148, sm: 152, md: 164, lg: 414 }}
+                w={itemSize}
+                h={itemSize}
                 onPress={() => navigation.navigate('documents')}
                 title="Documentos"
                 icon={
@@ -332,8 +350,8 @@ export function Home() {
               />
 
               <MenuCard
-                w={{ base: 148, sm: 152, md: 164, lg: 414 }}
-                h={{ base: 148, sm: 152, md: 164, lg: 414 }}
+                w={itemSize}
+                h={itemSize}
                 onPress={() => navigation.navigate('photos')}
                 title="Fotos"
                 icon={
@@ -346,8 +364,8 @@ export function Home() {
                 }
               />
               <MenuCard
-                w={{ base: 148, sm: 152, md: 164, lg: 414 }}
-                h={{ base: 148, sm: 152, md: 164, lg: 414 }}
+                w={itemSize}
+                h={itemSize}
                 onPress={() => navigation.navigate('quotes')}
                 title="Orçamentos"
                 icon={

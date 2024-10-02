@@ -200,7 +200,7 @@ export function Onboarding2() {
           }}
           mt={{
             base: 4,
-            sm: 0,
+            sm: 4,
             md: 0,
             lg: 8,
           }}
@@ -288,7 +288,7 @@ export function Onboarding2() {
           </Text>
 
           <SliderDots
-            activeIndex={0}
+            activeIndex={1}
             size={{
               base: 1.5,
               sm: 2,
@@ -374,7 +374,7 @@ export function Onboarding3() {
           }}
           mt={{
             base: 4,
-            sm: 0,
+            sm: 4,
             md: 0,
             lg: 8,
           }}
@@ -462,7 +462,7 @@ export function Onboarding3() {
           </Text>
 
           <SliderDots
-            activeIndex={0}
+            activeIndex={2}
             size={{
               base: 1.5,
               sm: 2,

@@ -91,7 +91,7 @@ export function SignIn() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <VStack
-        mt={{ base: 4, sm: 4, md: 4, lg: 16 }}
+        mt={{ base: 4, sm: 4, md: 0, lg: 16 }}
         px={{
           base: 7,
           sm: 8,
@@ -102,7 +102,7 @@ export function SignIn() {
         <Pressable
           h={{ base: 6, sm: 6, md: 6, lg: 10 }}
           onPress={handleGoBack}
-          justifyContent={'flex-start'}
+          alignSelf={'flex-start'}
           mr={'full'}
           hitSlop={20}
         >
@@ -111,7 +111,6 @@ export function SignIn() {
             name="arrow-left"
             color={'light.700'}
             size={{ base: 6, sm: 6, md: 6, lg: 10 }}
-            alignSelf={'flex-start'}
           />
         </Pressable>
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -135,7 +134,6 @@ export function SignIn() {
               alignSelf={'flex-start'}
               color={'light.500'}
               mb={{ base: 4, sm: 6, md: 6, lg: 12 }}
-              fontWeight={'bold'}
               fontSize={{
                 base: 14,
                 sm: 16,

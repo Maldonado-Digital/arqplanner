@@ -8,8 +8,21 @@ type MenuCard = IStackProps & {
   onPress: () => void
 }
 
+const shadowOpt = {
+  width: 164,
+  height: 164,
+  color: '#000',
+  // border: 2,
+  radius: 15,
+  opacity: 0.05,
+  x: 0,
+  y: 4,
+  // style: { marginVertical: 5 },
+}
+
 export function MenuCard({ title, icon, onPress, ...rest }: MenuCard) {
   return (
+    // <BoxShadow setting={shadowOpt}>
     <Pressable onPress={onPress}>
       {({ pressed }) => (
         <VStack
@@ -30,7 +43,6 @@ export function MenuCard({ title, icon, onPress, ...rest }: MenuCard) {
           borderColor={'#00000012'}
           borderWidth={1}
           style={{
-            shadowColor: '#000000',
             shadowOpacity: 0.05,
             shadowRadius: 15,
             shadowOffset: { width: 0, height: 4 },
@@ -48,5 +60,6 @@ export function MenuCard({ title, icon, onPress, ...rest }: MenuCard) {
         </VStack>
       )}
     </Pressable>
+    // </BoxShadow>
   )
 }

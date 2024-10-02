@@ -14,8 +14,8 @@ export function ApprovalFooter({
 }: DisclosureFooterProps) {
   const pb = useBreakpointValue({
     base: 28,
-    sm: 44,
-    md: 44,
+    sm: 32,
+    md: 40,
     lg: 60,
   })
   const px = useBreakpointValue({
@@ -35,7 +35,9 @@ export function ApprovalFooter({
     <Box w={'full'} borderTopColor={'muted.200'} borderTopWidth={1} {...rest}>
       <BlurView
         intensity={80}
-        tint="systemThickMaterialLight"
+        blurReductionFactor={4}
+        experimentalBlurMethod="dimezisBlurView"
+        tint="systemUltraThinMaterialLight"
         style={{
           width: '100%',
           paddingTop: pt,
