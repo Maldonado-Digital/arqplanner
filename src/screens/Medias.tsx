@@ -177,7 +177,11 @@ export function Medias() {
     const asset = await MediaLibrary.createAssetAsync(mediaUri)
     const album = await MediaLibrary.getAlbumAsync('ArqPlanner')
 
-    await MediaLibrary.createAlbumAsync('ArqPlanner', asset, false)
+    if (!album) {
+      await MediaLibrary.createAlbumAsync('ArqPlanner', asset, false)
+      return
+    }
+
     await MediaLibrary.addAssetsToAlbumAsync([asset], album, false)
   }
 
