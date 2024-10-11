@@ -71,7 +71,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       },
     )
 
-    if (!data.user?.organization?.id || !data.user.works) {
+    if (
+      !data.user?.organization?.id ||
+      !data.user.works ||
+      typeof data.user.works === 'string'
+    ) {
       throw new AppError('Erro ao carregar as informações')
     }
 

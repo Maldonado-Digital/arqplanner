@@ -59,7 +59,6 @@ export function Home() {
   }
 
   if (isPending) return <Loading />
-
   if (isError) return <SessionExpired />
 
   const numColumns = 2

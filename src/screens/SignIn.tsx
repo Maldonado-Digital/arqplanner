@@ -57,9 +57,7 @@ export function SignIn() {
       await signIn(email, password)
     } catch (err) {
       const isAppError = err instanceof AppError
-      const message = isAppError
-        ? 'Email ou senha inválidos.'
-        : 'Erro ao fazer login. Tente novamente.'
+      const message = isAppError ? err.message : 'Erro ao fazer login. Tente novamente.'
 
       toast.show({
         duration: 3000,
