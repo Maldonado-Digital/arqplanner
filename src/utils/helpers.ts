@@ -1,16 +1,10 @@
 import { format } from 'date-fns'
 import type {
   ApprovalStatus,
-  Document,
   FileType,
   MediaFileType,
-  Photo,
-  Project,
-  Quote,
-  Render,
   Work,
 } from 'src/api/queries/getWorks'
-import { AppError } from './AppError'
 
 export function getInitials(name: string) {
   const splitted = name.trim().split(' ')
@@ -150,8 +144,10 @@ export function digViewingMediaData(
 
     const data = {
       title: render.render.title,
-      subTitle: format(render.render.files[0].uploads.updatedAt, "dd-MM-yy' | 'HH:mm"),
-      files: render.render.files,
+      subTitle: render.render.files.length
+        ? format(render.render.files[0].uploads.updatedAt, "dd-MM-yy' | 'HH:mm")
+        : 'Nenhum 3D adicionado',
+      files: render.render.files.length ? render.render.files : [],
       status: render.render.status,
     }
 
@@ -165,8 +161,10 @@ export function digViewingMediaData(
 
     const data = {
       title: photo.photo.title,
-      subTitle: format(photo.photo.files[0].uploads.updatedAt, "dd-MM-yy' | 'HH:mm"),
-      files: photo.photo.files,
+      subTitle: photo.photo.files.length
+        ? format(photo.photo.files[0].uploads.updatedAt, "dd-MM-yy' | 'HH:mm")
+        : 'Nenhuma foto adicionada',
+      files: photo.photo.files.length ? photo.photo.files : [],
       status: null,
     }
 

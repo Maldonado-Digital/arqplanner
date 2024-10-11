@@ -1,4 +1,3 @@
-import { Category } from '@components/Category'
 import { ListEmpty } from '@components/ListEmpty'
 import { ListItem } from '@components/ListItem'
 import { ListScreenHeader } from '@components/ListScreenHeader'
@@ -6,14 +5,14 @@ import { Loading } from '@components/Loading'
 import { SessionExpired } from '@components/SessionExpired'
 import { Feather } from '@expo/vector-icons'
 import { useRefresh } from '@hooks/useRefresh'
-import { useNavigation, useRoute } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { FlatList, Icon, VStack } from 'native-base'
 import { RefreshControl } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { getWorks } from 'src/api/queries/getWorks'
+import { type Photo, getWorks } from 'src/api/queries/getWorks'
 
 export function Photos() {
   const navigation = useNavigation<AppNavigatorRoutesProps>()
@@ -30,15 +29,17 @@ export function Photos() {
   })
   const { refreshing, handleRefresh } = useRefresh(refetch)
 
-  const photos = works?.docs[0].photos.sort((a, b) => {
+  const photos = works?.docs[0]?.photos.sort((a, b) => {
+    if (!a.photo.files.length || !b.photo.files.length) return 0
+
     return (
-      new Date(b.photo.files[0].uploads.updatedAt).getTime() -
-      new Date(a.photo.files[0].uploads.updatedAt).getTime()
+      new Date(b.photo.files[0]?.uploads.updatedAt).getTime() -
+      new Date(a.photo.files[0]?.uploads.updatedAt).getTime()
     )
   })
 
-  function handleViewMedia(id: string) {
-    navigation.navigate('medias', { mediaId: id, mediaType: 'photo' })
+  function handleViewMedia(media: Photo) {
+    navigation.navigate('medias', { mediaId: media.id, mediaType: 'photo' })
   }
 
   if (isError) return <SessionExpired />
@@ -75,10 +76,11 @@ export function Photos() {
             renderItem={({ item }) => (
               <ListItem
                 title={item.photo.title}
-                subTitle={format(
-                  item.photo.files[0].uploads.updatedAt,
-                  "dd-MM-yy' | 'HH:mm",
-                )}
+                subTitle={
+                  item.photo.files.length
+                    ? format(item.photo.files[0]?.uploads.updatedAt, "dd-MM-yy' | 'HH:mm")
+                    : 'Sem fotos'
+                }
                 icon={
                   <Icon
                     as={Feather}
@@ -87,7 +89,7 @@ export function Photos() {
                     color="light.700"
                   />
                 }
-                onPress={() => handleViewMedia(item.id)}
+                onPress={() => handleViewMedia(item)}
               />
             )}
             showsVerticalScrollIndicator={false}

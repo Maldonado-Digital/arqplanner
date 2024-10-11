@@ -66,8 +66,6 @@ export function Home() {
   const gap = 0.06 * width
   const padding = 0.08 * width
 
-  console.log(width)
-
   const availableSpace = width - 2 * padding - gap
   const itemSize = availableSpace / numColumns
 

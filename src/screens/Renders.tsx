@@ -5,18 +5,17 @@ import { ListScreenHeader } from '@components/ListScreenHeader'
 import { Loading } from '@components/Loading'
 import { SessionExpired } from '@components/SessionExpired'
 import { Feather } from '@expo/vector-icons'
-import { useAuth } from '@hooks/useAuth'
 import { useRefresh } from '@hooks/useRefresh'
 import { useNavigation } from '@react-navigation/native'
 import type { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { useQuery } from '@tanstack/react-query'
 import { FILE_EXTENSION_ICON_MAP, approvalStatus } from '@utils/constants'
 import { format } from 'date-fns'
-import { FlatList, Icon, Text, VStack, useBreakpointValue } from 'native-base'
+import { FlatList, Icon, VStack, useBreakpointValue } from 'native-base'
 import { useState } from 'react'
 import { RefreshControl } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { getWorks } from 'src/api/queries/getWorks'
+import { type Render, getWorks } from 'src/api/queries/getWorks'
 
 export function Renders() {
   const iconSize = useBreakpointValue({
@@ -41,6 +40,8 @@ export function Renders() {
   const { refreshing, handleRefresh } = useRefresh(refetch)
 
   const renders = works?.docs[0].renders.sort((a, b) => {
+    if (!a.render.files.length || !b.render.files.length) return 0
+
     return (
       new Date(b.render.files[0].uploads.updatedAt).getTime() -
       new Date(a.render.files[0].uploads.updatedAt).getTime()
@@ -51,8 +52,8 @@ export function Renders() {
     render => render.render.status === selectedStatus || selectedStatus === 'all',
   )
 
-  function handleViewMedia(renderId: string) {
-    navigation.navigate('medias', { mediaId: renderId, mediaType: 'render' })
+  function handleViewMedia(media: Render) {
+    navigation.navigate('medias', { mediaId: media.id, mediaType: 'render' })
   }
 
   if (isError) return <SessionExpired />
@@ -122,21 +123,28 @@ export function Renders() {
                   color="light.700"
                 />
               )
-              const ext = item.render.files[0].uploads.filename.split('.').pop()
-              const ExtIcon =
-                FILE_EXTENSION_ICON_MAP[ext as keyof typeof FILE_EXTENSION_ICON_MAP]
 
-              if (ExtIcon) icon = <ExtIcon width={iconSize} height={iconSize} />
+              if (item.render.files.length) {
+                const ext = item.render.files[0].uploads.filename.split('.').pop()
+                const ExtIcon =
+                  FILE_EXTENSION_ICON_MAP[ext as keyof typeof FILE_EXTENSION_ICON_MAP]
+
+                if (ExtIcon) icon = <ExtIcon width={iconSize} height={iconSize} />
+              }
 
               return (
                 <ListItem
                   title={item.render.title}
-                  subTitle={format(
-                    item.render.files[0].uploads.updatedAt,
-                    "dd-MM-yy' | 'HH:mm",
-                  )}
+                  subTitle={
+                    item.render.files.length
+                      ? format(
+                          item.render.files[0].uploads.updatedAt,
+                          "dd-MM-yy' | 'HH:mm",
+                        )
+                      : 'Sem 3Ds'
+                  }
                   icon={icon}
-                  onPress={() => handleViewMedia(item.id)}
+                  onPress={() => handleViewMedia(item)}
                   status={item.render.status}
                 />
               )

@@ -513,7 +513,6 @@ export function DocumentView() {
               isOpen={!!selectedOption}
               onClose={handleCloseActionSheet}
               hideDragIndicator={false}
-              // _backdrop={{}}
               _android={{
                 _backdrop: {
                   backgroundColor: '#fff',

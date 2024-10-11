@@ -86,7 +86,10 @@ export function Medias() {
 
   const { data } = digViewingMediaData(works.docs[0], mediaType, mediaId)
 
-  if (!data) return <SessionExpired />
+  if (!data) {
+    // Improve this error flow
+    return <SessionExpired />
+  }
 
   const { title, subTitle, files, status } = data
 
